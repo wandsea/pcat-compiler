@@ -5,6 +5,13 @@ PCAT compiler is a college course project assigned in the course
 ``Compiler'' offered in Fudan University.
 
 
+Architecture
+------------
+
+
+
+
+
 Resources
 ---------
 
@@ -29,13 +36,29 @@ The [PCAT Language Specification](http://web.cecs.pdx.edu/~harry/compilers/PCATL
 
 For Syntax Analysis,
 the lectures involved is 
-[A](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart1.pdf), 
-[B](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart2.pdf) and 
-[C](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart3.pdf).
-
+[SyntaxPart1](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart1.pdf), 
+[SyntaxPart2](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart2.pdf) and 
+[SyntaxPart3](http://web.cecs.pdx.edu/~harry/compilers/slides/SyntaxPart3.pdf).
 For semantic analysis one may refer to
-[this](http://web.cecs.pdx.edu/~harry/compilers/slides/SemanticsPart1.pdf)
+[SemanticsPart1](http://web.cecs.pdx.edu/~harry/compilers/slides/SemanticsPart1.pdf)
 and 
-[that](http://web.cecs.pdx.edu/~harry/compilers/slides/SemanticsPart1.pdf).
+[SemanticsPart2](http://web.cecs.pdx.edu/~harry/compilers/slides/SemanticsPart2.pdf).
+
+Relative Project is [Project 4](http://web.cecs.pdx.edu/~harry/compilers/slides/Project4.pdf),
+[Project 5](http://web.cecs.pdx.edu/~harry/compilers/slides/Project5.pdf)
+and [Project 6]
+(http://web.cecs.pdx.edu/~harry/compilers/slides/Project6.pdf).
+One can also refer to [AST Summary](web.cecs.pdx.edu/~harry/compilers/p4/ASTSummary.pdf) and 
+[PCAT Errors](http://web.cecs.pdx.edu/~harry/compilers/p6/PCATErrors.pdf)
+
+### IR Generation
+
+To finish it...
+
+[Review of AST](http://web.cecs.pdx.edu/~harry/compilers/p8/ReviewOfAST.pdf)
 
 
+
+Authors
+-------
+Alan Tian, Wandsee, Edward Cheng, Jifan Chen
