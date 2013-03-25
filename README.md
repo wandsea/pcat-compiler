@@ -1,8 +1,7 @@
 pcat-compiler
 =============
 
-PCAT compiler is a college course project assigned in the course 
-``Compiler'' offered in Fudan University.
+PCAT compiler is a college course project assigned in the course ``Compiler'' offered in Fudan University.
 
 
 Resources
