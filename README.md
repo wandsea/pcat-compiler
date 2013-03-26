@@ -33,7 +33,7 @@ Keywords are reserved words. Operators
 operating or seperating.
 
 Tab and space (which is not in a string or comment)
-are special ones, so are new lines (which is not in a comment)
+are special ones, so are new lines (which are not in a comment)
 and comments. They should be
 totally ingored.
 
@@ -61,19 +61,31 @@ Catch and ingore
 Catch normal comments by
 `\(\*(?:.|\n|\r)*?\*\)`, and then open comment
 by `\(\*(?:.|\n|\r)*`.
+##### Error Tokens
+Anything failed to fall into at least one type
+of tokens mentioned above is treated as error.
+We will try to ingore it by moving the pointer to the current charactor by one.
 
 #### Error Tolerance
+Several error auto correctings are performed, 
+including
 
+* Stripping overlong string literals and identifiers
+* Setting overflowed integer literals to `MAX_INT`
+* Ignore illegal charactors in string literals
+* Forcing closing open string literals and comments
 
 
 ### Syntax Analysis
-
+TODO
 
 ### Semantic Analysis
+TODO
 
 
 ### IR Generation
 
+TODO
 
 
 
