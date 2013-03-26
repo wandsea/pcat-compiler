@@ -27,6 +27,9 @@ Although in Java without solution, its supplimentary materials
 as well as lectures closely linked to the PCAT compiler, still mean a lot
 to us.
 
+Students are required to implement an compiler of PCAT language, including
+Lexical, syntax, semantic analysis and IR generation.
+
 
 ### Misc
 
@@ -45,14 +48,29 @@ For semantic analysis one may refer to
 and 
 [SemanticsPart2](http://web.cecs.pdx.edu/~harry/compilers/slides/SemanticsPart2.pdf).
 
-Relative Project is [Project 4](http://web.cecs.pdx.edu/~harry/compilers/slides/Project4.pdf),
+Related Projects are [Project 4](http://web.cecs.pdx.edu/~harry/compilers/slides/Project4.pdf),
 [Project 5](http://web.cecs.pdx.edu/~harry/compilers/slides/Project5.pdf)
-and [Project 6]
-(http://web.cecs.pdx.edu/~harry/compilers/slides/Project6.pdf).
+and [Project 6](http://web.cecs.pdx.edu/~harry/compilers/slides/Project6.pdf).
 One can also refer to [AST Summary](web.cecs.pdx.edu/~harry/compilers/p4/ASTSummary.pdf) and 
 [PCAT Errors](http://web.cecs.pdx.edu/~harry/compilers/p6/PCATErrors.pdf)
 
 ### IR Generation
+
+Prof. Porter covered the SPARC architecture in 3 courses
+([Part 1](http://web.cecs.pdx.edu/~harry/compilers/slides/SPARC-Part1.pdf),
+[Part 2](http://web.cecs.pdx.edu/~harry/compilers/slides/SPARC-Part2.pdf)
+and
+[Part 3](http://web.cecs.pdx.edu/~harry/compilers/slides/SPARC-Part3.pdf)),
+then covered Code Generation([Part 1](http://web.cecs.pdx.edu/~harry/compilers/slides/CodeGen1.pdf),
+[Part 2](http://web.cecs.pdx.edu/~harry/compilers/slides/CodeGen2.pdf),
+[Part 3](http://web.cecs.pdx.edu/~harry/compilers/slides/CodeGen3.pdf)), 
+[Tolmach's AST](http://web.cecs.pdx.edu/~harry/compilers/slides/TolmachsAST.pdf)
+and [Parameter Passing](http://web.cecs.pdx.edu/~harry/compilers/slides/ParamPassing.pdf).
+
+Related Projects are 
+[Project 8](http://web.cecs.pdx.edu/~harry/compilers/slides/Proj8.pdf),
+[Project 9](http://web.cecs.pdx.edu/~harry/compilers/slides/Proj9.pdf) and
+[Project 10](http://web.cecs.pdx.edu/~harry/compilers/slides/Proj10.pdf).
 
 
 Also refer to
