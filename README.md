@@ -60,4 +60,4 @@ To finish it...
 
 Authors
 -------
-Alan Tian, Wandsea, Edward Cheng, Jifan Chen
+Alan Tian (Tian Yingtao), Wandsea (Wang Xi), Edward Cheng (Cheng Munan), Jifan Chen
