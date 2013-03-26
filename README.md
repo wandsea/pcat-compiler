@@ -17,6 +17,8 @@ Details
 
 # Lexical Analysis (Tokenizer)
 
+## Tokens
+
 There are three kinds of tokens, namely
 literals, keywords, operators.
 
@@ -26,13 +28,23 @@ Literals can be one of following types
 * Real
 * String
 
-Keywords are reserved words, there're
+Keywords are reserved words. Operators
+(including delimiter) are used for
+operating or seperating.
 
+## Dealing
 
+### Identifiers and Keywords
+using `[a-zA-Z_][a-zA-Z_0-9]*` to catch
+identifiers and keywords. Check if the token
+is a keyword, and if so, treat it properly.
 
-Operators
+### Real
+A little extension to language specification:
+support `1.` or `.1` besided `1.1` using
+`[0-9]+\.[0-9]+|[0-9]+\.|\.[0-9]+`.
 
-
+## Error Tolerance
 
 
 
