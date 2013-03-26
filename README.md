@@ -15,12 +15,12 @@ Architecture
 Details
 ------------
 
-# Lexical Analysis (Tokenizer)
+### Lexical Analysis (Tokenizer)
 
-## Tokens
+#### Tokens
 
-There are three kinds of tokens, namely
-literals, keywords, operators.
+There are four kinds of tokens, namely
+literals, keywords, operators and special ones.
 
 Literals can be one of following types
 * Identifiers
@@ -32,29 +32,47 @@ Keywords are reserved words. Operators
 (including delimiter) are used for
 operating or seperating.
 
-## Dealing
+Tab and space (which is not in a string or comment)
+are special ones, so are new lines (which is not in a comment)
+and comments. They should be
+totally ingored.
 
-### Identifiers and Keywords
-using `[a-zA-Z_][a-zA-Z_0-9]*` to catch
+#### Dealing
+Tokens are handles in the following order.
+##### Identifiers and Keywords
+Using `[a-zA-Z_][a-zA-Z_0-9]*` to catch
 identifiers and keywords. Check if the token
 is a keyword, and if so, treat it properly.
-
-### Real
+##### Reals
 A little extension to language specification:
 support `1.` or `.1` besided `1.1` using
 `[0-9]+\.[0-9]+|[0-9]+\.|\.[0-9]+`.
+##### Integers
+Catch by `[0-9][0-9]*`
+##### String
+Catch by `\".*?(?:\"|\n|\r)` in order
+to forced close an open string (one that
+isn't properly closed)
+##### Operators
+Catch exactly what they look like.
+##### New lines
+Catch and ingore
+##### Comments
+Catch normal comments by
+`\(\*(?:.|\n|\r)*?\*\)`, and then open comment
+by `\(\*(?:.|\n|\r)*`.
 
-## Error Tolerance
+#### Error Tolerance
 
 
 
-# Syntax Analysis
+### Syntax Analysis
 
 
-# Semantic Analysis
+### Semantic Analysis
 
 
-# IR Generation
+### IR Generation
 
 
 
