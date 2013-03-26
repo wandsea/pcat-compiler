@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 from ply import *
 
@@ -83,7 +83,7 @@ class Compiler:
 
 		ori_value = t.value
 		# handle unterminated
-		if ori_value[-1] == '"':
+		if ori_value[-1] != '"':
 			self.lex_error( "Unterminated string, forced closed",t )
 
 		t.value = t.value[1:-1]
