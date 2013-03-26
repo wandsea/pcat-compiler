@@ -1,7 +1,8 @@
 pcat-compiler
 =============
 
-PCAT compiler is a college course project assigned in the course ``Compiler'' offered in Fudan University.
+PCAT compiler is a college course project assigned in the course ''Compiler''
+by Prof. Bo Yan, offered in Fudan University.
 
 
 Architecture
@@ -11,10 +12,11 @@ Architecture
 
 
 
+
 Resources
 ---------
 
-The TA failed to offer enough information and supplimentary materials
+We didn't receive enough information and supplimentary materials from TA,
 so we must search for it manually.
 
 
@@ -22,7 +24,7 @@ A [similar course](http://web.cecs.pdx.edu/~harry/compilers/syllabus.html)
 with project on PCAT was offered by 
 [Prof. Harry H.Porter](http://web.cecs.pdx.edu/~harry/) in 2005.
 Although in Java without solution, its supplimentary materials
-as well as lectures closely linked to the PCAT compiler, still means a lot
+as well as lectures closely linked to the PCAT compiler, still mean a lot
 to us.
 
 
@@ -52,8 +54,8 @@ One can also refer to [AST Summary](web.cecs.pdx.edu/~harry/compilers/p4/ASTSumm
 
 ### IR Generation
 
-To finish it...
 
+Also refer to
 [Review of AST](http://web.cecs.pdx.edu/~harry/compilers/p8/ReviewOfAST.pdf)
 
 
