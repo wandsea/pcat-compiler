@@ -4,6 +4,8 @@ pcat-compiler
 PCAT compiler is a college course project assigned in the course ''Compiler''
 by Prof. Bo Yan, offered in Fudan University.
 
+Students are required to implement an compiler of PCAT language, including
+Lexical, syntax, semantic analysis and IR generation.
 
 Architecture
 ------------
