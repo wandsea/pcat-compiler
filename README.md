@@ -7,10 +7,42 @@ by Prof. Bo Yan, offered in Fudan University.
 Students are required to implement an compiler of PCAT language, including
 Lexical, syntax, semantic analysis and IR generation.
 
+
 Architecture
 ------------
 
 
+Details
+------------
+
+# Lexical Analysis (Tokenizer)
+
+There are three kinds of tokens, namely
+literals, keywords, operators.
+
+Literals can be one of following types
+* Identifiers
+* Integer
+* Real
+* String
+
+Keywords are reserved words, there're
+
+
+
+Operators
+
+
+
+
+
+# Syntax Analysis
+
+
+# Semantic Analysis
+
+
+# IR Generation
 
 
 
