@@ -55,7 +55,12 @@
 ********************************************************************************/
 
 
-#include "basic.h"
+//#include "basic.h"
+#include <stdio.h>
+#include <iostream>
+#include <string.h>
+
+using namespace std;
 
 static int lineno = 1, columnno = 1;
 
