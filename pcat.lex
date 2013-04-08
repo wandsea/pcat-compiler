@@ -1,13 +1,35 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 
 static void DoBeforeEachAction();
 #define YY_USER_ACTION DoBeforeEachAction();
+
+int tCol=0;
 %}
 
 %x COMMENT
 
 %%
+
+
+"(*" { 
+  BEGIN(COMMENT);
+  tCol=columnno;
+  yymore(); 
+}
+
+<COMMENT>"*)" { 
+  tCol+=2;
+  printf("\033[01;37;40mLn:%d Col:%d \033[01;36;40m Comment: %s \n \033[0m",lineno,tCol-1,yytext);
+  BEGIN(INITIAL); 
+}
+<COMMENT><<EOF>> { 
+  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Unclosed comment.\n \033[0m",lineno,tCol);
+  return EOFF; 
+}
+<COMMENT>. {yymore();tCol++;}
+<COMMENT>"\n"   { yymore(); lineno++;  columnno=1; tCol=1;}
 
 <*>"\n" {
   lineno++;
@@ -17,18 +39,6 @@ static void DoBeforeEachAction();
 [ ]+ ;
 
 <*>[\t] { columnno += 8 - columnno%8 + 1; }
-
-"(*" { 
-  BEGIN(COMMENT); 
-}
-<COMMENT>"*)" { 
-  BEGIN(INITIAL); 
-}
-<COMMENT><<EOF>> { 
-  printf("%d:%d Unclosed comment.\n",lineno,columnno-yyleng);
-  return EOFF; 
-}
-<COMMENT>. ;
 
 "PROGRAM"    return PROGRAM;
 "IS"         return IS;
@@ -78,7 +88,7 @@ static void DoBeforeEachAction();
 "-"	return MINUS;
 "*"	return STAR;
 "/"	return SLASH;
-\\	return BACKSLASH;
+"\\"	return BACKSLASH;
 "="	return EQ;
 "<>"	return NEQ;
 "<"	return LT;
@@ -90,40 +100,51 @@ static void DoBeforeEachAction();
 
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(yyleng>255){
-    printf("%d:%d Identifier too long.\n",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Identifier too long.\n \033[0m",lineno,columnno-yyleng);
     return ERROR;
   }
   return IDENTIFIER;
 }
 
-[0-9]+\.[0-9]* {
+-?([0-9]+\.)    {printf("\033[01;37;40mLn:%d Col:%d \033[01;34;40m   real: %s000000\n \033[0m",lineno,columnno-yyleng,yytext);}
+
+
+-?([1-9]\d*\.[0-9]*|0\.[0-9]*|0?\.[0-9]*)    return REALT;
+
+-?([1-9]\d*\.[0-9e]*|0\.[0-9e]*|0?\.[0-9e]*)  {
+   if(atof(yytext)>3.4e38 || atof(yytext)<-3.4e38)
+   {  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Real out of range.\n \033[0m",lineno,columnno-yyleng);  return ERROR; }
   return REALT;
 }
 
 
-[0-9]+ {
-  if(yyleng>10||(yyleng==10&&strcmp(yytext,"2147483647")>0)){
-    printf("%d:%d Integer out of range.\n",lineno,columnno-yyleng);
+-?[0-9]+ {
+  if(yyleng==10&&(strcmp(yytext,"2147483647")>0)){
+    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Integer out of range.\n \033[0m",lineno,columnno-yyleng);
+   return ERROR;                  }
+  if(yyleng>11||(yyleng==11&&strcmp(yytext,"-2147483648")>0)){
+    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Integer out of range.\n \033[0m",lineno,columnno-yyleng); 
     return ERROR;
   }
   return INTEGERT;
 }
 
+
 \"[^\"\n]*\" {
   if(yyleng>257){
-    printf("%d:%d String too long.\n",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  String too long.\n \033[0m",lineno,columnno-yyleng);
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
-      printf("%d:%d Invaild char.\n",lineno,columnno-yyleng);
+      printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Invaild char.\n \033[0m",lineno,columnno-yyleng);
       yytext[i]=' ';
     }
   return STRINGT;
 }
 
 \"[^\"\n]* {
-  printf("%d:%d Unclosed string.\n",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Unclosed string.\n \033[0m",lineno,columnno-yyleng);
   return ERROR;
 }
 
@@ -131,7 +152,7 @@ static void DoBeforeEachAction();
 <<EOF>> return EOFF;
 
 . {
-  printf("%d:%d UnrecogChar.\n",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  UnrecogChar.\n \033[0m",lineno,columnno-yyleng);
   }
 
 %%
@@ -144,5 +165,4 @@ int yywrap(){
 static void DoBeforeEachAction()
 {
   columnno += yyleng;
-
 }

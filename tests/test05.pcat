@@ -1,5 +1,4 @@
 (* testing records *)
-
 PROGRAM IS
     VAR I : INTEGER := 0;
     TYPE COMPLEX IS RECORD R: REAL; I : REAL; END;

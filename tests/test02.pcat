@@ -12,3 +12,4 @@ BEGIN
     C := C * A + 1;
     WRITE ( -C /(A + 1));  
 END;
+a
