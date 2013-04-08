@@ -8,7 +8,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 35
+#define YY_FLEX_SUBMINOR_VERSION 37
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -141,15 +141,7 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
 #define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -161,7 +153,12 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-extern int yyleng;
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
+extern yy_size_t yyleng;
 
 extern FILE *yyin, *yyout;
 
@@ -187,11 +184,6 @@ extern FILE *yyin, *yyout;
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
 
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
-
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
@@ -209,7 +201,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -279,8 +271,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -308,7 +300,7 @@ static void yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE yy_scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 void *yyalloc (yy_size_t  );
 void *yyrealloc (void *,yy_size_t  );
@@ -380,7 +372,7 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[159] =
     {   0,
-       67,   67,    0,    0,   72,   70,    7,    5,    6,   69,
+        0,    0,    0,    0,   72,   70,    7,    5,    6,   69,
        39,   40,   52,   50,   48,   51,   46,   53,   67,   67,
        45,   47,   57,   55,   59,   63,   63,   63,   63,   63,
        63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -570,13 +562,13 @@ char *yytext;
 #line 2 "pcat.lex"
 #include <stdio.h>
 #include <stdlib.h>
-
-static void DoBeforeEachAction();
+  
+  static void DoBeforeEachAction();
 #define YY_USER_ACTION DoBeforeEachAction();
+  
+  int tCol=0;
 
-int tCol=0;
-
-#line 580 "lex.yy.c"
+#line 572 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -616,7 +608,7 @@ FILE *yyget_out (void );
 
 void yyset_out  (FILE * out_str  );
 
-int yyget_leng (void );
+yy_size_t yyget_leng (void );
 
 char *yyget_text (void );
 
@@ -658,12 +650,7 @@ static int input (void );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
 #define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -768,7 +755,7 @@ YY_DECL
 
 
 
-#line 772 "lex.yy.c"
+#line 759 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -864,335 +851,345 @@ YY_RULE_SETUP
   BEGIN(COMMENT);
   tCol=columnno;
   yymore(); 
-}
+ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 22 "pcat.lex"
 { 
   tCol+=2;
-  printf("\033[01;37;40mLn:%d Col:%d \033[01;36;40m Comment: %s \n \033[0m",lineno,tCol-1,yytext);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;36;40m Comment: %s \n \033[0m",lineno,tCol-1,yytext);
   BEGIN(INITIAL); 
-}
+ }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 27 "pcat.lex"
+#line 28 "pcat.lex"
 { 
-  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Unclosed comment.\n \033[0m",lineno,tCol);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed comment.\n \033[0m",lineno,tCol);
   return EOFF; 
-}
+ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "pcat.lex"
-{yymore();tCol++;}
+#line 32 "pcat.lex"
+{
+  yymore();
+  tCol++;
+ }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 32 "pcat.lex"
-{ yymore(); lineno++;  columnno=1; tCol=1;}
+#line 36 "pcat.lex"
+{ 
+  yymore(); 
+  lineno++;  
+  columnno=1; 
+  tCol=1;
+ }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 34 "pcat.lex"
+#line 43 "pcat.lex"
 {
   lineno++;
   columnno=1;
-}
+   }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 39 "pcat.lex"
+#line 48 "pcat.lex"
 ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 41 "pcat.lex"
-{ columnno += 8 - columnno%8 + 1; }
+#line 50 "pcat.lex"
+{ 
+  columnno += 8 - columnno%8 + 1; 
+}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 43 "pcat.lex"
+#line 54 "pcat.lex"
 return PROGRAM;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "pcat.lex"
+#line 55 "pcat.lex"
 return IS;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 45 "pcat.lex"
+#line 56 "pcat.lex"
 return BEGINT;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 46 "pcat.lex"
+#line 57 "pcat.lex"
 return END;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 47 "pcat.lex"
+#line 58 "pcat.lex"
 return VAR;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 48 "pcat.lex"
+#line 59 "pcat.lex"
 return TYPE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 49 "pcat.lex"
+#line 60 "pcat.lex"
 return PROCEDURE;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 50 "pcat.lex"
+#line 61 "pcat.lex"
 return ARRAY;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 51 "pcat.lex"
+#line 62 "pcat.lex"
 return RECORD;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 52 "pcat.lex"
+#line 63 "pcat.lex"
 return IN;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 53 "pcat.lex"
+#line 64 "pcat.lex"
 return OUT;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 54 "pcat.lex"
+#line 65 "pcat.lex"
 return READ;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 55 "pcat.lex"
+#line 66 "pcat.lex"
 return WRITE;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 56 "pcat.lex"
+#line 67 "pcat.lex"
 return IF;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 57 "pcat.lex"
+#line 68 "pcat.lex"
 return THEN;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 58 "pcat.lex"
+#line 69 "pcat.lex"
 return ELSE;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 59 "pcat.lex"
+#line 70 "pcat.lex"
 return ELSIF;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 60 "pcat.lex"
+#line 71 "pcat.lex"
 return WHILE;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 61 "pcat.lex"
+#line 72 "pcat.lex"
 return DO;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 62 "pcat.lex"
+#line 73 "pcat.lex"
 return LOOP;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 63 "pcat.lex"
+#line 74 "pcat.lex"
 return FOR;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 64 "pcat.lex"
+#line 75 "pcat.lex"
 return EXIT;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 65 "pcat.lex"
+#line 76 "pcat.lex"
 return RETURN;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 66 "pcat.lex"
+#line 77 "pcat.lex"
 return TO;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 67 "pcat.lex"
+#line 78 "pcat.lex"
 return BY;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 68 "pcat.lex"
+#line 79 "pcat.lex"
 return AND;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 69 "pcat.lex"
+#line 80 "pcat.lex"
 return OR;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 70 "pcat.lex"
+#line 81 "pcat.lex"
 return NOT;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 71 "pcat.lex"
+#line 82 "pcat.lex"
 return OF;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 72 "pcat.lex"
+#line 83 "pcat.lex"
 return DIV;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 73 "pcat.lex"
+#line 84 "pcat.lex"
 return MOD;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 76 "pcat.lex"
+#line 87 "pcat.lex"
 return LPAREN;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 77 "pcat.lex"
+#line 88 "pcat.lex"
 return RPAREN;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 78 "pcat.lex"
+#line 89 "pcat.lex"
 return LBRACKET;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 79 "pcat.lex"
+#line 90 "pcat.lex"
 return RBRACKET;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 80 "pcat.lex"
+#line 91 "pcat.lex"
 return LBRACE;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 81 "pcat.lex"
+#line 92 "pcat.lex"
 return RBRACE;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 82 "pcat.lex"
+#line 93 "pcat.lex"
 return COLON;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 83 "pcat.lex"
+#line 94 "pcat.lex"
 return DOT;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 84 "pcat.lex"
+#line 95 "pcat.lex"
 return SEMICOLON;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 85 "pcat.lex"
+#line 96 "pcat.lex"
 return COMMA;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 86 "pcat.lex"
+#line 97 "pcat.lex"
 return ASSIGN;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 87 "pcat.lex"
+#line 98 "pcat.lex"
 return PLUS;
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 88 "pcat.lex"
+#line 99 "pcat.lex"
 return MINUS;
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 89 "pcat.lex"
+#line 100 "pcat.lex"
 return STAR;
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 90 "pcat.lex"
+#line 101 "pcat.lex"
 return SLASH;
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 91 "pcat.lex"
+#line 102 "pcat.lex"
 return BACKSLASH;
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 92 "pcat.lex"
+#line 103 "pcat.lex"
 return EQ;
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 93 "pcat.lex"
+#line 104 "pcat.lex"
 return NEQ;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 94 "pcat.lex"
+#line 105 "pcat.lex"
 return LT;
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 95 "pcat.lex"
+#line 106 "pcat.lex"
 return LE;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 96 "pcat.lex"
+#line 107 "pcat.lex"
 return GT;
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 97 "pcat.lex"
+#line 108 "pcat.lex"
 return GE;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 98 "pcat.lex"
+#line 109 "pcat.lex"
 return LABRACKET;
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 99 "pcat.lex"
+#line 110 "pcat.lex"
 return RABRACKET; 
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 101 "pcat.lex"
+#line 112 "pcat.lex"
 {
   if(yyleng>255){
-    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Identifier too long.\n \033[0m",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Identifier too long.\n \033[0m",lineno,columnno-yyleng);
     return ERROR;
   }
   return IDENTIFIER;
@@ -1200,32 +1197,38 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 109 "pcat.lex"
-{printf("\033[01;37;40mLn:%d Col:%d \033[01;34;40m   real: %s000000\n \033[0m",lineno,columnno-yyleng,yytext);}
+#line 120 "pcat.lex"
+{
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;34;40m real: %s000000\n \033[0m",lineno,columnno-yyleng,yytext);
+  return REALT;
+}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 112 "pcat.lex"
+#line 126 "pcat.lex"
 return REALT;
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 114 "pcat.lex"
+#line 128 "pcat.lex"
 {
-   if(atof(yytext)>3.4e38 || atof(yytext)<-3.4e38)
-   {  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Real out of range.\n \033[0m",lineno,columnno-yyleng);  return ERROR; }
+   if(atof(yytext)>3.4e38 || atof(yytext)<-3.4e38){   
+     printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Real out of range.\n \033[0m",lineno,columnno-yyleng);  
+     return ERROR; 
+   }
   return REALT;
 }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 121 "pcat.lex"
+#line 137 "pcat.lex"
 {
   if(yyleng==10&&(strcmp(yytext,"2147483647")>0)){
-    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Integer out of range.\n \033[0m",lineno,columnno-yyleng);
-   return ERROR;                  }
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",lineno,columnno-yyleng);
+    return ERROR;                  
+  }
   if(yyleng>11||(yyleng==11&&strcmp(yytext,"-2147483648")>0)){
-    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m   Integer out of range.\n \033[0m",lineno,columnno-yyleng); 
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",lineno,columnno-yyleng); 
     return ERROR;
   }
   return INTEGERT;
@@ -1233,15 +1236,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 133 "pcat.lex"
+#line 150 "pcat.lex"
 {
   if(yyleng>257){
-    printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  String too long.\n \033[0m",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m String too long.\n \033[0m",lineno,columnno-yyleng);
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
-      printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Invaild char.\n \033[0m",lineno,columnno-yyleng);
+      printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Invaild char.\n \033[0m",lineno,columnno-yyleng);
       yytext[i]=' ';
     }
   return STRINGT;
@@ -1249,29 +1252,29 @@ YY_RULE_SETUP
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 146 "pcat.lex"
+#line 163 "pcat.lex"
 {
-  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  Unclosed string.\n \033[0m",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed string.\n \033[0m",lineno,columnno-yyleng);
   return ERROR;
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 152 "pcat.lex"
+#line 169 "pcat.lex"
 return EOFF;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 154 "pcat.lex"
+#line 171 "pcat.lex"
 {
-  printf("\033[01;37;40mLn:%d Col:%d \033[01;31;40m  UnrecogChar.\n \033[0m",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m UnrecogChar.\n \033[0m",lineno,columnno-yyleng);
   }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 158 "pcat.lex"
+#line 175 "pcat.lex"
 ECHO;
 	YY_BREAK
-#line 1275 "lex.yy.c"
+#line 1278 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1455,21 +1458,21 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) ((yy_c_buf_p) - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1500,7 +1503,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -1595,7 +1598,7 @@ static int yy_get_next_buffer (void)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 158);
 
-	return yy_is_jam ? 0 : yy_current_state;
+		return yy_is_jam ? 0 : yy_current_state;
 }
 
     static void yyunput (int c, register char * yy_bp )
@@ -1610,7 +1613,7 @@ static int yy_get_next_buffer (void)
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
+		register yy_size_t number_to_move = (yy_n_chars) + 2;
 		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		register char *source =
@@ -1659,7 +1662,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -1819,10 +1822,6 @@ static void yy_load_buffer_state  (void)
 	yyfree((void *) b  );
 }
 
-#ifndef __cplusplus
-extern int isatty (int );
-#endif /* __cplusplus */
-    
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a yyrestart() or at EOF.
@@ -1935,7 +1934,7 @@ void yypop_buffer_state (void)
  */
 static void yyensure_buffer_stack (void)
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -2032,7 +2031,7 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -2119,7 +2118,7 @@ FILE *yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int yyget_leng  (void)
+yy_size_t yyget_leng  (void)
 {
         return yyleng;
 }
@@ -2267,7 +2266,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 158 "pcat.lex"
+#line 175 "pcat.lex"
 
 
 

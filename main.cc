@@ -138,17 +138,19 @@ string keywords[] = { "identifier", "integer", "real","string","PROGRAM","IS","B
 
 int main ( int argc, char* arg[] ) {
   if (argc>1)
-     yyin = fopen(arg[1],"r");
-
+    yyin = fopen(arg[1],"r");
+  
   for (;;) {
     short n = yylex();
     if (n==EOFF) break;
-   printf("\033[01;37;40mLn:%d Col:%d   ",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t",lineno,columnno-yyleng);
     if (n<262)
       printf("\033[01;34;40m %s: %s \n \033[0m",keywords[n-258].c_str(),yytext); 
-    else if(n>=262 && n<=292) printf("\033[01;32;40m KeyWords: %s \n \033[0m",keywords[n-258].c_str());
-    else if(n>292 && n<=316)  printf("\033[01;33;40m Operators: %s \n \033[0m",keywords[n-258].c_str());
+    else if(n>=262 && n<=292) 
+      printf("\033[01;32;40m KeyWords: %s \n \033[0m",keywords[n-258].c_str());
+    else if(n>292 && n<=316)  
+      printf("\033[01;33;40m Operators: %s \n \033[0m",keywords[n-258].c_str());
     else printf("\033[01;31;40m %s \n \033[0m",keywords[n-258].c_str());
   };
-
+  
 };
