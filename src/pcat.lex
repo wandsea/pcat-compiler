@@ -117,32 +117,13 @@
   return IDENTIFIER;
 }
 
--?([0-9]+\.)  {
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;34;40m real: %s000000\n \033[0m",lineno,columnno-yyleng,yytext);
-  return REALT;
-}
+[0-9]+\.[0-9]*   return REALT;
 
-
--?([1-9]\d*\.[0-9]*|0\.[0-9]*|0?\.[0-9]*)    return REALT;
-
--?([1-9]\d*\.[0-9e]*|0\.[0-9e]*|0?\.[0-9e]*)  {
-   if(atof(yytext)>3.4e38 || atof(yytext)<-3.4e38){   
-     printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Real out of range.\n \033[0m",lineno,columnno-yyleng);  
-     return ERROR; 
-   }
-  return REALT;
-}
-
-
--?[0-9]+ {
-  if(yyleng==10&&(strcmp(yytext,"2147483647")>0)){
+[0-9]+ {
+  if(yyleng>10||(yyleng==10&&(strcmp(yytext,"2147483647")>0))){
     printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",lineno,columnno-yyleng);
     return ERROR;                  
-  }
-  if(yyleng>11||(yyleng==11&&strcmp(yytext,"-2147483648")>0)){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",lineno,columnno-yyleng); 
-    return ERROR;
-  }
+  } 
   return INTEGERT;
 }
 
