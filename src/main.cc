@@ -143,7 +143,7 @@ int main ( int argc, char* arg[] ) {
   for (;;) {
     short n = yylex();
     if (n==EOFF) break;
-    printf("\033[01;37;40mLn:%d\tCol:%d\t",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t",(int)lineno,(int)(columnno-yyleng));
     if (n<262)
       printf("\033[01;34;40m %s: %s \n \033[0m",keywords[n-258].c_str(),yytext); 
     else if(n>=262 && n<=292) 

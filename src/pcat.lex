@@ -111,7 +111,7 @@
 
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(yyleng>255){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Identifier too long.\n \033[0m",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Identifier too long.\n \033[0m",(int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   return IDENTIFIER;
@@ -121,7 +121,7 @@
 
 [0-9]+ {
   if(yyleng>10||(yyleng==10&&(strcmp(yytext,"2147483647")>0))){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",(int)lineno,int(columnno-yyleng));
     return ERROR;                  
   } 
   return INTEGERT;
@@ -130,19 +130,19 @@
 
 \"[^\"\n]*\" {
   if(yyleng>257){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m String too long.\n \033[0m",lineno,columnno-yyleng);
+    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m String too long.\n \033[0m",(int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
-      printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Invaild char.\n \033[0m",lineno,columnno-yyleng);
+      printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Invaild char.\n \033[0m",(int)lineno,int(columnno-yyleng));
       yytext[i]=' ';
     }
   return STRINGT;
 }
 
 \"[^\"\n]* {
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed string.\n \033[0m",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed string.\n \033[0m",(int)lineno,int(columnno-yyleng));
   return ERROR;
 }
 
@@ -150,7 +150,7 @@
 <<EOF>> return EOFF;
 
 . {
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m UnrecogChar.\n \033[0m",lineno,columnno-yyleng);
+  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m UnrecogChar.\n \033[0m",(int)lineno,int(columnno-yyleng));
   }
 
 %%
