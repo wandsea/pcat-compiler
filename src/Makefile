@@ -11,7 +11,7 @@ GCC = g++
 CXXFLAGS = -g 
 YACC = bison
 LEX = flex
-INCLUDE = basic.h basic.templates
+INCLUDE = util.h basic.h basic.templates
 
 #lexer:	main.cc basic.o pcat.yy.c
 #	$(GCC) $(CXXFLAGS) main.cc basic.o /usr/local/lib/libgc.a -o lexer

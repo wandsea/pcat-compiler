@@ -61,6 +61,8 @@
 #include <string.h>
 #include <string>
 
+#include "util.h"
+
 using namespace std;
 
 static int lineno = 1, columnno = 1;
@@ -143,14 +145,14 @@ int main ( int argc, char* arg[] ) {
   for (;;) {
     short n = yylex();
     if (n==EOFF) break;
-    printf("\033[01;37;40mLn:%d\tCol:%d\t",(int)lineno,(int)(columnno-yyleng));
+    printf(FMT_POS"Ln:%d\tCol:%d\t",(int)lineno,(int)(columnno-yyleng));
     if (n<262)
-      printf("\033[01;34;40m %s: %s \n \033[0m",keywords[n-258].c_str(),yytext); 
+      printf(FMT_LIT" %s: %s \n"FMT_RESET,keywords[n-258].c_str(),yytext); 
     else if(n>=262 && n<=292) 
-      printf("\033[01;32;40m KeyWords: %s \n \033[0m",keywords[n-258].c_str());
+      printf(FMT_KEY" Keywords: %s \n"FMT_RESET,keywords[n-258].c_str());
     else if(n>292 && n<=316)  
-      printf("\033[01;33;40m Operators: %s \n \033[0m",keywords[n-258].c_str());
-    else printf("\033[01;31;40m %s \n \033[0m",keywords[n-258].c_str());
+      printf(FMT_OPR" Operators: %s \n"FMT_RESET,keywords[n-258].c_str());
+    else printf(FMT_ERR" %s \n"FMT_RESET,keywords[n-258].c_str());
   };
   
 };

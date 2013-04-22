@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
   
-  static void DoBeforeEachAction();
+#include "util.h"
+
+static void DoBeforeEachAction();
 #define YY_USER_ACTION DoBeforeEachAction();
   
-  int tCol=0;
+int tCol=0;
 %}
 
 %x COMMENT
@@ -21,12 +23,17 @@
 
 <COMMENT>"*)" { 
   tCol+=2;
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;36;40m Comment: %s \n \033[0m",lineno,tCol-1,yytext);
+  printf(FMT_POS"Ln:%d\tCol:%d\t"
+    FMT_CMT" Comment: %s \n"FMT_RESET,
+    lineno,tCol-1,
+    yytext);
   BEGIN(INITIAL); 
  }
 
 <COMMENT><<EOF>> { 
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed comment.\n \033[0m",lineno,tCol);
+  printf(FMT_POS"Ln:%d\tCol:%d\t"
+    FMT_ERR" Unclosed comment.\n"FMT_RESET,
+    lineno,tCol);
   return EOFF; 
  }
 <COMMENT>. {
@@ -38,12 +45,12 @@
   lineno++;  
   columnno=1; 
   tCol=1;
- }
+}
 
 <*>"\n" {
   lineno++;
   columnno=1;
-   }
+}
 
 [ ]+ ;
 
@@ -104,14 +111,16 @@
 "<>"	return NEQ;
 "<"	return LT;
 "<="	return LE;
-">"	return GT;
+">" return GT;
 ">="	return GE;
 "[<"	return LABRACKET;
 ">]"	return RABRACKET; 
 
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(yyleng>255){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Identifier too long.\n \033[0m",(int)lineno,int(columnno-yyleng));
+    printf(FMT_POS"Ln:%d\tCol:%d\t"
+      FMT_ERR" Identifier too long.\n"FMT_RESET,
+      (int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   return IDENTIFIER;
@@ -121,7 +130,9 @@
 
 [0-9]+ {
   if(yyleng>10||(yyleng==10&&(strcmp(yytext,"2147483647")>0))){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Integer out of range.\n \033[0m",(int)lineno,int(columnno-yyleng));
+    printf(FMT_POS"Ln:%d\tCol:%d\t"
+      FMT_ERR" Integer out of range.\n"FMT_RESET,
+      (int)lineno,int(columnno-yyleng));
     return ERROR;                  
   } 
   return INTEGERT;
@@ -130,19 +141,25 @@
 
 \"[^\"\n]*\" {
   if(yyleng>257){
-    printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m String too long.\n \033[0m",(int)lineno,int(columnno-yyleng));
+    printf(FMT_POS"Ln:%d\tCol:%d\t"
+      FMT_ERR" String too long.\n"FMT_RESET,
+      (int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
-      printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Invaild char.\n \033[0m",(int)lineno,int(columnno-yyleng));
+      printf(FMT_POS"Ln:%d\tCol:%d\t"
+        FMT_ERR" Invaild char.\n"FMT_RESET,
+        (int)lineno,int(columnno-yyleng));
       yytext[i]=' ';
     }
   return STRINGT;
 }
 
 \"[^\"\n]* {
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m Unclosed string.\n \033[0m",(int)lineno,int(columnno-yyleng));
+  printf(FMT_POS"Ln:%d\tCol:%d\t"
+    FMT_ERR" Unclosed string.\n"FMT_RESET,
+    (int)lineno,int(columnno-yyleng));
   return ERROR;
 }
 
@@ -150,7 +167,9 @@
 <<EOF>> return EOFF;
 
 . {
-  printf("\033[01;37;40mLn:%d\tCol:%d\t\033[01;31;40m UnrecogChar.\n \033[0m",(int)lineno,int(columnno-yyleng));
+  printf(FMT_POS"Ln:%d\tCol:%d\t"
+    FMT_ERR" UnrecogChar.\n"FMT_RESET,
+    (int)lineno,int(columnno-yyleng));
   }
 
 %%
