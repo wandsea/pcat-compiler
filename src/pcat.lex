@@ -25,6 +25,7 @@
  }
 
 <COMMENT><<EOF>> { 
+  yyerror("Unclosed comment.\n");
   return EOFF; 
  }
 <COMMENT>. {
@@ -103,15 +104,19 @@
 
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(yyleng>255){
+    yyerror("Identifier too long.\n");
     return ERROR;
   }
   return IDENTIFIER;
 }
 
-[0-9]+\.[0-9]*   return REALT;
+[0-9]+\.[0-9]* {
+  return REALT;
+}
 
 [0-9]+ {
   if(yyleng>10||(yyleng==10&&(strcmp(yytext,"2147483647")>0))){
+    yyerror("Integer out of range.\n");
     return ERROR;                  
   } 
   return INTEGERT;
@@ -120,16 +125,19 @@
 
 \"[^\"\n]*\" {
   if(yyleng>257){
+    yyerror("String too long.\n");
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
+      yyerror("Invaild char.\n");
       yytext[i]=' ';
     }
   return STRINGT;
 }
 
 \"[^\"\n]* {
+  yyerror("Unclosed string.\n");
   return ERROR;
 }
 
@@ -137,6 +145,7 @@
 <<EOF>> return EOFF;
 
 . {
+    yyerror("UnrecogChar.\n");
   }
 
 %%
