@@ -1,0 +1,14 @@
+(* testing scopes *)
+
+PROGRAM IS
+    PROCEDURE FOO(X: INT; Y: INT):INT IS 
+      PROCEDURE BAR() IS BEGIN Y := X + 1; END;
+      BEGIN 
+        BAR();
+	RETURN Y;
+      END;
+    VAR C := 0;
+BEGIN 
+    C := FOO(3, 2);
+    WRITE("C = ", C, " (should be 4)");	
+END;

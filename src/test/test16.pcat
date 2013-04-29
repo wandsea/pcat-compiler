@@ -19,9 +19,7 @@ PROGRAM IS
     END;
 BEGIN 
     WRITE ("The first 5 factorials are (in descending order):");
-    I := 5;
-    LOOP
-	IF I <= 0 THEN EXIT; END;
+    FOR I := 5 TO 0 BY -1 DO
         FACTORIAL();
         WRITE("FACTORIAL(", I, ") = ", ANSWER);
 	I := I - 1;

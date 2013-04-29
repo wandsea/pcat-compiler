@@ -1,61 +1,46 @@
+/********************************************************************************
+*
+* File: pcat.lex
+* Title: The PCAT scanner
+* Student names and IDs: 
+*
+********************************************************************************/
 %{
-#include <stdio.h>
-#include <stdlib.h>
-  
-#include "util.h"
-
-static void DoBeforeEachAction();
-#define YY_USER_ACTION DoBeforeEachAction();
-  
-int tCol=0;
+  #include <stdlib.h>
+  #include "y.tab.h"
+  extern int lineno;
+  void yyerror(char *);
 %}
-
+%option noyywrap
 %x COMMENT
 
 %%
-
-
 "(*" { 
   BEGIN(COMMENT);
-  tCol=columnno;
   yymore(); 
  }
 
 <COMMENT>"*)" { 
-  tCol+=2;
-  printf(FMT_POS"Ln:%d\tCol:%d\t"
-    FMT_CMT" Comment: %s \n"FMT_RESET,
-    lineno,tCol-1,
-    yytext);
   BEGIN(INITIAL); 
  }
 
 <COMMENT><<EOF>> { 
-  printf(FMT_POS"Ln:%d\tCol:%d\t"
-    FMT_ERR" Unclosed comment.\n"FMT_RESET,
-    lineno,tCol);
   return EOFF; 
  }
 <COMMENT>. {
   yymore();
-  tCol++;
  }
 <COMMENT>"\n" { 
   yymore(); 
-  lineno++;  
-  columnno=1; 
-  tCol=1;
-}
+ }
 
 <*>"\n" {
   lineno++;
-  columnno=1;
-}
+ }
 
 [ ]+ ;
 
 <*>[\t] { 
-  columnno += 8 - columnno%8 + 1; 
 }
 
 "PROGRAM"    return PROGRAM;
@@ -111,16 +96,13 @@ int tCol=0;
 "<>"	return NEQ;
 "<"	return LT;
 "<="	return LE;
-">" return GT;
+">"	return GT;
 ">="	return GE;
 "[<"	return LABRACKET;
 ">]"	return RABRACKET; 
 
 [a-zA-Z_][a-zA-Z_0-9]* {
   if(yyleng>255){
-    printf(FMT_POS"Ln:%d\tCol:%d\t"
-      FMT_ERR" Identifier too long.\n"FMT_RESET,
-      (int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   return IDENTIFIER;
@@ -130,9 +112,6 @@ int tCol=0;
 
 [0-9]+ {
   if(yyleng>10||(yyleng==10&&(strcmp(yytext,"2147483647")>0))){
-    printf(FMT_POS"Ln:%d\tCol:%d\t"
-      FMT_ERR" Integer out of range.\n"FMT_RESET,
-      (int)lineno,int(columnno-yyleng));
     return ERROR;                  
   } 
   return INTEGERT;
@@ -141,25 +120,16 @@ int tCol=0;
 
 \"[^\"\n]*\" {
   if(yyleng>257){
-    printf(FMT_POS"Ln:%d\tCol:%d\t"
-      FMT_ERR" String too long.\n"FMT_RESET,
-      (int)lineno,int(columnno-yyleng));
     return ERROR;
   }
   for(int i=0;i<yyleng;i++)
     if(yytext[i]<32||yytext[i]==127){
-      printf(FMT_POS"Ln:%d\tCol:%d\t"
-        FMT_ERR" Invaild char.\n"FMT_RESET,
-        (int)lineno,int(columnno-yyleng));
       yytext[i]=' ';
     }
   return STRINGT;
 }
 
 \"[^\"\n]* {
-  printf(FMT_POS"Ln:%d\tCol:%d\t"
-    FMT_ERR" Unclosed string.\n"FMT_RESET,
-    (int)lineno,int(columnno-yyleng));
   return ERROR;
 }
 
@@ -167,19 +137,7 @@ int tCol=0;
 <<EOF>> return EOFF;
 
 . {
-  printf(FMT_POS"Ln:%d\tCol:%d\t"
-    FMT_ERR" UnrecogChar.\n"FMT_RESET,
-    (int)lineno,int(columnno-yyleng));
   }
 
 %%
 
-int yywrap(){
-    return 1;
-}
-
-
-static void DoBeforeEachAction()
-{
-  columnno += yyleng;
-}

@@ -1,30 +1,30 @@
 #--------------------------------------------------------------------------------
 #
-# Makefile for the PCAT scanner
+# Makefile for the PCAT AST generation
 #
 #--------------------------------------------------------------------------------
 
 # The GC directory (the garbage collector)
-GCDIR = /usr/local/lib
+GCDIR = /public/cse/5317-501/gc
 
-GCC = g++
-CXXFLAGS = -g 
+GCC = gcc
+CFLAGS = -g -std=gnu99
 YACC = bison
 LEX = flex
-INCLUDE = util.h basic.h basic.templates
 
-#lexer:	main.cc basic.o pcat.yy.c
-#	$(GCC) $(CXXFLAGS) main.cc basic.o /usr/local/lib/libgc.a -o lexer
+all: parser
 
-lexer:	main.cc pcat.yy.c
-	$(GCC) $(CXXFLAGS) main.cc -o lexer
+parser: main.c y.tab.c lex.yy.c ast.h ast.o
+	$(GCC) $(CFLAGS) lex.yy.c y.tab.c main.c ast.o -o parser
 
-#basic.o: basic.cc $(INCLUDE)
-#	 $(GCC) $(CXXFLAGS) -c basic.cc
+ast.o:  ast.c ast.h
+	$(GCC) $(CFLAGS) -c ast.c
 
-pcat.yy.c: pcat.lex
+y.tab.c: pcat.y
+	$(YACC) -y -d pcat.y
+
+lex.yy.c: pcat.lex
 	   $(LEX) pcat.lex
-	   mv lex.yy.c pcat.yy.c
 
-clean: 
-	/bin/rm -f *.o *~ pcat.yy.c lexer core
+clean:
+	/bin/rm -f *.o *~ pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core
