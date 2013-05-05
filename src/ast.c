@@ -47,14 +47,6 @@ ast* mk_str ( const char* x ) {
 };
 
 
-ast* mk_node ( const ast_kind tag, ast_list* args ) {
-  ast* res = (ast*) malloc(sizeof(ast));
-  res->tag = node_ast;
-  res->info.node.tag = tag;
-  res->info.node.arguments = args;
-  return res;
-};
-
 
 ast_list* cons ( ast* e, ast_list* r ) {
   ast_list* res = (ast_list*) malloc(sizeof(ast_list));
@@ -137,12 +129,13 @@ void _print_ast_pretty( ast* x, int offset ){
         printf("[!EMPTY!]\n");
     else{
         switch (x->tag){
-            case int_ast: printf("%d\n",x->info.integer); break;
-            case real_ast: printf("%f\n",x->info.real); break;
-            case var_ast: printf("%s\n",x->info.variable); break;
-            case str_ast: printf("\"%s\"\n",x->info.string); break;
+            case int_ast: printf("INT(%d)\n",x->info.integer); break;
+            case real_ast: printf("REAL(%f)\n",x->info.real); break;
+            case var_ast: printf("VAR(%s)\n",x->info.variable); break;
+            case str_ast: printf("STR(\"%s\")\n",x->info.string); break;
             case node_ast: {
-                printf("%s\n",ast_names[x->info.node.tag]);
+                printf("%s, %d:%d~%d:%d",ast_names[x->info.node.tag],x->l1,x->c1,x->l2,x->c2);
+                printf("\n");
                 _print_ast_list_pretty(x->info.node.arguments,offset+2);
                 /*
                 for( i = 0; i < offset; i++ ) printf(" ");
@@ -151,6 +144,7 @@ void _print_ast_pretty( ast* x, int offset ){
                 break;
             };
         }
+        
     }
 }
 

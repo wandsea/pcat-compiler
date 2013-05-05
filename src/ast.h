@@ -23,9 +23,14 @@ TypeInferenceNeeded,VoidType,EmptyExpression
 } ast_kind;
 
 static char* ast_names[] = {
-"Program","BodyDef","DeclareList","VarDecs","TypeDecs","ProcDecs","VarDec","TypeDec","ProcDec","NamedTyp","ArrayTyp","RecordTyp","NoTyp","CompList","Comp","FormalParamList","Param","StList","AssignSt","CallSt","ReadSt","WriteSt","IfSt","WhileSt","LoopSt","ForSt","ExitSt","RetSt","SeqSt","ExprList","BinOpExp","UnOpExp","LvalExp","CallExp","RecordExp","ArrayExp","IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList","Var","ArrayDeref","RecordDeref",
-"Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod","And","Or","UPlus","UMinus","Not",
-"TypeInferenceNeeded","VoidType","EmptyExpression"
+"Program","BodyDefine","DeclareList","VaribleDeclareList","TypeDeclareList","ProcedureDeclareList",
+"VaribleDeclare","TypeDeclare","ProcDeclare","NamedType","ArrayType","RecordType","NoType","ComponentList",
+"Component","FormalParameterList","Parameter","StatementList","AssignStatement","CallStatement","ReadStatement",
+"WriteStatement","IfStatement","WhileStatement","LoopStatement","ForStatement","ExitStatement","ReturnStatement",
+"StatementList","ExprList","BinOpExpr","UnOpExpr","LvalExpr","CallExpr","RecordExpr","ArrayExpr",
+"IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList",
+"Var","ArrayDeref","RecordDeref","Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod",
+"And","Or","UPlus","UMinus","Not","TypeInferenceNeeded","VoidType","EmptyExpression"
 };
 
 
@@ -47,6 +52,7 @@ typedef struct ast {
                 struct ast_list*  arguments;
             } node;
       } info;
+      int l1,c1,l2,c2;
 } ast;
 
 
@@ -73,7 +79,7 @@ ast* mk_str ( const char* x );
 
 
 /* create an internal AST node */
-ast* mk_node ( const ast_kind tag, ast_list* args );
+//ast* mk_node ( const ast_kind tag, ast_list* args);
 
 
 /* put an AST e in the beginning of the list of ASTs r */
