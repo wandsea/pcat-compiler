@@ -52,7 +52,7 @@ lvalue                   -> ( Var ( ID ) )
                          -> ( RecordDeref ( lvalue ID ) )
 binop                    -> GT | LT | EQ | GE | LE | NE | PLUS | MINUS | TIMES | SLASH
                          -> DIV | MOD | AND | OR 
-unop                     -> UPLUS | UMINUS | NOT
+unop                     -> UPLUS | UMINUS | NOT 
 
 note:
 Remove 'line'
@@ -63,6 +63,9 @@ for ops (binop and unop), formats are:
 binop -> GT  = ( GT () )
 unop -> NOT  = ( NOT () )
 they are single nodes without children
+
+
+IntConst,RealConst,StringConst is not need because AST provides int_ast,real_ast,str_ast
 
 
 ====

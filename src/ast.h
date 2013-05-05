@@ -16,15 +16,12 @@
 
 /* Put the names of all the different kinds of ASTs here */
 
-typedef enum { if_exp, eq_exp, lt_exp, gt_exp, le_exp, ne_exp, ge_exp, plus_exp, minus_exp,
-               times_exp, div_exp, or_exp, and_exp, not_exp, call_exp, fnc_def,
-               assign_exp
+typedef enum {
+BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,StList,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,GT,LT,EQ,GE,LE,NE,PLUS,MINUS,TIMES,SLASH,DIV,MOD,AND,OR,UPLUS,UMINUS,NOT
 } ast_kind;
 
 static char* ast_names[] = {
-   "if_exp", "eq_exp", "lt_exp", "gt_exp", "le_exp", "ne_exp", "ge_exp", "plus_exp", "minus_exp",
-   "times_exp", "div_exp", "or_exp", "and_exp", "not_exp", "call_exp", "fnc_def",
-   "assign_exp"
+"BodyDef","DeclareList","VarDecs","TypeDecs","ProcDecs","VarDec","TypeDec","ProcDec","NamedTyp","ArrayTyp","RecordTyp","NoTyp","CompList","Comp","FormalParamList","Param","StList","AssignSt","CallSt","ReadSt","WriteSt","IfSt","WhileSt","LoopSt","ForSt","ExitSt","RetSt","SeqSt","ExprList","BinOpExp","UnOpExp","LvalExp","CallExp","RecordExp","ArrayExp","IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList","Var","ArrayDeref","RecordDeref","GT","LT","EQ","GE","LE","NE","PLUS","MINUS","TIMES","SLASH","DIV","MOD","AND","OR","UPLUS","UMINUS","NOT"
 };
 
 
