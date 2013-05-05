@@ -32,22 +32,16 @@ void yyerror ( char* s ) {
 
 %%
 
-start: program                  
-{ 
-    print_ast($1);
-}
+start:		program	EOFF	{ print_ast($1);}
 ;
 
-program: id ASSIGN id
-{ 
-    $$ = mk_node(assign_exp,cons($1,cons($3,NULL)));
-} 
+program: 	id ASSIGN id SEMICOLON	{ $$ = mk_node(assign_exp,cons($1,cons($3,NULL)));} 
 ;
 
-id: IDENTIFIER   
-{ 
-    $$ = mk_var(yytext);
-}
+id: 		 IDENTIFIER   	{ $$ = mk_var(yytext); }
+		|INTEGERT	{ $$ = mk_int(atoi(yytext)); }
+		|REALT		{ $$ = mk_real(atof(yytext)); }
+		|STRINGT	{ $$ = mk_str(yytext); }
 ;
 
 %%

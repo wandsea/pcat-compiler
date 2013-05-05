@@ -42,7 +42,7 @@ ast* mk_str ( const char* x ) {
   ast* res = (ast*) malloc(sizeof(ast));
   res->tag = str_ast;
   res->info.variable = (char*) malloc(strlen(x)+1);
-  strcpy(res->info.variable,x);
+  strncpy(res->info.variable,x+1,strlen(x)-2);
   return res;
 };
 
