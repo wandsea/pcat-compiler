@@ -59,6 +59,11 @@ Remove 'line'
 using REAL for real const instead of STRING
 format: ( tag ( arg1 arg2....) )
 
+for ops (binop and unop), formats are:
+binop -> GT  = ( GT () )
+unop -> NOT  = ( NOT () )
+they are single nodes without children
+
 
 ====
 tags
