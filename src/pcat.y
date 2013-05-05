@@ -1,9 +1,9 @@
 %{
- #include "y.tab.h"
- #include "ast.h"
+#include "y.tab.h"
+#include "ast.h"
 
- extern int lineno;
- extern char *yytext;
+extern int lineno;
+extern char *yytext;
 
 /* parse error */
 void yyerror ( char* s ) {
@@ -11,10 +11,10 @@ void yyerror ( char* s ) {
          s, lineno, yytext);
 };
 
-
 %}
+
 %union {
-        char*           Tstring;
+        char*                  Tstring;
         struct ast*            Tast;
         struct ast_list*       Tast_list;
 }
@@ -27,18 +27,27 @@ void yyerror ( char* s ) {
        SEMICOLON COMMA ASSIGN PLUS MINUS STAR SLASH BACKSLASH EQ
        NEQ LT LE GT GE LABRACKET RABRACKET EOFF ERROR
 
-%type <Tstring> id
+%type <Tast> id
 %type <Tast> program
 
 %%
 
-start: program                  { print_ast($1); }
-     ;
+start: program                  
+{ 
+    print_ast($1);
+}
+;
 
-program: id                     { $$ = mk_var($1); } 
-   ;
+program: id ASSIGN id
+{ 
+    $$ = mk_node(assign_exp,cons($1,cons($3,NULL)));
+} 
+;
 
-id: IDENTIFIER                  { $$ = (char*) malloc(strlen(yytext)); strcpy($$,yytext); }
-  ;
+id: IDENTIFIER   
+{ 
+    $$ = mk_var(yytext);
+}
+;
 
 %%

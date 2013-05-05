@@ -17,12 +17,14 @@
 /* Put the names of all the different kinds of ASTs here */
 
 typedef enum { if_exp, eq_exp, lt_exp, gt_exp, le_exp, ne_exp, ge_exp, plus_exp, minus_exp,
-               times_exp, div_exp, or_exp, and_exp, not_exp, call_exp, fnc_def
+               times_exp, div_exp, or_exp, and_exp, not_exp, call_exp, fnc_def,
+               assign_exp
 } ast_kind;
 
 static char* ast_names[] = {
    "if_exp", "eq_exp", "lt_exp", "gt_exp", "le_exp", "ne_exp", "ge_exp", "plus_exp", "minus_exp",
-   "times_exp", "div_exp", "or_exp", "and_exp", "not_exp", "call_exp", "fnc_def"
+   "times_exp", "div_exp", "or_exp", "and_exp", "not_exp", "call_exp", "fnc_def",
+   "assign_exp"
 };
 
 
@@ -32,14 +34,17 @@ static char* ast_names[] = {
 
 typedef struct ast {
   enum { int_ast, real_ast, var_ast, str_ast, node_ast } tag;
-  union { /*long*/int   integer;   
-          /*  long would be 64-bit now, change to 32-bit int*/
-          double        real;
-          char*         variable;
-          char*         string;
-          struct { ast_kind          tag;
-                   struct ast_list*  arguments;
-	  } node;
+  union {
+          /*long          integer;   */
+          /*long would be 64-bit now, change to 32-bit int*/
+            int           integer;   
+            double        real;
+            char*         variable;
+            char*         string;
+            struct { 
+                ast_kind          tag;
+                struct ast_list*  arguments;
+            } node;
       } info;
 } ast;
 
