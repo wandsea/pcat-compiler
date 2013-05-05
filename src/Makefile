@@ -4,9 +4,6 @@
 #
 #--------------------------------------------------------------------------------
 
-# The GC directory (the garbage collector)
-GCDIR = /public/cse/5317-501/gc
-
 GCC = gcc
 CFLAGS = -g -std=gnu99
 YACC = bison
