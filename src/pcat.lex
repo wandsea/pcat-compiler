@@ -107,7 +107,7 @@
     yyerror("Identifier too long.\n");
     return ERROR;
   }
-  return IDENTIFIER;
+  return ID;
 }
 
 [0-9]+\.[0-9]* {
