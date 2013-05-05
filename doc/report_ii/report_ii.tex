@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage{xeCJK}
+\setmainfont{FreeSerif}
+\setmonofont{FreeMono}
+\setsansfont{FreeSans}
+\setCJKmainfont{WenQuanYi Micro Hei}
+\setCJKfamilyfont{song}{WenQuanYi Micro Hei}
+\usepackage{listings}
+\lstset{
+        breaklines=true,
+        basicstyle=\ttfamily\footnotesize
+}
+
+\title {编译实验二实验报告 —— Parser of PCAT}
+\author {田应涛 10302010029 \quad 王曦 \quad 10300240014\\ 陈济凡 10300240076 \quad 承沐南 10300240003}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage
+\section{YACC}
+\subsection{YACC概述}
+yacc（Yet Another Compiler Compiler），是Unix/Linux上一个用来生成编译器的编译器（编译器代码生成器）。yacc生成的编译器主要是用C语言写成的语法解析器（Parser），需要与词法解析器Lex一起使用，再把两部份产生出來的C程序一并编译。yacc本来只在Unix系统上才有，但现在已普遍移植往Windows及其他平台。
+
+yacc的输入是巴科斯范式（BNF）表达的语法规则以及语法规约的处理代码，Yacc输出的是基于表驱动的编译器，包含输入的语法规约的处理代码部分。
+
+yacc是开发编译器的一个有用的工具，采用LALR(1)语法分析方法。yacc最初由AT\&T的Steven C. Johnson为Unix操作系统开发，后来一些兼容的程序如Berkeley Yacc，GNU bison，MKS yacc和Abraxas yacc陆续出现。它们都在原先基础上做了少许改进或者增加，但是基本概念是相同的。
+
+由于所产生的解析器需要词法分析器配合，因此Yacc经常和词法分析器的产生器——一般就是Lex——联合使用。IEEE POSIX P1003.2 标准定义了Lex和Yacc的功能和需求。
+
+本实验中使用的GNU bison是一个自由软件，用于自动生成语法分析器程序，实际上可用于所有常见的操作系统。Bison把LALR形式的上下文无关文法描述转换为可做语法分析的C或C++程序。在新近版本中，Bison增加了对GLR语法分析算法的支持。GNU bison基本兼容Yacc，并做了一些改进。它一般与flex一起使用。
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=3in]{yacc.jpg}
+%\end{figure}
+\subsection{YACC文件结构}
+YACC文件结构分为三个部分,分别为<定义部分><规则部分><用户子程序部分>。其中规则部分是必须的,定义和用户子程序部分是任选的。
+
+\begin{itemize}
+\item 定义部分 \\
+定义部分的C语言部分起始于 \%\{ 符号,终止于\%\} 符号，其间可以是包括include语句、声明语句在内的C语句。除此之外，还可以包含语义值数据类型定义、单词定义、非终结符定义和优先级定义。
+
+其中，C语言代码部分同LEX，语义值数据类型定义部分定义了进行语法分析时语义栈中元素的数据类型，可用宏YYSTYPE定义。
+结合次序和优先级别的定义，将让YACC在编译源文件时，面对由文法的二义性引起的移进-归约冲突时，能正确的选择移进或归约。
+\item 规则部分 \\
+规则部分起始于"\%\%"符号,终止于"\%\%"符号,其间则是语法规则。语法规则由模式和动作两部分组成。模式部分由非终结符组成，动作部分是由C语言语句组成，这些语句用来对所匹配的模式进行相应处理。动作部分如果有多行执行语句,也可以用\{\}括起来。 YACC最欢迎的是左递归文法，而用右递归文法则可能会导致分析栈溢出，故要尽量避免用右递归文法。
+\item 用户子程序部分 \\
+最后一个\%\%后面的内容是用户子程序部分，可以包含用C语言编写的子程序，而这些子程序可以用在前面的动作中，这样就可以达到简化编程的目的。
+
+\end{itemize}
+
+\subsection{终结符与非终结符}
+在YACC源文件中，有两种方式表示的单词（终结符）：一种是在定义部分通过YACC指令\%token定义文法中出现的单词，称为有名单词，如\%token NUMBER就定义了一有名单词NUMBER，可用它来表示整数的种别码；另一种是单个字符，称为字符单词，如单个字符’+’、’-’,’a’,’4’,’!’等，它们本身作为终结符出现在规则部分，不需要在定义部分说明，可直接加单引使用，如同C语言的字符常量。
+
+非终结符一般为不加引号的标识符，习惯上用小写字母组成的字符串表示。如可用exp表示用来表示表达式的非终结符。
+
+YACC在对源文件进行编译时，将对所有的单词和非终结符进行编码，并用该编码建立分析表和语法分析器。单词的编码原则是：字符单词使用其对应的ASCII码，有名单词则由分析器进行编码。用户在对有名单词进行命名时，一定要注意不要和使用该单词名的C源程序中已有的宏名相同，否则在编译该C模块时是会产生宏定义冲突的。
+
+\section{实验实现}
+我们实现的语法规则参照了http://web.cecs.pdx.edu/~apt/cs302\_1999/pcat99/\\pcat99.html中给出的PCAT标准，并根据该标准写出了EBNF语法，之后我们将该EBNF语法转换至BNF语法并制定了抽象语法树生成规则。
+\subsection{EBNF语法}  
+\lstinputlisting{../../concrete-syntax-ebnf.txt}
+\subsection{BNF语法}  
+\lstinputlisting{../../concrete-syntax-bnf.txt}
+\subsection{抽象语法树生成规则}
+\lstinputlisting{../../abstruct-syntax.txt}
+
+\section{运行结果} 
+
+\end{document}
