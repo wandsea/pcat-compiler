@@ -138,11 +138,11 @@
 
 \"[^\"\n]* {
   yyerror("Unclosed string.\n");
-  return ERROR;
+  return 0;
 }
 
 
-<<EOF>> return EOFF;
+<<EOF>> return 0;
 
 . {
     yyerror("UnrecogChar.\n");
