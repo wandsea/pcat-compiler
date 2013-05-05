@@ -77,7 +77,18 @@ including
 
 
 ### Syntax Analysis
-TODO
+
+As part of the language specification, the syntax is also available at
+http://web.cecs.pdx.edu/~apt/cs302_1999/pcat99/pcat99.html
+
+Both concrete and abstract syntax is provided. In this part (syntax analysis),
+we use concrete syntax to handle the tokens, and then arrange them into
+AST in form of abstract syntax.
+
+The concrete syntax (concrete-syntax-ebnf.txt) is provided in form of EBNF, thus we
+convert it to BNF (concrete-syntax-bnf.txt) following directions from
+http://web.eecs.utk.edu/~bvz/cs461/notes/bison/
+
 
 ### Semantic Analysis
 TODO
