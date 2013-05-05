@@ -31,6 +31,9 @@ void yyerror ( char* s ) {
        LPAREN  RPAREN LBRACKET RBRACKET LBRACE RBRACE COLON DOT
        SEMICOLON COMMA ASSIGN PLUS MINUS STAR SLASH BACKSLASH EQ
        NEQ LT LE GT GE LABRACKET RABRACKET EOFF ERROR
+       
+//vitual tokens
+%token VUMinus
 
 %type <Tast> program
 %type <Tast> body
@@ -78,10 +81,23 @@ void yyerror ( char* s ) {
 %type <Tast> identifier
 %type <Tast> string
 
+// precedence assigment
+%nonassoc    ASSIGN
+%left        OR
+%left        AND
+%nonassoc    EQ NEQ
+%nonassoc    LT LE GT GE
+%left        PLUS MINUS
+%left        STAR DIV MOD
+%nonassoc    VUMinus
+%nonassoc    LBRACKET DOT
+
+
+
 %%
 //id ASSIGN id SEMICOLON  { $$ = mk_node(assign_exp,cons($1,cons($3,NULL)));} 
 
-start:                program { print_ast($1); }
+start:                program { print_ast_pretty($1); }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
 ;
@@ -176,7 +192,7 @@ statement:            lvalue ASSIGN expression SEMICOLON  { $$=mk_node(AssignSt,
                                         current_if->info.node.arguments->next->next = cons(middle_list->elem,NULL);
                                         current_if = current_if->info.node.arguments->next->next->elem;
                                     }
-                                    current_if->info.node.arguments->next->next = cons($6,NULL); 
+                                    current_if->info.node.arguments->next->next = cons($6,NULL);
                                     $$ = if_ast;
                                 }
                      |WHILE expression DO statement_list END SEMICOLON     { $$=mk_node(WhileSt,cons($2,cons($4,NULL))); }
@@ -198,7 +214,7 @@ statement_elsif_S:    statement_elsif_S ELSIF expression THEN statement_list
                      | { $$=NULL; }
 ;
 statement_else_O:     ELSE statement_list { $$=$2; }
-                     | {$$=NULL;}
+                     | {$$=mk_node(EmptyExpression,NULL);}
 ;
 statement_by_O:       BY expression { $$=$2; }
                      | {$$=mk_int(1);}
@@ -220,7 +236,7 @@ expression:           number                       { $$=$1; }
                      |lvalue                       { $$=mk_node(LvalExp,cons($1,NULL)); }
                      |LPAREN expression RPAREN     { $$=$2; }
                      |PLUS expression              { $$=mk_node(UnOpExp,cons(mk_node(UPlus,NULL),cons($2,NULL))); }
-                     |MINUS expression             { $$=mk_node(UnOpExp,cons(mk_node(UMinus,NULL),cons($2,NULL))); }
+                     |MINUS expression %prec VUMinus            { $$=mk_node(UnOpExp,cons(mk_node(UMinus,NULL),cons($2,NULL))); }
                      |NOT expression               { $$=mk_node(UnOpExp,cons(mk_node(Not,NULL),cons($2,NULL))); }
                      |expression PLUS expression   { $$=mk_node(BinOpExp,cons(mk_node(Plus,NULL),cons($1,cons($3,NULL)))); }
                      |expression MINUS expression  { $$=mk_node(BinOpExp,cons(mk_node(Minus,NULL),cons($1,cons($3,NULL)))); }

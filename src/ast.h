@@ -98,3 +98,6 @@ ast_list* reverse ( ast_list* );
 void print_ast_list ( ast_list* r );
 
 void print_ast ( ast* x );
+
+/* pretty printing */
+void print_ast_pretty( ast* x );

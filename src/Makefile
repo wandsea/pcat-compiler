@@ -25,4 +25,4 @@ lex.yy.c: pcat.lex
 	$(LEX) pcat.lex
 
 clean:
-	/bin/rm -f *.o *~ pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core
+	/bin/rm -f *.o *~ *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core

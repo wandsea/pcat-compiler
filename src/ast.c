@@ -121,15 +121,37 @@ void print_ast ( ast* x ) {
   };
 };
 
+void _print_ast_pretty( ast* x, int offset );
+
+void _print_ast_list_pretty ( ast_list* r,int offset  ) {
+  if (r == null)
+     return;
+  _print_ast_pretty(r->elem,offset);
+  _print_ast_list_pretty(r->next,offset);
+};
+
 void _print_ast_pretty( ast* x, int offset ){
     int i;
-    for( i = 0; i < offset, i++ ) printf("");
+    for( i = 0; i < offset; i++ ) printf(" ");
     if ( x== NULL )
-        printf("[!EMPTY!]");
+        printf("[!EMPTY!]\n");
     else{
-        
+        switch (x->tag){
+            case int_ast: printf("%d\n",x->info.integer); break;
+            case real_ast: printf("%f\n",x->info.real); break;
+            case var_ast: printf("%s\n",x->info.variable); break;
+            case str_ast: printf("\"%s\"\n",x->info.string); break;
+            case node_ast: {
+                printf("%s\n",ast_names[x->info.node.tag]);
+                _print_ast_list_pretty(x->info.node.arguments,offset+2);
+                /*
+                for( i = 0; i < offset; i++ ) printf(" ");
+                printf(")");
+                */
+                break;
+            };
+        }
     }
-    printf("\n");
 }
 
 void print_ast_pretty( ast* x ){
