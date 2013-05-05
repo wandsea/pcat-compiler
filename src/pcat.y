@@ -34,7 +34,7 @@ void yyerror ( char* s ) {
 %type <Tast> declaration
 %type <Tast> var_decl_S 
 %type <Tast> type_decl_S
-%type <Tast> porcedure_decl_S
+%type <Tast> procedure_decl_S
 %type <Tast> var_decl
 %type <Tast> var_decl_id_S
 %type <Tast> var_decl_type_O 
@@ -76,7 +76,7 @@ start:                program { print_ast($1);}
 ;
 program:              PROGRAM IS body SEMICOLON { $$=$1; }
 ;
-body:                 declaration_S BEGIN statement_S END { $$=$1; }
+body:                 declaration_S BEGINT statement_S END { $$=$1; }
 ;
 declaration_S:        declaration_S declaration { $$=$1; }
                      |
@@ -94,7 +94,7 @@ var_decl_S:           var_decl_S var_decl { $$=$1; }
 type_decl_S:          type_decl_S type_decl { $$=$1; }
                      |
 ;
-porcedure_decl_S:     porcedure_decl_S porcedure_decl { $$=$1; }
+procedure_decl_S:     procedure_decl_S procedure_decl { $$=$1; }
 ;
 var_decl:             ID var_decl_id_S var_decl_type_O ASSIGN expression SEMICOLON { $$=$1; }
 ;
