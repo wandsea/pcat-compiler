@@ -132,7 +132,7 @@ void _print_ast_pretty( ast* x, int offset ){
             case int_ast: printf("INT(%d)\n",x->info.integer); break;
             case real_ast: printf("REAL(%f)\n",x->info.real); break;
             case var_ast: printf("VAR(%s)\n",x->info.variable); break;
-            case str_ast: printf("STR(\"%s\")\n",x->info.string); break;
+            case str_ast: printf("STRING(\"%s\")\n",x->info.string); break;
             case node_ast: {
                 printf("%s, %d:%d~%d:%d",ast_names[x->info.node.tag],x->l1,x->c1,x->l2,x->c2);
                 printf("\n");

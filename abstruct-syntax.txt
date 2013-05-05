@@ -54,21 +54,3 @@ binop                    -> GT | LT | EQ | GE | LE | NE | PLUS | MINUS | TIMES |
                          -> DIV | MOD | AND | OR 
 unop                     -> UPLUS | UMINUS | NOT 
 
-note:
-Remove 'line'
-using REAL for real const instead of STRING
-format: ( tag ( arg1 arg2....) )
-
-for ops (binop and unop), formats are:
-binop -> GT  = ( GT () )
-unop -> NOT  = ( NOT () )
-they are single nodes without children
-
-
-IntConst,RealConst,StringConst is not need because AST provides int_ast,real_ast,str_ast
-
-
-====
-tags
-====
-BodyDef,decle

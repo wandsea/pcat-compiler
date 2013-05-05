@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Arch Linux) (format=xelatex 2013.4.22)  5 MAY 2013 17:00
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Arch Linux) (format=xelatex 2013.4.22)  5 MAY 2013 22:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -709,18 +709,19 @@ Package xeCJK Warning: Unknown CJK family `tt' is ignored.
 Use \setCJKfamilyfont to define a CJK family. on input line 63.
 
 (../../concrete-syntax-ebnf.txt [3]) (../../concrete-syntax-bnf.txt [4]
-[5]) (../../abstruct-syntax.txt [6]) [7] (./report_ii.aux)
+[5]) (../../abstruct-syntax.txt [6]) (./test01.pcat) (./test01.out [7])
+(./test02.pcat [8]) (./test02.out [9] [10]) [11] (./report_ii.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 15614 strings out of 494004
- 334959 string characters out of 3155736
- 505555 words of memory out of 3000000
+ 15626 strings out of 494004
+ 335080 string characters out of 3155736
+ 498555 words of memory out of 3000000
  18691 multiletter control sequences out of 15000+200000
  6736 words of font info for 68 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 54i,6n,45p,592b,1456s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 54i,6n,45p,592b,1457s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on report_ii.pdf (7 pages).
+Output written on report_ii.pdf (11 pages).
