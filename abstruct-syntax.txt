@@ -2,7 +2,7 @@
 Abstruct Syntax - Modified
 ==========================
 
-program                  -> body
+program                  -> ( Program ( body ) )
 body                     -> ( BodyDef ( declarations-list statements-list ) )
 declarations-list        -> ( DeclareList ( {declarations} ) )
 declarations             -> ( VarDecs ( {var-dec} ) )

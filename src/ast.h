@@ -17,11 +17,13 @@
 /* Put the names of all the different kinds of ASTs here */
 
 typedef enum {
-BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,StList,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,GT,LT,EQ,GE,LE,NE,PLUS,MINUS,TIMES,SLASH,DIV,MOD,AND,OR,UPLUS,UMINUS,NOT
+Program,BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,StList,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,
+Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,And,Or,UPlus,UMinus,Not
 } ast_kind;
 
 static char* ast_names[] = {
-"BodyDef","DeclareList","VarDecs","TypeDecs","ProcDecs","VarDec","TypeDec","ProcDec","NamedTyp","ArrayTyp","RecordTyp","NoTyp","CompList","Comp","FormalParamList","Param","StList","AssignSt","CallSt","ReadSt","WriteSt","IfSt","WhileSt","LoopSt","ForSt","ExitSt","RetSt","SeqSt","ExprList","BinOpExp","UnOpExp","LvalExp","CallExp","RecordExp","ArrayExp","IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList","Var","ArrayDeref","RecordDeref","GT","LT","EQ","GE","LE","NE","PLUS","MINUS","TIMES","SLASH","DIV","MOD","AND","OR","UPLUS","UMINUS","NOT"
+"Program","BodyDef","DeclareList","VarDecs","TypeDecs","ProcDecs","VarDec","TypeDec","ProcDec","NamedTyp","ArrayTyp","RecordTyp","NoTyp","CompList","Comp","FormalParamList","Param","StList","AssignSt","CallSt","ReadSt","WriteSt","IfSt","WhileSt","LoopSt","ForSt","ExitSt","RetSt","SeqSt","ExprList","BinOpExp","UnOpExp","LvalExp","CallExp","RecordExp","ArrayExp","IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList","Var","ArrayDeref","RecordDeref",
+"Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod","And","Or","UPlus","UMinus","Not"
 };
 
 
