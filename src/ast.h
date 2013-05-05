@@ -5,12 +5,14 @@
 * Programmer: Leonidas Fegaras, UTA
 * Date: 12/17/97
 *
+* modified to fit contemporary 64-bit gcc
+*
 ********************************************************************************/
 
 
 #include "malloc.h"
 #include <string.h>
-
+#include <stdio.h>       /* for printf */
 
 /* Put the names of all the different kinds of ASTs here */
 
@@ -30,7 +32,8 @@ static char* ast_names[] = {
 
 typedef struct ast {
   enum { int_ast, real_ast, var_ast, str_ast, node_ast } tag;
-  union { long          integer;
+  union { /*long*/int   integer;   
+          /*  long would be 64-bit now, change to 32-bit int*/
           double        real;
           char*         variable;
           char*         string;

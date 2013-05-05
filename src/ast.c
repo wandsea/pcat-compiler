@@ -5,6 +5,8 @@
 * Programmer: Leonidas Fegaras, UTA
 * Date: 12/17/97
 *
+* modified to fit contemporary 64-bit gcc
+*
 ********************************************************************************/
 
 

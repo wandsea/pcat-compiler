@@ -5,7 +5,7 @@
 #--------------------------------------------------------------------------------
 
 GCC = gcc
-CFLAGS = -g -std=gnu99
+CFLAGS = -g -std=gnu99 -Wall
 YACC = bison
 LEX = flex
 
