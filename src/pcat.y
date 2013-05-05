@@ -42,7 +42,7 @@ void yyerror ( char* s ) {
 %type <Tast_list> var_decl_S 
 %type <Tast_list> type_decl_S
 %type <Tast_list> procedure_decl_S
-%type <Tast> var_decl
+%type <Tast_list> var_decl            // return ast_list of ( VarDec (..) )
 %type <Tast_list> var_decl_id_S
 %type <Tast> var_decl_type_O 
 %type <Tast> type_decl
@@ -54,7 +54,7 @@ void yyerror ( char* s ) {
 %type <Tast> component
 %type <Tast> formal_params
 %type <Tast_list> fp_section_S
-%type <Tast> fp_section
+%type <Tast_list> fp_section        // return ast_list of ( Param (..) )
 %type <Tast_list> fp_section_id_S
 %type <Tast> statement
 %type <Tast_list> statement_lvalue_S
@@ -85,9 +85,9 @@ start:                program { print_ast($1); }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
 ;
-body:                 declaration_S BEGINT statement_list END { $$=mk_node(BodyDef,cons($1,cons($3,NULL))); }
+body:                 declaration_list BEGINT statement_list END { $$=mk_node(BodyDef,cons($1,cons($3,NULL))); }
 ;
-declaration_list:     declaration_S { $$=mk_node(DeclareList,reverse(declaration_s));}
+declaration_list:     declaration_S { $$=mk_node(DeclareList,reverse($1));}
 ;
 declaration_S:        declaration_S declaration { $$=cons($2,$1); }
                      | {$$=NULL;}
@@ -97,11 +97,11 @@ statement_list:       statement_S { $$=mk_node(SeqSt,reverse($1)); }
 statement_S:          statement_S statement { $$=cons($2,$1); }
                      | {$$=NULL;}
 ;
-declaration:          VAR var_decl_S  { $$=mk_node(VarDecs,reverse($2)); }
+declaration:          VAR var_decl_S  { $$=mk_node(VarDecs,$2); }       // by using join, it's in right order, no need for reverse
                      |TYPE type_decl_S  { $$=mk_node(TypeDecs,reverse($2)); }
                      |PROCEDURE procedure_decl_S { $$=mk_node(ProcDecs,reverse($2)); }
 ;
-var_decl_S:           var_decl_S var_decl { $$=cons($2,$1); }
+var_decl_S:           var_decl_S var_decl { $$=join($1,$2); }
                      | {$$=NULL;}
 ;
 type_decl_S:          type_decl_S type_decl { $$=cons($2,$1); }
@@ -110,56 +110,91 @@ type_decl_S:          type_decl_S type_decl { $$=cons($2,$1); }
 procedure_decl_S:     procedure_decl_S procedure_decl { $$=cons($2,$1); }
                      | {$$=NULL;}
 ;
-var_decl:             identifier var_decl_id_S var_decl_type_O ASSIGN expression SEMICOLON { $$=NULL; }
+var_decl:             identifier var_decl_id_S var_decl_type_O ASSIGN expression SEMICOLON
+                            {
+                                struct ast_list* id_list = cons($1,reverse($2)); $$=NULL; 
+                                struct ast_list* var_list = NULL;
+                                while( id_list != NULL ){
+                                    var_list = cons( mk_node(VarDec,cons(id_list->elem,cons($3,cons($5,NULL)))), var_list );
+                                    id_list = id_list->next;
+                                }
+                                $$=reverse(var_list);
+                            }
 ;
 var_decl_id_S:        var_decl_id_S COMMA identifier { $$=cons($3,$1); }
                      | {$$=NULL;}
 ;
-var_decl_type_O:      COLON typename { $$=NULL; }
+var_decl_type_O:      COLON typename { $$=$2; }
                      | {$$=NULL;}
 ;
-type_decl:            identifier IS type SEMICOLON { $$=NULL; }
+type_decl:            identifier IS type SEMICOLON { $$=mk_node(TypeDec,cons($1,cons($3,NULL))); }
 ;
-procedure_decl:       identifier formal_params procedure_decl_type_O IS body SEMICOLON { $$=NULL; }
+procedure_decl:       identifier formal_params procedure_decl_type_O IS body SEMICOLON { $$=mk_node(ProcDec,cons($1,cons($2,cons($3,cons($5,NULL))))); }
 ;
 procedure_decl_type_O: COLON typename  { $$=NULL; }
                      | {$$=NULL;}
 ;
-typename:             identifier { $$=NULL; }
+typename:             identifier { $$=mk_node(NamedTyp,cons($1,NULL)); }
 ;
-type:                 ARRAY OF typename { $$=NULL; }
-                     |RECORD component component_S END { $$=NULL; }
+type:                 ARRAY OF typename { $$=mk_node(ArrayTyp,cons($3,NULL)); }
+                     |RECORD component component_S END { $$=mk_node(RecordTyp,cons(mk_node(CompList,cons($2,reverse($3))),NULL)); }
 ;
-component_S:          component_S component { $$=NULL; }
-component:            identifier COLON typename SEMICOLON { $$=NULL; }
+component_S:          component_S component { $$=cons($2,$1); }
+                     | {$$=NULL;}
+component:            identifier COLON typename SEMICOLON { $$=mk_node(Comp,cons($1,cons($3,NULL))); }
 ;
-formal_params:        LPAREN fp_section fp_section_S RPAREN   { $$=NULL; }
-                     |LPAREN RPAREN   { $$=NULL; }
+formal_params:        LPAREN fp_section fp_section_S RPAREN   { $$=mk_node(FormalParamList,join($2,$3)); }
+                     | {$$=mk_node(FormalParamList,NULL);}
 ;
-fp_section_S:         fp_section_S SEMICOLON fp_section  { $$=NULL; }
+fp_section_S:         fp_section_S SEMICOLON fp_section  { $$=join($1,$3); }
                      | {$$=NULL;}
 ;
-fp_section:           identifier fp_section_id_S COLON typename  { $$=NULL; }
+fp_section:           identifier fp_section_id_S COLON typename  
+                            {  
+                                struct ast_list* id_list = cons($1,reverse($2)); $$=NULL; 
+                                struct ast_list* fp_list = NULL;
+                                while( id_list != NULL ){
+                                    fp_list = cons( mk_node(Param,cons(id_list->elem,cons($4,NULL))), fp_list );
+                                    id_list = id_list->next;
+                                }
+                                $$=reverse(fp_list);
+                            }
 ;
-fp_section_id_S:      fp_section_id_S COMMA identifier  { $$=NULL; }
+fp_section_id_S:      fp_section_id_S COMMA identifier  { $$=cons($3,$1); }
                      | {$$=NULL;}
 ;
 statement:            lvalue ASSIGN expression SEMICOLON  { $$=mk_node(AssignSt,cons($1,cons($3,NULL))); }
-                     |identifier actual_params SEMICOLON          { $$=mk_node(CallSt,cons($1,cons($2,NULL))); }
+                     |identifier actual_params SEMICOLON  { $$=mk_node(CallSt,cons($1,cons($2,NULL))); }
                      |READ LPAREN lvalue statement_lvalue_S RPAREN SEMICOLON    { $$=mk_node(ReadSt,cons($3,reverse($4))); }
                      |WRITE write_params SEMICOLON        { $$=mk_node(WriteSt,$2); }
-                     |IF expression THEN statement_list statement_elsif_S statement_else_O END SEMICOLON { $$=NULL; }         //!!!!!!!!!!!
+                     |IF expression THEN statement_list statement_elsif_S statement_else_O END SEMICOLON 
+                                {
+                                    struct ast* if_ast = mk_node(IfSt,cons($2,cons($4,cons(NULL,NULL))));
+                                    struct ast* current_if = if_ast;
+                                    struct ast_list* middle_list = reverse($5);
+                                    for( ; middle_list != NULL; middle_list = middle_list->next ){
+                                        current_if->info.node.arguments->next->next = cons(middle_list->elem,NULL);
+                                        current_if = current_if->info.node.arguments->next->next->elem;
+                                    }
+                                    current_if->info.node.arguments->next->next = cons($6,NULL); 
+                                    $$ = if_ast;
+                                }
                      |WHILE expression DO statement_list END SEMICOLON     { $$=mk_node(WhileSt,cons($2,cons($4,NULL))); }
-                     |LOOP statement_list END SEMICOLON      { $$=mk_node(LoopSt,cons($2,NULL)); }
-                     |FOR identifier ASSIGN expression TO expression statement_by_O DO statement_list END SEMICOLON { $$=mk_node(ForSt,cons($2,cons($4,cons($6,cons($7,cons($9,NULL)))))); }
+                     |LOOP statement_list END SEMICOLON   { $$=mk_node(LoopSt,cons($2,NULL)); }
+                     |FOR identifier ASSIGN expression TO expression statement_by_O DO statement_list END SEMICOLON 
+                                { 
+                                    $$=mk_node(ForSt,cons($2,cons($4,cons($6,cons($7,cons($9,NULL)))))); 
+                                }
                      |EXIT SEMICOLON                      { $$=mk_node(ExitSt,NULL); }
                      |RETURN expression_O SEMICOLON       { $$=mk_node(RetSt,cons($2,NULL)); }
 ;
-// reversed
 statement_lvalue_S:   statement_lvalue_S COMMA lvalue     { $$=cons($3,$1); }       
                      |                                    { $$=NULL; }
 ;
-statement_elsif_S:    statement_elsif_S ELSIF expression THEN statement_list { $$=NULL; }
+statement_elsif_S:    statement_elsif_S ELSIF expression THEN statement_list 
+                                { 
+                                    $$=cons(mk_node(IfSt,cons($3,cons($5,cons(NULL,NULL)))),$1);
+                                }
                      | { $$=NULL; }
 ;
 statement_else_O:     ELSE statement_list { $$=$2; }

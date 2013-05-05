@@ -25,6 +25,8 @@ procedure-decl-type-O        -> ':' typename
 typename                     -> identifier
 type                         -> ARRAY OF typename
                              -> RECORD component component-S END
+component-S                  -> component_S component
+                             -> 
 component                    -> identifier ':' typename ';'
 formal-params                -> '(' fp-section fp-section-S ')' 
                              -> '(' ')' 

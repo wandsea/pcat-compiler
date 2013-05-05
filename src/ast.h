@@ -77,6 +77,9 @@ ast* mk_node ( const ast_kind tag, ast_list* args );
 /* put an AST e in the beginning of the list of ASTs r */
 ast_list* cons ( ast* e, ast_list* r );
 
+/* join two lists of ASTs together */
+ast_list *join( ast_list* a, ast_list* b );
+
 
 /* the empty list of ASTs */
 #define null NULL

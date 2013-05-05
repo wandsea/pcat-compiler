@@ -63,6 +63,16 @@ ast_list* cons ( ast* e, ast_list* r ) {
   return res;
 };
 
+ast_list* join ( ast_list* a, ast_list* b ) {
+  ast_list* res = (ast_list*) malloc(sizeof(ast_list));
+  for( ; a != NULL; a = a -> next )
+    res = cons( a, res );
+  for( ; b != NULL; b = b -> next )
+    res = cons( b, res );
+  res = reverse(res);
+  return res;    
+}
+
 
 short length ( ast_list* r ) {
   short i = 0;
