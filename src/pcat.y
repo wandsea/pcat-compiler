@@ -30,15 +30,17 @@ void yyerror ( char* s ) {
 %type <Tast> id
 %type <Tast> program
 
+%start show
+
 %%
 
-start: program                  
+show: program                  
 { 
     print_ast($1);
 }
 ;
 
-program: id ASSIGN id
+program: id ASSIGN id EOFF
 { 
     $$ = mk_node(assign_exp,cons($1,cons($3,NULL)));
 } 
