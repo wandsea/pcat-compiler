@@ -18,12 +18,14 @@
 
 typedef enum {
 Program,BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,StList,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,
-Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,And,Or,UPlus,UMinus,Not
+Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,And,Or,UPlus,UMinus,Not,
+TypeInferenceNeeded,VoidType,EmptyExpression
 } ast_kind;
 
 static char* ast_names[] = {
 "Program","BodyDef","DeclareList","VarDecs","TypeDecs","ProcDecs","VarDec","TypeDec","ProcDec","NamedTyp","ArrayTyp","RecordTyp","NoTyp","CompList","Comp","FormalParamList","Param","StList","AssignSt","CallSt","ReadSt","WriteSt","IfSt","WhileSt","LoopSt","ForSt","ExitSt","RetSt","SeqSt","ExprList","BinOpExp","UnOpExp","LvalExp","CallExp","RecordExp","ArrayExp","IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList","Var","ArrayDeref","RecordDeref",
-"Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod","And","Or","UPlus","UMinus","Not"
+"Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod","And","Or","UPlus","UMinus","Not",
+"TypeInferenceNeeded","VoidType","EmptyExpression"
 };
 
 

@@ -12,7 +12,7 @@ extern char *yytext;
 
 /* parse error */
 void yyerror ( char* s ) {
-  printf("\n*** %s (line : %d, token: %s)\n",
+  printf("\n*** %s (line : %d, token: '%s')\n",
          s, lineno, yytext);
 };
 
@@ -125,14 +125,14 @@ var_decl_id_S:        var_decl_id_S COMMA identifier { $$=cons($3,$1); }
                      | {$$=NULL;}
 ;
 var_decl_type_O:      COLON typename { $$=$2; }
-                     | {$$=NULL;}
+                     | {$$=mk_node(TypeInferenceNeeded,NULL);}
 ;
 type_decl:            identifier IS type SEMICOLON { $$=mk_node(TypeDec,cons($1,cons($3,NULL))); }
 ;
 procedure_decl:       identifier formal_params procedure_decl_type_O IS body SEMICOLON { $$=mk_node(ProcDec,cons($1,cons($2,cons($3,cons($5,NULL))))); }
 ;
-procedure_decl_type_O: COLON typename  { $$=NULL; }
-                     | {$$=NULL;}
+procedure_decl_type_O: COLON typename  { $$=$2; }
+                     | {$$=mk_node(VoidType,NULL);}
 ;
 typename:             identifier { $$=mk_node(NamedTyp,cons($1,NULL)); }
 ;
@@ -144,7 +144,7 @@ component_S:          component_S component { $$=cons($2,$1); }
 component:            identifier COLON typename SEMICOLON { $$=mk_node(Comp,cons($1,cons($3,NULL))); }
 ;
 formal_params:        LPAREN fp_section fp_section_S RPAREN   { $$=mk_node(FormalParamList,join($2,$3)); }
-                     | {$$=mk_node(FormalParamList,NULL);}
+                     |LPAREN RPAREN {$$=mk_node(FormalParamList,NULL);}
 ;
 fp_section_S:         fp_section_S SEMICOLON fp_section  { $$=join($1,$3); }
                      | {$$=NULL;}
@@ -201,7 +201,7 @@ statement_else_O:     ELSE statement_list { $$=$2; }
                      | {$$=NULL;}
 ;
 statement_by_O:       BY expression { $$=$2; }
-                     | {$$=NULL;}
+                     | {$$=mk_int(1);}
 ;
 write_params:         LPAREN write_expr write_params_expr_S RPAREN { $$=cons($2,reverse($3)); }
                      |LPAREN RPAREN { $$=NULL; }
@@ -214,7 +214,7 @@ write_expr:           string  { $$=$1; }
                      |expression { $$=$1; }
 ;
 expression_O:         expression { $$=$1; }
-                     | {$$=NULL;}
+                     | {$$=mk_node(EmptyExpression,NULL);}
 ;
 expression:           number                       { $$=$1; }
                      |lvalue                       { $$=mk_node(LvalExp,cons($1,NULL)); }
@@ -240,9 +240,9 @@ expression:           number                       { $$=$1; }
                      |identifier record_inits      { $$=mk_node(RecordExp,cons($1,cons($2,NULL)));}
                      |identifier array_inits       { $$=mk_node(ArrayExp,cons($1,cons($2,NULL)));}
 ;
-lvalue:               identifier  { $$=NULL; }
-                     |lvalue LBRACKET expression RBRACKET  { $$=NULL; }
-                     |lvalue DOT identifier   { $$=NULL; }
+lvalue:               identifier  { $$=mk_node(Var,cons($1,NULL)); }
+                     |lvalue LBRACKET expression RBRACKET  { $$=mk_node(ArrayDeref,cons($1,cons($3,NULL))); }
+                     |lvalue DOT identifier   { $$=mk_node(RecordDeref,cons($1,cons($3,NULL))); }
 ;
 actual_params:        LPAREN expression actual_params_expr_S RPAREN  { $$=mk_node(ExprList,cons($2,reverse($3))); }
                      |LPAREN RPAREN  { $$=mk_node(ExprList,NULL); }

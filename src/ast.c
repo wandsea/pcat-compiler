@@ -64,13 +64,13 @@ ast_list* cons ( ast* e, ast_list* r ) {
 };
 
 ast_list* join ( ast_list* a, ast_list* b ) {
-  ast_list* res = (ast_list*) malloc(sizeof(ast_list));
-  for( ; a != NULL; a = a -> next )
+  ast_list* res = NULL;
+  for( ; a != NULL && a->elem != NULL; a = a -> next )
     res = cons( a->elem, res );
-  for( ; b != NULL; b = b -> next )
+  for( ; b != NULL && b->elem != NULL; b = b -> next )
     res = cons( b->elem, res );
   res = reverse(res);
-  return res;    
+  return res;
 }
 
 
@@ -103,6 +103,10 @@ void print_ast_list ( ast_list* r ) {
 
 
 void print_ast ( ast* x ) {
+  if ( x==NULL){
+    printf("[!EMPTY!]");
+    return;
+  }
   switch (x->tag) {
   case int_ast: printf("%d",x->info.integer); break;
   case real_ast: printf("%f",x->info.real); break;
@@ -116,3 +120,18 @@ void print_ast ( ast* x ) {
     };
   };
 };
+
+void _print_ast_pretty( ast* x, int offset ){
+    int i;
+    for( i = 0; i < offset, i++ ) printf("");
+    if ( x== NULL )
+        printf("[!EMPTY!]");
+    else{
+        
+    }
+    printf("\n");
+}
+
+void print_ast_pretty( ast* x ){
+    _print_ast_pretty( x, 0 );
+}
