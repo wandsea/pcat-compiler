@@ -1,0 +1,44 @@
+Program, 4:1~11:4
+  BodyDefine, 4:10~11:3
+    DeclareList, 4:10~7:15
+      VaribleDeclareList, 5:5~5:28
+        VaribleDeclare, 5:9~5:28
+          VAR(i)
+          NamedType, 5:16~5:22
+            VAR(INTEGER)
+          INT(1)
+        VaribleDeclare, 5:9~5:28
+          VAR(j)
+          NamedType, 5:16~5:22
+            VAR(INTEGER)
+          INT(1)
+      VaribleDeclareList, 6:5~6:25
+        VaribleDeclare, 6:9~6:25
+          VAR(x)
+          NamedType, 6:13~6:19
+            VAR(INTEGER)
+          INT(2)
+      VaribleDeclareList, 7:5~7:15
+        VaribleDeclare, 7:9~7:15
+          VAR(y)
+          TypeInferenceNeeded, 7:9~7:9
+          INT(3)
+    StatementList, 8:5~10:35
+      WriteStatement, 9:5~9:35
+        STR("i = ")
+        LvalExpr, 9:20~9:20
+          Var, 9:20~9:20
+            VAR(i)
+        STR(", j = ")
+        LvalExpr, 9:33~9:33
+          Var, 9:33~9:33
+            VAR(j)
+      WriteStatement, 10:5~10:35
+        STR("x = ")
+        LvalExpr, 10:20~10:20
+          Var, 10:20~10:20
+            VAR(x)
+        STR(", y = ")
+        LvalExpr, 10:33~10:33
+          Var, 10:33~10:33
+            VAR(y)

@@ -157,6 +157,7 @@ type:                 ARRAY OF typename { $$=mk_node(ArrayTyp,cons($3,NULL),&@$)
 ;
 component_S:          component_S component { $$=cons($2,$1); }
                      | {$$=NULL;}
+;
 component:            identifier COLON typename SEMICOLON { $$=mk_node(Comp,cons($1,cons($3,NULL)),&@$); }
 ;
 formal_params:        LPAREN fp_section fp_section_S RPAREN   { $$=mk_node(FormalParamList,join($2,$3),&@$); }
