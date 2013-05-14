@@ -1,0 +1,95 @@
+program                      -> PROGRAM IS body ';'
+body                         -> declaration-S BEGIN statement-S END
+declaration-S                -> declaration-S declaration
+                             -> 
+statement-S                  -> statement-S statement
+                             ->
+declaration                  -> VAR var-decl-S
+                             -> TYPE type-decl-S
+                             -> PROCEDURE procedure-decl-S
+var-decl-S                   -> var-decl-S var-decl
+                             ->
+type-decl-S                  -> type-decl-S type-decl
+                             ->
+porcedure-decl-S             -> porcedure-decl-S porcedure-decl
+                             ->
+var-decl                     -> identifier var-decl-id-S var-decl-type-O ':=' expression ';'
+var-decl-id-S                -> var-decl-id-S ',' identifier
+                             ->
+var-decl-type-O              -> ':' typename
+                             -> 
+type-decl                    -> identifier IS type ';' 
+procedure-decl               -> identifier formal-params procedure-decl-type-O IS body ';'
+procedure-decl-type-O        -> ':' typename
+                             -> 
+typename                     -> identifier
+type                         -> ARRAY OF typename
+                             -> RECORD component component-S END
+component-S                  -> component_S component
+                             -> 
+component                    -> identifier ':' typename ';'
+formal-params                -> '(' fp-section fp-section-S ')' 
+                             -> '(' ')' 
+fp-section-S                 -> fp-section-S ';' fp-section
+                             ->
+fp-section                   -> identifier fp-section-id-S ':' typename
+fp-section-id-S              -> fp-section-id-S ',' identifier
+                             -> 
+statement                    -> lvalue ':=' expression ';'
+                             -> identifier actual-params ';'
+                             -> READ '(' lvalue statement-lvalue-S ')' ';'
+                             -> WRITE write-params ';'
+                             -> IF expression THEN statement-S
+                                statement-elsif-S
+                                statement-else-O END ';'
+                             -> WHILE expression DO statement-S END ';'
+                             -> LOOP statement-S END ';'
+                             -> FOR identifier ':=' expression TO expression statement-by-O 
+                                DO statement-S END ';'
+                             -> EXIT ';'
+                             -> RETURN expression-O ';'
+statement-lvalue-S           -> statement-lvalue-S ',' lvalue
+                             ->
+statement-elsif-S            -> statement-elsif-S ELSIF expression THEN statement-S
+                             ->
+statement-else-O             -> ELSE statement-S
+                             -> 
+statement-by-O               -> BY expression
+                             -> 
+write-params                 -> '(' write-expr write-params-expr-S ')'
+                             -> '(' ')'
+write-params-expr-S          -> write-params-expr-S ',' write-expr
+                             ->
+write-expr                   -> string
+                             -> expression
+expression-O                 -> expression
+                             -> 
+expression                   -> number
+                             -> lvalue
+                             -> '(' expression ')'
+                             -> unary-op expression
+                             -> expression binary-op expression
+                             -> identifier actual-params
+                             -> identifier record-inits
+                             -> identifier array-inits
+lvalue                       -> identifier
+                             -> lvalue '[' expression ']'
+                             -> lvalue '.' identifier
+actual-params                -> '(' expression actual-params-expr-S ')'
+                             -> '(' ')'
+actual-params-expr-S         -> actual-params-expr-S ',' expression
+                             ->
+record-inits                 -> '{' identifier ':=' expression record-inits-pair-S '}'
+record-inits-pair-S          -> record-inits-pair-S ';' identifier ':=' expression
+                             -> 
+array-inits                  -> '[<' array-init array-inits-array-init-S '>]'
+array-inits-array-init-S     -> array-inits-array-init-S ',' array-init
+                             -> 
+array-init                   -> expression
+                             -> expression of expression
+unary-op                     -> '+' | '-' | NOT
+binary-op                    -> '+' | '-' |  '*' | '/' | DIV | MOD | OR | AND
+                             -> '>' | '<' | '=' | '>=' | '<=' | '<>'
+number                       -> INTEGER | REAL
+string                       -> STRING
+identifier                   -> ID
