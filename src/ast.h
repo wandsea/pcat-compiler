@@ -17,20 +17,39 @@
 /* Put the names of all the different kinds of ASTs here */
 
 typedef enum {
-Program,BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,
-Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,And,Or,UPlus,UMinus,Not,
-TypeInferenceNeeded,VoidType,EmptyExpression
+Program,                BodyDef,            DeclareList,        VarDecs,                TypeDecs,
+ProcDecs,               VarDec,             TypeDec,            ProcDec,                NamedTyp,
+ArrayTyp,               RecordTyp,          NoTyp,              CompList,               Comp,
+FormalParamList,        Param,              AssignSt,           CallSt,                 ReadSt,
+WriteSt,                IfSt,               WhileSt,            LoopSt,                 ForSt,
+ExitSt,                 RetSt,              SeqSt,              ExprList,               BinOpExp,
+UnOpExp,                LvalExp,            CallExp,            RecordExp,              ArrayExp,
+IntConst,               RealConst,          StringConst,        RecordInitList,         RecordInit,
+ArrayInitList,          ArrayInit,          LvalList,           Var,                    ArrayDeref,RecordDeref,
+
+Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,
+And,Or,UPlus,UMinus,Not,
+
+TypeInferenceNeeded,    VoidType,           EmptyStatement,     EmptyExpression
 } ast_kind;
 
+
+
 static char* ast_names[] = {
-"Program","BodyDefine","DeclareList","VaribleDeclareList","TypeDeclareList","ProcedureDeclareList",
-"VaribleDeclare","TypeDeclare","ProcDeclare","NamedTyp","ArrayTyp","RecordTyp","NoTyp","ComponentList",
-"Component","FormalParameterList","Parameter","AssignStatement","CallStatement","ReadStatement",
-"WriteStatement","IfStatement","WhileStatement","LoopStatement","ForStatement","ExitStatement","ReturnStatement",
-"StatementList","ExprList","BinOpExpr","UnOpExpr","LvalExpr","CallExpr","RecordExpr","ArrayExpr",
-"IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList",
-"Var","ArrayDeref","RecordDeref","Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod",
-"And","Or","UPlus","UMinus","Not","TypeInferenceNeeded","VoidType","EmptyExpression"
+"Program",              "BodyDefine",       "DeclareList",      "VaribleDeclareList",   "TypeDeclareList",
+"ProcedureDeclareList", "VaribleDeclare",   "TypeDeclare",      "ProcDeclare",          "NamedTyp",
+"ArrayTyp",             "RecordTyp",        "NoTyp",            "ComponentList",        "Component",
+"FormalParameterList",  "Parameter",        "AssignStatement",  "CallStatement",        "ReadStatement",
+"WriteStatement",       "IfStatement",      "WhileStatement",   "LoopStatement",        "ForStatement",
+"ExitStatement",        "ReturnStatement",  "StatementList",    "ExprList",             "BinOpExpr",
+"UnOpExpr",             "LvalExpr",         "CallExpr",         "RecordExpr",           "ArrayExpr",
+"IntConst",             "RealConst",        "StringConst",      "RecordInitList",       "RecordInit",
+"ArrayInitList",        "ArrayInit",        "LvalList",         "Var",                  "ArrayDeref",           "RecordDeref",
+
+"Gt","Lt","Eq","Ge","Le","Ne","Plus","Minus","Time","Slash","Div","Mod",
+"And","Or","UPlus","UMinus","Not",
+
+"TypeInferenceNeeded",  "VoidType",         "EmptyStatement",   "EmptyExpression"
 };
 
 

@@ -97,11 +97,12 @@ void yyerror ( char* s ) {
 
 %%
 
-start:                program { 
-                        struct ast* prog = $1;
-                        print_ast_pretty(prog); 
-                        print_ast_code_style(prog);
-                      }
+start:                program 
+                        { 
+                            struct ast* prog = $1;
+                            print_ast_pretty(prog); 
+                            print_ast_code_style(prog);
+                        }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
 ;
@@ -186,7 +187,7 @@ fp_section_id_S:      fp_section_id_S COMMA identifier  { $$=cons($3,$1); }
 ;
 statement:            lvalue ASSIGN expression SEMICOLON  { $$=mk_node(AssignSt,cons($1,cons($3,NULL))); }
                      |identifier actual_params SEMICOLON  { $$=mk_node(CallSt,cons($1,cons($2,NULL))); }
-                     |READ LPAREN lvalue statement_lvalue_S RPAREN SEMICOLON    { $$=mk_node(ReadSt,cons($3,reverse($4))); }
+                     |READ LPAREN lvalue statement_lvalue_S RPAREN SEMICOLON    { $$=mk_node(ReadSt,cons(mk_node(LvalList,cons($3,reverse($4))),NULL)); }
                      |WRITE write_params SEMICOLON        { $$=mk_node(WriteSt,cons($2,NULL)); }
                      |IF expression THEN statement_list statement_elsif_S statement_else_O END SEMICOLON 
                                 {
@@ -219,13 +220,13 @@ statement_elsif_S:    statement_elsif_S ELSIF expression THEN statement_list
                      | { $$=NULL; }
 ;
 statement_else_O:     ELSE statement_list { $$=$2; }
-                     | {$$=mk_node(EmptyExpression,NULL);}
+                     | {$$=mk_node(EmptyStatement,NULL);}
 ;
 statement_by_O:       BY expression { $$=$2; }
                      | {$$=mk_int(1);}
 ;
 write_params:         LPAREN write_expr write_params_expr_S RPAREN { $$=mk_node(ExprList,cons($2,reverse($3))); }
-                     |LPAREN RPAREN { $$=NULL; }
+                     |LPAREN RPAREN { $$=mk_node(EmptyExpression,NULL); }
 ;
 // reversed
 write_params_expr_S:  write_params_expr_S COMMA write_expr { $$=cons($3,$1); } 

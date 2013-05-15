@@ -162,31 +162,38 @@ void _print_ast_pretty( ast* x, int offset ){
 }
 
 void print_ast_pretty( ast* x ){
+    printf("========= S-Expr Start ===============\n");
     _print_ast_pretty( x, 0 );
+    printf("=========  S-Expr End  ===============\n");
 }
 
 
 /* better printing */
 
+int print_line_no;
+
 void make_offset( int offset ){
+    print_line_no++;
+    printf("%3d | ",print_line_no);
+    
     int i;
     for ( i = 0; i < offset; i++ ) putchar(' ');
 }
 
 void _print_ast_code_style( ast* x, int offset ){
-#define PICK(k) pick(x->info.node.arguments,k)
-#define next_offset (offset+2)
-#define gopi(k) _print_ast_code_style( PICK(k), next_offset );
-#define gop(k) _print_ast_code_style( PICK(k), offset );
-#define goi(t) _print_ast_code_style( t, next_offset );
-#define go(t) _print_ast_code_style( t, offset );
-#define mo() make_offset(offset)
-#define FOREACH for(l=x->info.node.arguments;l;l=l->next)
-#define ELEM l->elem
-#define EACHGO FOREACH go(ELEM) 
-#define EACHGOI FOREACH goi(ELEM) 
-#define p printf
-#define SEPLIST(sep)    i=0; FOREACH{ if ( i > 0 ){p(sep);p(" ");}go(ELEM); i += 1; }     
+#define PICK(k)        pick(x->info.node.arguments,k)
+#define next_offset    (offset+2)
+#define gopi(k)        _print_ast_code_style( PICK(k), next_offset );
+#define gop(k)         _print_ast_code_style( PICK(k), offset );
+#define goi(t)         _print_ast_code_style( t, next_offset );
+#define go(t)          _print_ast_code_style( t, offset );
+#define mo()           make_offset(offset)
+#define FOREACH        for(l=x->info.node.arguments;l;l=l->next)
+#define ELEM           l->elem
+#define EACHGO         FOREACH go(ELEM) 
+#define EACHGOI        FOREACH goi(ELEM) 
+#define p              printf
+#define SEPLIST(sep)   i=0; FOREACH{ if ( i > 0 ){p(sep);p(" ");}go(ELEM); i += 1; }     
                         
     if ( x == NULL )
         printf("[!EMPTY!]\n");
@@ -285,7 +292,7 @@ void _print_ast_code_style( ast* x, int offset ){
                     mo();p("END");p(";\n");
                     break;
                 case ForSt:
-                    mo();p("FOR ");gop(0);p(" := ");gop(1);p(" TO ");gop(2);p(" BY ");gop(3); p(" DO");p("\n");
+                    mo();p("FOR ");gop(0);p(" := ");gop(1);p(" TO ");gop(2);p(" BY ");gop(3);p(" DO");p("\n");
                     gopi(4);
                     mo();p("END");p(";\n");
                     break;
@@ -296,8 +303,7 @@ void _print_ast_code_style( ast* x, int offset ){
                     mo();p("RETURN ");gop(0);p(";\n");
                     break;
                 case SeqSt:
-                    FOREACH
-                        go(ELEM);
+                    EACHGO;
                     break;
                 case ExprList:
                     SEPLIST(",");
@@ -349,6 +355,7 @@ void _print_ast_code_style( ast* x, int offset ){
                 case RecordDeref:
                     gop(0);p(".");gop(1);                
                     break;
+                    
                 case Gt:p(">");break;
                 case Lt:p("<");break;
                 case Eq:p("=");break;
@@ -373,6 +380,9 @@ void _print_ast_code_style( ast* x, int offset ){
                 case VoidType:
                     p("[Void Type]");
                 break;
+                case EmptyStatement:
+                    mo();p("[Empty Statement]");p(";\n");
+                break;
                 case EmptyExpression:
                     p("[Empty Expression]");
                 break;
@@ -383,5 +393,6 @@ void _print_ast_code_style( ast* x, int offset ){
 }
 
 void print_ast_code_style( ast* x ){
+    print_line_no = 0;
     _print_ast_code_style( x, 0 );
 }
