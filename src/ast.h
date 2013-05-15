@@ -52,7 +52,6 @@ typedef struct ast {
                 struct ast_list*  arguments;
             } node;
       } info;
-      int l1,c1,l2,c2;
 } ast;
 
 
@@ -79,7 +78,7 @@ ast* mk_str ( const char* x );
 
 
 /* create an internal AST node */
-//ast* mk_node ( const ast_kind tag, ast_list* args);
+ast* mk_node ( const ast_kind tag, ast_list* args);
 
 
 /* put an AST e in the beginning of the list of ASTs r */

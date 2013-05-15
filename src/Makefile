@@ -5,7 +5,7 @@
 #--------------------------------------------------------------------------------
 
 GCC = gcc
-CFLAGS = -g -std=gnu99 -Wall
+CFLAGS = -g -std=gnu99 -Wall -Wno-unused-function
 YACC = bison
 YFLAGS= -d -t -y
 LEX = flex
@@ -18,7 +18,7 @@ parser: main.c y.tab.c lex.yy.c ast.h ast.o
 ast.o:  ast.c ast.h
 	$(GCC) $(CFLAGS) -c ast.c
 
-y.tab.c: pcat.y
+y.tab.c y.tab.h: pcat.y
 	$(YACC) $(YFLAGS) pcat.y
 
 lex.yy.c: pcat.lex
