@@ -17,15 +17,15 @@
 /* Put the names of all the different kinds of ASTs here */
 
 typedef enum {
-Program,BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,StList,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,
+Program,BodyDef,DeclareList,VarDecs,TypeDecs,ProcDecs,VarDec,TypeDec,ProcDec,NamedTyp,ArrayTyp,RecordTyp,NoTyp,CompList,Comp,FormalParamList,Param,AssignSt,CallSt,ReadSt,WriteSt,IfSt,WhileSt,LoopSt,ForSt,ExitSt,RetSt,SeqSt,ExprList,BinOpExp,UnOpExp,LvalExp,CallExp,RecordExp,ArrayExp,IntConst,RealConst,StringConst,RecordInitList,RecordInit,ArrayInitList,ArrayInit,LvalList,Var,ArrayDeref,RecordDeref,
 Gt,Lt,Eq,Ge,Le,Ne,Plus,Minus,Times,Slash,Div,Mod,And,Or,UPlus,UMinus,Not,
 TypeInferenceNeeded,VoidType,EmptyExpression
 } ast_kind;
 
 static char* ast_names[] = {
 "Program","BodyDefine","DeclareList","VaribleDeclareList","TypeDeclareList","ProcedureDeclareList",
-"VaribleDeclare","TypeDeclare","ProcDeclare","NamedType","ArrayType","RecordType","NoType","ComponentList",
-"Component","FormalParameterList","Parameter","StatementList","AssignStatement","CallStatement","ReadStatement",
+"VaribleDeclare","TypeDeclare","ProcDeclare","NamedTyp","ArrayTyp","RecordTyp","NoTyp","ComponentList",
+"Component","FormalParameterList","Parameter","AssignStatement","CallStatement","ReadStatement",
 "WriteStatement","IfStatement","WhileStatement","LoopStatement","ForStatement","ExitStatement","ReturnStatement",
 "StatementList","ExprList","BinOpExpr","UnOpExpr","LvalExpr","CallExpr","RecordExpr","ArrayExpr",
 "IntConst","RealConst","StringConst","RecordInitList","RecordInit","ArrayInitList","ArrayInit","LvalList",
@@ -84,9 +84,14 @@ ast* mk_node ( const ast_kind tag, ast_list* args);
 /* put an AST e in the beginning of the list of ASTs r */
 ast_list* cons ( ast* e, ast_list* r );
 
+/* put an AST e in the endding of the list of ASTs r */
+ast_list* append ( ast_list* r, ast* e );
+
 /* join two lists of ASTs together */
 ast_list *join( ast_list* a, ast_list* b );
 
+/* pick k-th member of AST list */
+ast* pick( ast_list* a, int k );
 
 /* the empty list of ASTs */
 #define null NULL
@@ -106,3 +111,6 @@ void print_ast ( ast* x );
 
 /* pretty printing */
 void print_ast_pretty( ast* x );
+
+/* prettier (code style) printing */
+void print_ast_code_style( ast* x );

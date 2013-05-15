@@ -65,7 +65,7 @@ void yyerror ( char* s ) {
 %type <Tast_list> statement_elsif_S
 %type <Tast> statement_else_O
 %type <Tast> statement_by_O
-%type <Tast_list> write_params
+%type <Tast> write_params        // return ExprList
 %type <Tast_list> write_params_expr_S
 %type <Tast> write_expr
 %type <Tast> expression_O
@@ -97,7 +97,11 @@ void yyerror ( char* s ) {
 
 %%
 
-start:                program { print_ast_pretty($1); }
+start:                program { 
+                        struct ast* prog = $1;
+                        print_ast_pretty(prog); 
+                        print_ast_code_style(prog);
+                      }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
 ;
@@ -183,7 +187,7 @@ fp_section_id_S:      fp_section_id_S COMMA identifier  { $$=cons($3,$1); }
 statement:            lvalue ASSIGN expression SEMICOLON  { $$=mk_node(AssignSt,cons($1,cons($3,NULL))); }
                      |identifier actual_params SEMICOLON  { $$=mk_node(CallSt,cons($1,cons($2,NULL))); }
                      |READ LPAREN lvalue statement_lvalue_S RPAREN SEMICOLON    { $$=mk_node(ReadSt,cons($3,reverse($4))); }
-                     |WRITE write_params SEMICOLON        { $$=mk_node(WriteSt,$2); }
+                     |WRITE write_params SEMICOLON        { $$=mk_node(WriteSt,cons($2,NULL)); }
                      |IF expression THEN statement_list statement_elsif_S statement_else_O END SEMICOLON 
                                 {
                                     struct ast* if_ast = mk_node(IfSt,cons($2,cons($4,cons(NULL,NULL))));
@@ -220,7 +224,7 @@ statement_else_O:     ELSE statement_list { $$=$2; }
 statement_by_O:       BY expression { $$=$2; }
                      | {$$=mk_int(1);}
 ;
-write_params:         LPAREN write_expr write_params_expr_S RPAREN { $$=cons($2,reverse($3)); }
+write_params:         LPAREN write_expr write_params_expr_S RPAREN { $$=mk_node(ExprList,cons($2,reverse($3))); }
                      |LPAREN RPAREN { $$=NULL; }
 ;
 // reversed
@@ -277,7 +281,7 @@ array_inits:          LABRACKET array_init array_inits_array_init_S RABRACKET { 
 array_inits_array_init_S: array_inits_array_init_S COMMA array_init { $$=cons($3,$1); }
                      | { $$=NULL; }
 ;
-array_init:          expression { $$=mk_node(ArrayInit,cons($1,NULL)); }
+array_init:          expression { $$=mk_node(ArrayInit,cons(mk_int(1),cons($1,NULL))); }
                     |expression OF expression { $$=mk_node(ArrayInit,cons($1,cons($3,NULL))); }
 ;
 number:               INTEGERT { $$=mk_int(atoi(yytext)); }
