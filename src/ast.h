@@ -1,13 +1,5 @@
-/********************************************************************************
-*
-* File: ast.h
-* The abstract syntax trees for the calculator
-* Programmer: Leonidas Fegaras, UTA
-* Date: 12/17/97
-*
-* modified to fit contemporary 64-bit gcc
-*
-********************************************************************************/
+#ifndef _AST_H_
+#define _AST_H_
 
 
 #include "malloc.h"
@@ -133,3 +125,5 @@ void print_ast_pretty( ast* x );
 
 /* prettier (code style) printing */
 void print_ast_code_style( ast* x );
+
+#endif

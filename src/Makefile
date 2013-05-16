@@ -23,6 +23,10 @@ y.tab.c y.tab.h: pcat.y
 
 lex.yy.c: pcat.lex
 	$(LEX) pcat.lex
+    
+table.o: table.c
+	$(GCC) $(CFLAGS) -c table.c
+    
 
 clean:
 	/bin/rm -f *.o *~ *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core
