@@ -10,10 +10,12 @@ YACC = bison
 YFLAGS= -d -t -y
 LEX = flex
 
+ACTIONS = action.o type.o table.o
+
 all: parser
 
-parser: main.c y.tab.c lex.yy.c ast.h ast.o
-	$(GCC) $(CFLAGS) lex.yy.c y.tab.c main.c ast.o -o parser
+parser: main.c y.tab.c lex.yy.c ast.h ast.o $(ACTIONS)
+	$(GCC) $(CFLAGS) lex.yy.c y.tab.c main.c ast.o $(ACTIONS) -o parser
 
 ast.o:  ast.c ast.h
 	$(GCC) $(CFLAGS) -c ast.c
@@ -24,8 +26,15 @@ y.tab.c y.tab.h: pcat.y
 lex.yy.c: pcat.lex
 	$(LEX) pcat.lex
     
-table.o: table.c
+action.o: action.c action.h
+	$(GCC) $(CFLAGS) -c action.c
+    
+table.o: table.c table.h
 	$(GCC) $(CFLAGS) -c table.c
+
+type.o: type.c type.h
+	$(GCC) $(CFLAGS) -c type.c
+    
     
 
 clean:

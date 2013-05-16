@@ -26,8 +26,14 @@ TypeInferenceNeeded,    VoidType,           EmptyStatement,     EmptyExpression
 } ast_kind;
 
 
+/* suppressing the "variable not used" warning.*/
+#ifdef __GNUC__
+#define VARIABLE_IS_NOT_USED __attribute__ ((unused))
+#else
+#define VARIABLE_IS_NOT_USED
+#endif
 
-static char* ast_names[] = {
+VARIABLE_IS_NOT_USED static const char* ast_names[] = {
 "Program",              "BodyDefine",       "DeclareList",      "VaribleDeclareList",   "TypeDeclareList",
 "ProcedureDeclareList", "VaribleDeclare",   "TypeDeclare",      "ProcDeclare",          "NamedTyp",
 "ArrayTyp",             "RecordTyp",        "NoTyp",            "ComponentList",        "Component",
@@ -63,6 +69,7 @@ typedef struct ast {
                 struct ast_list*  arguments;
             } node;
       } info;
+  int line_no;
 } ast;
 
 

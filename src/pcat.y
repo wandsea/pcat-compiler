@@ -5,6 +5,7 @@
 
 #include "y.tab.h"
 #include "ast.h"
+#include "action.h"
 
 
 extern int lineno;
@@ -100,8 +101,7 @@ void yyerror ( char* s ) {
 start:                program 
                         { 
                             struct ast* prog = $1;
-                            print_ast_pretty(prog); 
-                            print_ast_code_style(prog);
+                            action(prog);
                         }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
