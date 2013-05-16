@@ -12,6 +12,7 @@
  1: No support for RECORD now..
  2: Variables/procedures/types share the same name space.
     it's sanity has not been carefully verified.
+ 3: Forward reference is not supported now....
     
 */
 
