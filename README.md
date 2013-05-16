@@ -62,6 +62,10 @@ to us.
 Another [course](http://lambda.uta.edu/cse5317/spring02/)
 offered by Prof Fegras also contains PCAT compiler implementation
 as it course project.
+The [lecture note](http://lambda.uta.edu/cse5317/spring02/notes/notes.html)
+provides good vision of knowledge required for this project, while 
+instructions from [projects](http://lambda.uta.edu/cse5317/spring02/project.html)
+explained some details on the implementation.
 
 Students are required to implement an compiler of PCAT language, including
 Lexical, syntax, semantic analysis and IR generation.
