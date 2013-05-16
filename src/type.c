@@ -21,8 +21,12 @@ ast *basic_int, *basic_real, *basic_bool, *basic_str;
 ast *no_type, *need_infer, *void_type;
 
 
+
+int has_error;
+
 void error(ast* x, const char* s){
-    printf("Error at line %d near \"",x->line_no);
+    has_error = 1;
+    printf("ERROR: at line %d near \"",x->line_no);
     switch (x->tag){
         case int_ast:   break;
         case real_ast:  break;
@@ -45,7 +49,6 @@ void show_trace(ast* x){
     }
     printf("\"\n");
 }
-
 
 ast* _check_type( ast* x ){
 #define PICK(k)        pick(x->info.node.arguments,k)
@@ -110,6 +113,11 @@ ast* _check_type( ast* x ){
                     FOREACH go(ELEM); 
                     break;
                 case VarDec:
+                    // append level/offset
+                    x->info.node.arguments = append( x->info.node.arguments, mk_int(curr_level()) );
+                    x->info.node.arguments = append( x->info.node.arguments, mk_int(0) );
+
+                    // real works
                     id = PICK(0)->info.variable;
                     t1 = gop(1);
                     t2 = gop(2);
@@ -129,7 +137,11 @@ ast* _check_type( ast* x ){
                     if ( decl && !(level<curr_level()) ){
                         error(x,"Name conflict");
                     }else
-                        insert( id, gop(1) );
+                        insert( id, x );
+                        //insert( id, gop(1) );
+
+
+                    //printf("Var %s at level %d defined\n",id,PICK(3)->info.integer);
                     break;
                 case TypeDec:                
                     id = PICK(0)->info.variable;
@@ -140,7 +152,11 @@ ast* _check_type( ast* x ){
                     }else
                         error(x,"Name conflict");
                     break;
-                case ProcDec:                    
+                case ProcDec:       
+                    // append level/offset
+                    x->info.node.arguments = append( x->info.node.arguments, mk_int(curr_level()) );
+
+                    // real works             
                     id = PICK(0)->info.variable;
                     decl = lookup(id,&level);
                     if ( !decl ){
@@ -211,7 +227,6 @@ ast* _check_type( ast* x ){
                     FOREACH go(ELEM);   // check each param
                     break;
                 case Param:
-                // TODO: treat name conflict like var
                     id = PICK(0)->info.variable;
                     decl = lookup(id,&level);
                     if ( decl && !(level < curr_level() ) ){
@@ -219,7 +234,8 @@ ast* _check_type( ast* x ){
                         printf("%d %d\n",level,curr_level());
                     }else{
                         t1 = gop(1);
-                        insert(id,t1);
+                        insert(id,x);
+                        //insert(id,t1);
                         result = t1;
                     }
                     break;
@@ -460,8 +476,11 @@ ast* _check_type( ast* x ){
                     decl = lookup(id,&level);
                     if ( !decl )
                         error(x,"Unknow variable name");
-                    else
-                        result = decl;
+                    else{
+                        result = _check_type( pick(decl->info.node.arguments,1) );
+                    }
+                   // printf("note: at line %d, type of \"%s\" is defined at line %d\n",x->line_no,id,decl->line_no);
+
                     break;
                 case ArrayDeref:
                     t0 = gop(0);
@@ -524,7 +543,7 @@ ast* _check_type( ast* x ){
 
 /* check the type of ast. return 1 if ok, 0 if no-passed*/
 
-void typecheck( ast* x ){
+int typecheck( ast* x ){
     //basic types
     basic_int  = mk_node(NamedTyp,cons(mk_var("INT"),NULL));
     basic_real = mk_node(NamedTyp,cons(mk_var("REAL"),NULL));
@@ -535,9 +554,17 @@ void typecheck( ast* x ){
     void_type  = mk_node(NamedTyp,cons(mk_var("void_type"),NULL));
     
     // recursively check
+    has_error = 0;
     scope_init();    
-    _check_type(x);
-    
-    printf("type checking done!\n");
+
+    printf("========== Type Checking Start ========\n");
+    _check_type(x);    
+    if ( has_error )
+        printf("Type Checking finished with *ERRORS*\n");
+    else
+        printf("Type Checking finished *SUCCESSFULLY*\n");
+    printf("==========  Type Checking End  ========\n");
+
+    return has_error;
 }
 

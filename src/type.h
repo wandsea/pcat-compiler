@@ -5,6 +5,6 @@
 
 
 
-void typecheck( ast* x );
+int typecheck( ast* x );
 
 #endif
