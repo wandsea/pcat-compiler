@@ -26,7 +26,7 @@ TypeInferenceNeeded,    VoidType,           EmptyStatement,     EmptyExpression
 } ast_kind;
 
 
-/* suppressing the "variable not used" warning.*/
+/* suppressing the "variable not used" warning by GCC.*/
 #ifdef __GNUC__
 #define VARIABLE_IS_NOT_USED __attribute__ ((unused))
 #else

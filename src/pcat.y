@@ -158,7 +158,10 @@ procedure_decl_type_O: COLON typename  { $$=$2; }
 typename:             identifier { $$=mk_node(NamedTyp,cons($1,NULL)); }
 ;
 type:                 ARRAY OF typename { $$=mk_node(ArrayTyp,cons($3,NULL)); }
-                     |RECORD component component_S END { $$=mk_node(RecordTyp,cons(mk_node(CompList,cons($2,reverse($3))),NULL)); }
+                     |RECORD component component_S END {
+                        $$=mk_node(RecordTyp,cons(mk_node(CompList,cons($2,reverse($3))),NULL)); 
+                      }
+                     |typename {$$=$1;}
 ;
 component_S:          component_S component { $$=cons($2,$1); }
                      | {$$=NULL;}

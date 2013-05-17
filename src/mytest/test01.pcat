@@ -1,0 +1,7 @@
+(* test variable declaraion *)
+PROGRAM IS
+    VAR i := 1+3.0;          (* variable type which cannot be infered *)
+    VAR j : INTEGER := 3.0;  (* variable type conflict *)
+    VAR j := 3;              (* name conflict *)
+BEGIN 
+END;

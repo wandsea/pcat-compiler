@@ -181,10 +181,10 @@ void make_offset( int offset ){
 }
 
 void _print_ast_code_style( ast* x, int offset ){
-#define PICK(k)        pick(x->info.node.arguments,k)
+#define PICKX(k)       pick(x->info.node.arguments,k)
 #define next_offset    (offset+2)
-#define gopi(k)        _print_ast_code_style( PICK(k), next_offset );
-#define gop(k)         _print_ast_code_style( PICK(k), offset );
+#define gopi(k)        _print_ast_code_style( PICKX(k), next_offset );
+#define gop(k)         _print_ast_code_style( PICKX(k), offset );
 #define goi(t)         _print_ast_code_style( t, next_offset );
 #define go(t)          _print_ast_code_style( t, offset );
 #define mo()           make_offset(offset)
