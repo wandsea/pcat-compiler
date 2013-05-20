@@ -54,3 +54,9 @@ binop                    -> GT | LT | EQ | GE | LE | NE | PLUS | MINUS | TIMES |
                          -> DIV | MOD | AND | OR 
 unop                     -> UPLUS | UMINUS | NOT 
 
+
+===========================
+Abstruct Syntax - Extension
+===========================
+proc-dec                 -> ( ProcDec ( ID formal-param-list type body level ) ) 
+var-dec                  -> ( VarDec ( ID type expression level offset ) )

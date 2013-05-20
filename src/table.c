@@ -9,7 +9,6 @@ _REAL MAN_ don't release the malloc-ed memory...
 *****************************/
 
 
-
 ////////////////////////
 // look-up table
 ////////////////////////
@@ -108,16 +107,20 @@ void insert( const char * key, ast* binding ){
 
 ast* lookup( const char* key, int* p_level ){
     // return "ast*" the value
-    // store level in "*p_level"
+    // store level in "*p_level" iff p_level != NULL
     scope* s = scope_head;
     ast* a;
     for(; s->level > 0; s = s->next ){
         a = table_lookup(s->t,key);
         if ( a != NULL ){
-            *p_level = s->level;
+            if ( p_level ) *p_level = s->level;
             return a;
         }
     }
-    p_level = 0;
+    if ( p_level ) p_level = 0;
     return NULL;
+}
+
+int curr_level(){
+    return scope_head->level;
 }

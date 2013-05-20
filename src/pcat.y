@@ -5,6 +5,7 @@
 
 #include "y.tab.h"
 #include "ast.h"
+#include "action.h"
 
 
 extern int lineno;
@@ -100,8 +101,7 @@ void yyerror ( char* s ) {
 start:                program 
                         { 
                             struct ast* prog = $1;
-                            print_ast_pretty(prog); 
-                            print_ast_code_style(prog);
+                            action(prog);
                         }
 ;
 program:              PROGRAM IS body SEMICOLON { $$=mk_node(Program,cons($3,NULL)); }
@@ -158,7 +158,10 @@ procedure_decl_type_O: COLON typename  { $$=$2; }
 typename:             identifier { $$=mk_node(NamedTyp,cons($1,NULL)); }
 ;
 type:                 ARRAY OF typename { $$=mk_node(ArrayTyp,cons($3,NULL)); }
-                     |RECORD component component_S END { $$=mk_node(RecordTyp,cons(mk_node(CompList,cons($2,reverse($3))),NULL)); }
+                     |RECORD component component_S END {
+                        $$=mk_node(RecordTyp,cons(mk_node(CompList,cons($2,reverse($3))),NULL)); 
+                      }
+                     |typename {$$=$1;}
 ;
 component_S:          component_S component { $$=cons($2,$1); }
                      | {$$=NULL;}
