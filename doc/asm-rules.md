@@ -18,9 +18,9 @@ There's not so-called global variables. All variables are allocated on stack.
 To make things simpler, now only (signed) integer and real, both occupying 4-bytes, are supported. Boolean is treated as a 4-byte integer, with 0 representing `FALSE` and non-zero values `TRUE`.
 
 
-The code follows the __cdecl__ calling conversion. The static link is passed as the first paramenter to the callee in form of a pointer to the destination frame.
+The code follows the __cdecl__ calling conversion. The static link is passed as the first parameter to the callee in form of a pointer to the destination frame.
 To avoid register allocation, all temporary variables are also stored on the stack, which means
-each calculation would take operants from stack, compute, and store the result to the stack.
+each calculation would take operands from stack, compute, and store the result to the stack.
 
 ## Constant values
 All constant values should be placed at the end of asm code.
@@ -57,7 +57,7 @@ For strings, we may need
         .long	.LC0
 
 ## Arithmetic operations
-In the following examples, assume that integer `a` ,`b` and `c` are stored at `-4(%ebp)` `-8(%ebp)` and `-12(%ebp)` (recall that boolean is also treated as integer),
+In the following examples, assume that integer `a` ,`b` and `c` are stored at `-4(%ebp)` `-8(%ebp)` and `-12(%ebp)` (recall that Boolean is also treated as integer),
 float `d` , `e` and 'f' are stored at `-12(%ebp)` , `-16(%ebp)` and `-20(%ebp)`.
 
     #c=a+b
@@ -146,9 +146,9 @@ The integer-to-real conversion can be done by `fildl` instruction.
 ## Frame
 
 The EBP of the caller is stored at `+0(%ebp)`, the return address is stored at `+4(%ebp)`. 
-The first paramater (here static links) is stored at `+8(%ebp)`, 
+The first parameter (here static links) is stored at `+8(%ebp)`, 
 the second is at `+12(%ebp)`, etc.
-Local variables are stoed at `-4(%ebp)`,`-8(%ebp)`, etc.
+Local variables are stored at `-4(%ebp)`,`-8(%ebp)`, etc.
 
 Following __cdecl__ calling conversion,
 integer values are returned in the `%eax` register, floating point values—in the `ST0` x87 register. 
@@ -171,9 +171,9 @@ Variable initialization is done upon the entry just like normal assignment.
 But this value should be known at the compiling time.
 
 All local variables (including declared and _temporary_) are allocated on
-the stack. To make things simplier, temporary variables are not reused.
+the stack. To make things simpler, temporary variables are not reused.
 
-To make stack align to 16-byte boundary, a commen trick is 
+To make stack align to 16-byte boundary, a common trick is 
 
 	andl	$-16, %esp
 	subl	$32, %esp
@@ -183,8 +183,8 @@ To make stack align to 16-byte boundary, a commen trick is
 
 so for a piece PCAT code
 
-    (* callle is at scope 1 *)
-    PROCEDURE calee(a : INTEGER, b : INTEGER, c : INTEGER ) : INTEGER is
+    (* callee is at scope 1 *)
+    PROCEDURE callee(a : INTEGER, b : INTEGER, c : INTEGER ) : INTEGER is
     BEGIN
         RETURN a + b + c;
     END;
@@ -203,7 +203,7 @@ so for a piece PCAT code
                 RETURN ret;
             END;
 
-the generated code for caller shouled be
+the generated code for caller should be
 
         .global caller
         .type	caller, @function
@@ -218,7 +218,7 @@ the generated code for caller shouled be
         pushl   $3
         pushl   $2
         pushl   $1
-        # set up staic link
+        # set up static link
         movl    +8(%ebp),%eax
         movl    (%eax),%eax
         movl    (%eax),%eax
@@ -227,7 +227,7 @@ the generated code for caller shouled be
         call    callee
         # restore stack
         addl    $16,%esp
-        # store the reuslt
+        # store the result
         movl    %eax,-4(%ebp)
         # load x
         movl    +8(%ebp),%eax
