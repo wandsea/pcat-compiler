@@ -149,6 +149,17 @@ notes:
     for var, return its decleration
     
  */
+
+int scope_offset[1000];
+int scope_offset_top;
+#define SCOPE_PUSH scope_offset[scope_offset_top++] = 0
+#define SCOPE_POP  scope_offset[--scope_offset_top] = 0
+#define CURR_OFFSET scope_offset[scope_offset_top-1]
+#define TAKE_OFFSET (CURR_OFFSET-=4,CURR_OFFSET)
+
+int param_offset;
+#define TAKE_PARAM_OFFSET (param_offset+=4,param_offset)
+
 ast* _check_type( ast* x ){
 #define GOPICK(k)      _check_type( pick_ast(x,k) )
 #define GO(e)          _check_type( e )
@@ -183,9 +194,11 @@ ast* _check_type( ast* x ){
             ast *array_elem_type;
             switch (x->info.node.tag){
                 case Program:    
-                    begin_scope();       
+                    begin_scope();    
+                    SCOPE_PUSH;   
                     GOPICK(0);        
-                    result=no_type;  
+                    result=no_type; 
+                    SCOPE_POP; 
                     end_scope();
                     break;
                 case BodyDef:      
@@ -213,7 +226,7 @@ ast* _check_type( ast* x ){
                 case VarDec:
                     // append level/offset
                     append_ast(x,mk_int(curr_level()));
-                    append_ast(x,mk_int(0));
+                    append_ast(x,mk_int(TAKE_OFFSET));
 
                     // real works
                     id = pick_ast(x,0)->info.variable;
@@ -247,8 +260,8 @@ ast* _check_type( ast* x ){
                     }else
                         error(x,"Name conflict");
                     break;
-                case ProcDec:       
-                    // append level/offset
+                case ProcDec:  
+                    // append level
                     append_ast(x,mk_int(curr_level()));
 
                     // real works             
@@ -261,8 +274,10 @@ ast* _check_type( ast* x ){
                     
                     GOPICK(2);  //check return type
                     begin_scope();
+                    SCOPE_PUSH;
                     GOPICK(1);  //check formal list, adding to scope
                     GOPICK(3);  //check procedure body
+                    SCOPE_POP;
                     end_scope();
                     break;
                 case NamedTyp:
@@ -306,6 +321,7 @@ ast* _check_type( ast* x ){
                 */
                     break;
                 case FormalParamList:
+                    param_offset = 8;       // first(8) reserved for static links
                     FOREACH(x) GO(ELEML);   // check each param
                     break;
                 case Param:
@@ -319,6 +335,8 @@ ast* _check_type( ast* x ){
                         insert(id,x);
                         result = t1;
                     }
+                    append_ast(x,mk_int(curr_level()));
+                    append_ast(x,mk_int(TAKE_PARAM_OFFSET));
                     break;
                 case AssignSt:
                     t0 = GOPICK(0);
@@ -352,8 +370,9 @@ ast* _check_type( ast* x ){
                             error(x,"Too many actual parameters");
                         if ( !lap && lfp )
                             error(x,"Need more actual parameters");
-                        
                     }
+
+                    append_ast(x,mk_int(curr_level()-pick_ast(decl,4)->info.integer));
                     break;
                 case ReadSt:
                     nx = pick_ast(x,0);
@@ -433,16 +452,15 @@ ast* _check_type( ast* x ){
                     
                     if ( t1==no_type || t2 == no_type )
                         ;
-                    else if ( t1!=t2 )
-                        error(x,"Different type around binary operator");
-                    else if ( t1!=basic_int && t1!=basic_real && t1!=basic_bool )
+                    else if ( ( t1!=basic_int && t1!=basic_real && t1!=basic_bool ) ||
+                              ( t2!=basic_int && t2!=basic_real && t2!=basic_bool ) )
                         error(x,"Non-basic type couldn't be used for binary operation");
                     else if ( (tag(pick_ast(x,0)) == And || tag(pick_ast(x,0)) == Or) && 
-                              t1!=basic_bool )
-                        error(x,"Binary arithmic operation not for BOOLEAN");
+                              (t1!=basic_bool || t2!=basic_bool) )
+                        error(x,"Binary boolean operation expects BOOLEAN type on both sides");
                     else if ( !(tag(pick_ast(x,0)) == And || tag(pick_ast(x,0)) == Or) &&
-                              t1!=basic_int )
-                        error(x,"Binary boolean operation not for INT");
+                              (t1==basic_bool || t2==basic_bool) )
+                        error(x,"Binary arithmic operation expects INTEGER or REAL type on both sides");
                     else{
                         if ( tag(pick_ast(x,0)) == Gt ||
                              tag(pick_ast(x,0)) == Lt ||
@@ -453,9 +471,15 @@ ast* _check_type( ast* x ){
                              tag(pick_ast(x,0)) == And||
                              tag(pick_ast(x,0)) == Or )
                             result = basic_bool;
-                        else
-                            result = basic_int;
+                        else{
+                            if (t1==basic_real || t2==basic_real)
+                                result = basic_real;
+                            else
+                                result = basic_int;
+                        }
                     }
+
+                    append_ast(x,mk_int(TAKE_OFFSET));
                     break;
                 case UnOpExp:
                     t1 = GOPICK(1);                    
@@ -464,15 +488,21 @@ ast* _check_type( ast* x ){
                     else if ( t1!=basic_int && t1!=basic_real && t1!=basic_bool )
                         error(x,"Non-basic type couldn't be used for unary operation");
                     else if ( (tag(pick_ast(x,0)) == Not) && t1!=basic_bool )
-                        error(x,"Unary arithmic operation not for BOOLEAN");
+                        error(x,"Unary boolean operation expects BOOLEAN type");
                     else if ( !(tag(pick_ast(x,0)) == Not) && t1!=basic_int )
-                        error(x,"Unary boolean operation not for INT");
+                        error(x,"Unary arithmic operation expects INTEGER or REAL type");
                     else{
                         if ( tag(pick_ast(x,0)) == Not )
                             result = basic_bool;
-                        else
-                            result = basic_int;
+                        else{
+                            if (t1==basic_real)
+                                result = basic_real;
+                            else
+                                result = basic_int;
+                        }
                     }
+
+                    append_ast(x,mk_int(TAKE_OFFSET));
                     break;
                 case LvalExp:
                     result = GOPICK(0);
@@ -505,6 +535,10 @@ ast* _check_type( ast* x ){
                         // type of procedure
                         result = GO( pick_ast(decl,2) );
                     }
+
+
+                    append_ast(x,mk_int(curr_level()-pick_ast(decl,4)->info.integer));
+                    append_ast(x,mk_int(TAKE_OFFSET));
                     break;
                 case RecordExp:
                     error(x,"RecordExp checking not implement");
@@ -558,8 +592,15 @@ ast* _check_type( ast* x ){
                     else{
                         result = GO( pick_ast(decl,1) );
                     }
-                    //printf("note: at line %d, type of \"%s\" is defined at line %d\n",x->line_no,id,decl->line_no);
-
+                    // TODO: Param vs. VarDecl
+                    if (tag(decl)==Param){
+                        append_ast(x,mk_int(curr_level()-pick_ast(decl,2)->info.integer));
+                        append_ast(x,mk_int(pick_ast(decl,3)->info.integer));
+                    }else{
+                        append_ast(x,mk_int(curr_level()-pick_ast(decl,3)->info.integer));
+                        append_ast(x,mk_int(pick_ast(decl,4)->info.integer));
+                    }
+                    
                     break;
                 case ArrayDeref:
                     t0 = GOPICK(0);
@@ -634,6 +675,7 @@ int typecheck( ast* x ){
     // recursively check
     has_error = 0;
     scope_init();    
+    scope_offset_top = 0;
 
     printf("========== Type Checking Start ========\n");
     _check_type(x);    
