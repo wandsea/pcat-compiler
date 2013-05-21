@@ -1,0 +1,56 @@
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
+
+
+
+This files describles the details of manner in which PCAT compiler is compiling AST into assembly code.
+
+# Overview
+
+The main aim is to compile AST into assembly code. To accomplish this goal, the PCAT compiler will generate file `prog.S` in `gas` format, which will later turn into `prog.o` by gcc.
+The entrance and supporting routines would be written in `sup.c` then turned into `sup.o` by gcc.
+Finally, a call to `gcc` would generate the excutable file `prog`.
+
+# Assembly
+
+In this part we are mainly concerning about how to transfer AST into assebly code.
+
+There's not so-called global varaibles. 
+
+
+## Arithmic operations
+    #c=a+b
+        movl	-8(%ebp), %eax
+        movl	-4(%ebp), %edx 
+        addl	%edx, %eax
+        movl	%eax, -12(%ebp)
+    #b=a-b
+        movl	-8(%ebp), %eax
+        movl	-4(%ebp), %edx
+        subl	%eax, %edx
+        movl	%edx, %eax
+        movl	%eax, -8(%ebp)
+    #c=a*b
+        movl	-4(%ebp), %eax
+        imull	-8(%ebp), %eax
+        movl	%eax, -12(%ebp)
+    #c=a div b
+        movl	-4(%ebp), %eax
+        cltd
+        idivl	-8(%ebp)
+        movl	%eax, -12(%ebp)
+    #c=a mod b
+        movl	-4(%ebp), %eax
+        cltd
+        idivl	-8(%ebp)
+        movl	%edx, -8(%ebp)
+    #int->float
+        fildl	-4(%ebp)
+        fstps	-12(%ebp)
+    #c=a/b with(int->float) a=16(%esp) b=12(%esp)
+        fildl	16(%esp)
+        fildl	12(%esp)
+        fdivrp	%st, %st(1)
+        fstps	8(%esp)
+
+# Supporting routing
+
