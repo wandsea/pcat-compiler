@@ -17,8 +17,17 @@ _f:
     call    _print_int
     addl    $4,%esp
     
-    movl    %eax
+    
+    pushl   $L1
+    call    _print_str
+    addl    $4,%esp
+    
+    movl    $9,%eax
     
 	leave
 	ret
     
+	.section .rdata,"dr"
+L1:
+	.ascii "HeHeHe\0"
+	.text

@@ -1,1 +1,1 @@
-#include <stdio.h>void print_int( int v ){    printf("%d",v);}
+#include <stdio.h>void print_int( int v ){    printf("%d",v);}void print_str( char * v ){    printf("%s",v);}
