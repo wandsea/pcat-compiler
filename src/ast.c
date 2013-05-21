@@ -54,7 +54,6 @@ ast* mk_node ( const ast_kind tag, ast_list* args ) {
   return res;
 };
 
-
 ast_list* cons ( ast* e, ast_list* r ) {
   ast_list* res = (ast_list*) malloc(sizeof(ast_list));
   res->elem = e;
@@ -89,18 +88,32 @@ ast_list* rev ( ast_list* r, ast_list* s ) {
   return rev(r->next,cons(r->elem,s));
 };
 
-
 ast_list* reverse ( ast_list* r ) {
   return rev(r,null);
 };
 
 
-ast* pick( ast_list* a, int k ){
+int tag( ast* a ){
+    return a->info.node.tag;
+}
+
+ast_list* args( ast* a ){
+    return a->info.node.arguments;
+}
+
+ast* pick_ast_list( ast_list* a, int k ){
     for ( ; k > 0; k-- )
         a = a->next;
     return a->elem;
 }
 
+ast* pick_ast( ast* a, int k ){
+    return pick_ast_list(args(a),k);
+}
+
+void append_ast( ast* a, ast* b ){
+    a->info.node.arguments=append(a->info.node.arguments,b);
+}
 
 void print_ast_list ( ast_list* r ) {
   if (r == null)
@@ -130,18 +143,18 @@ void print_ast ( ast* x ) {
   };
 };
 
-void _print_ast_pretty( ast* x, int offset );
+void _print_ast_pretty( ast* x, int curr_offset );
 
-void _print_ast_list_pretty ( ast_list* r,int offset  ) {
+void _print_ast_list_pretty ( ast_list* r,int curr_offset  ) {
   if (r == null)
      return;
-  _print_ast_pretty(r->elem,offset);
-  _print_ast_list_pretty(r->next,offset);
+  _print_ast_pretty(r->elem,curr_offset);
+  _print_ast_list_pretty(r->next,curr_offset);
 };
 
-void _print_ast_pretty( ast* x, int offset ){
+void _print_ast_pretty( ast* x, int curr_offset ){
     int i;
-    for( i = 0; i < offset; i++ ) printf(" ");
+    for( i = 0; i < curr_offset; i++ ) printf(" ");
     if ( x== NULL )
         printf("[!EMPTY!]\n");
     else{
@@ -153,7 +166,7 @@ void _print_ast_pretty( ast* x, int offset ){
             case node_ast: {
                 printf("%s",ast_names[x->info.node.tag]);
                 printf("\n");
-                _print_ast_list_pretty(x->info.node.arguments,offset+2);
+                _print_ast_list_pretty(x->info.node.arguments,curr_offset+2);
                 break;
             };
         }
@@ -172,23 +185,22 @@ void print_ast_pretty( ast* x ){
 
 int print_line_no;
 
-void make_offset( int offset ){
+void make_offset( int curr_offset ){
     print_line_no++;
     printf("%3d | ",print_line_no);
     
     int i;
-    for ( i = 0; i < offset; i++ ) putchar(' ');
+    for ( i = 0; i < curr_offset; i++ ) putchar(' ');
 }
 
-void _print_ast_code_style( ast* x, int offset ){
-#define PICKX(k)       pick(x->info.node.arguments,k)
-#define next_offset    (offset+2)
-#define gopi(k)        _print_ast_code_style( PICKX(k), next_offset );
-#define gop(k)         _print_ast_code_style( PICKX(k), offset );
+void _print_ast_code_style( ast* x, int curr_offset ){
+#define next_offset    (curr_offset+2)
+#define gopi(k)        _print_ast_code_style( pick_ast(x,k), next_offset );
+#define gop(k)         _print_ast_code_style( pick_ast(x,k), curr_offset );
 #define goi(t)         _print_ast_code_style( t, next_offset );
-#define go(t)          _print_ast_code_style( t, offset );
-#define mo()           make_offset(offset)
-#define FOREACH        for(l=x->info.node.arguments;l;l=l->next)
+#define go(t)          _print_ast_code_style( t, curr_offset );
+#define mo()           make_offset(curr_offset)
+#define FOREACH        for(l=args(x);l;l=l->next)
 #define ELEM           l->elem
 #define EACHGO         FOREACH go(ELEM) 
 #define EACHGOI        FOREACH goi(ELEM) 

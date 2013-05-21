@@ -10,7 +10,7 @@ YACC = bison
 YFLAGS= -d -t -y
 LEX = flex
 
-ACTIONS = action.o type.o table.o
+ACTIONS = action.o type.o table.o gen.o
 
 all: parser
 
@@ -34,7 +34,9 @@ table.o: table.c table.h
 
 type.o: type.c type.h
 	$(GCC) $(CFLAGS) -c type.c
-    
+
+gen.o: gen.c gen.h
+	$(GCC) $(CFLAGS) -c gen.c
     
 
 clean:
