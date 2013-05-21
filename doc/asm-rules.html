@@ -15,9 +15,9 @@ Finally, a call to <code>gcc</code> would generate the executable file <code>pro
 <p>There's not so-called global variables. All variables are allocated on stack.
 To make things simpler, now only (signed) integer and real, both occupying 4-bytes, are supported. Boolean is treated as a 4-byte integer, with 0 representing <code>FALSE</code> and non-zero values <code>TRUE</code>.</p>
 
-<p>The code follows the <strong>cdecl</strong> calling conversion. The static link is passed as the first paramenter to the callee in form of a pointer to the destination frame.
+<p>The code follows the <strong>cdecl</strong> calling conversion. The static link is passed as the first parameter to the callee in form of a pointer to the destination frame.
 To avoid register allocation, all temporary variables are also stored on the stack, which means
-each calculation would take operants from stack, compute, and store the result to the stack.</p>
+each calculation would take operands from stack, compute, and store the result to the stack.</p>
 
 <h2>Constant values</h2>
 
@@ -58,7 +58,7 @@ b:
 
 <h2>Arithmetic operations</h2>
 
-<p>In the following examples, assume that integer <code>a</code> ,<code>b</code> and <code>c</code> are stored at <code>-4(%ebp)</code> <code>-8(%ebp)</code> and <code>-12(%ebp)</code> (recall that boolean is also treated as integer),
+<p>In the following examples, assume that integer <code>a</code> ,<code>b</code> and <code>c</code> are stored at <code>-4(%ebp)</code> <code>-8(%ebp)</code> and <code>-12(%ebp)</code> (recall that Boolean is also treated as integer),
 float <code>d</code> , <code>e</code> and 'f' are stored at <code>-12(%ebp)</code> , <code>-16(%ebp)</code> and <code>-20(%ebp)</code>.</p>
 
 <pre><code>#c=a+b
@@ -147,9 +147,9 @@ float <code>d</code> , <code>e</code> and 'f' are stored at <code>-12(%ebp)</cod
 <h2>Frame</h2>
 
 <p>The EBP of the caller is stored at <code>+0(%ebp)</code>, the return address is stored at <code>+4(%ebp)</code>. 
-The first paramater (here static links) is stored at <code>+8(%ebp)</code>, 
+The first parameter (here static links) is stored at <code>+8(%ebp)</code>, 
 the second is at <code>+12(%ebp)</code>, etc.
-Local variables are stoed at <code>-4(%ebp)</code>,<code>-8(%ebp)</code>, etc.</p>
+Local variables are stored at <code>-4(%ebp)</code>,<code>-8(%ebp)</code>, etc.</p>
 
 <p>Following <strong>cdecl</strong> calling conversion,
 integer values are returned in the <code>%eax</code> register, floating point values—in the <code>ST0</code> x87 register. 
@@ -172,9 +172,9 @@ The same holds for loading into <code>%edx</code></p>
 But this value should be known at the compiling time.</p>
 
 <p>All local variables (including declared and <em>temporary</em>) are allocated on
-the stack. To make things simplier, temporary variables are not reused.</p>
+the stack. To make things simpler, temporary variables are not reused.</p>
 
-<p>To make stack align to 16-byte boundary, a commen trick is </p>
+<p>To make stack align to 16-byte boundary, a common trick is </p>
 
 <pre><code>andl    $-16, %esp
 subl    $32, %esp
@@ -184,8 +184,8 @@ subl    $32, %esp
 
 <p>so for a piece PCAT code</p>
 
-<pre><code>(* callle is at scope 1 *)
-PROCEDURE calee(a : INTEGER, b : INTEGER, c : INTEGER ) : INTEGER is
+<pre><code>(* callee is at scope 1 *)
+PROCEDURE callee(a : INTEGER, b : INTEGER, c : INTEGER ) : INTEGER is
 BEGIN
     RETURN a + b + c;
 END;
@@ -205,7 +205,7 @@ VAR x : INTEGER; (*stored at `-4(%ebp)`)
         END;
 </code></pre>
 
-<p>the generated code for caller shouled be</p>
+<p>the generated code for caller should be</p>
 
 <pre><code>    .global caller
     .type   caller, @function
@@ -220,7 +220,7 @@ caller:
     pushl   $3
     pushl   $2
     pushl   $1
-    # set up staic link
+    # set up static link
     movl    +8(%ebp),%eax
     movl    (%eax),%eax
     movl    (%eax),%eax
@@ -229,7 +229,7 @@ caller:
     call    callee
     # restore stack
     addl    $16,%esp
-    # store the reuslt
+    # store the result
     movl    %eax,-4(%ebp)
     # load x
     movl    +8(%ebp),%eax
