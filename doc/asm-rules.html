@@ -19,21 +19,59 @@ To make things simpler, now only (signed) integer and real, both occupying 4-byt
 To avoid register allocation, all temporary variables are also stored on the stack, which means
 each calculation would take operants from stack, compute, and store the result to the stack.</p>
 
+<h2>Constant values</h2>
+
+<p>All constant values should be placed at the end of asm code.</p>
+
+<p>Integer constance can be represented as immediate number, the real one need some tricks like</p>
+
+<pre><code>(global)
+    .globl  a
+    .align 4
+    .type   a, @object
+    .size   a, 4
+a:
+    .long   1092616192
+
+(local)
+    movl    .LC0, %eax
+    movl    %eax, -4(%ebp)
+
+    .align 4
+.LC0:
+    .long   1093664768
+</code></pre>
+
+<p>For strings, we may need</p>
+
+<pre><code>    .globl  b
+    .section    .rodata
+.LC0:
+    .string "10"
+    .data
+    .align 4
+    .type   b, @object
+    .size   b, 4
+b:
+    .long   .LC0
+</code></pre>
+
 <h2>Arithmetic operations</h2>
 
-<p>In the following examples, assume that <code>a</code> is stored at <code>-4(%ebp)</code> while <code>b</code> at <code>-8(%ebp)</code></p>
+<p>In the following examples, assume that integer <code>a</code> ,<code>b</code> and <code>c</code> are stored at <code>-4(%ebp)</code> <code>-8(%ebp)</code> and <code>-12(%ebp)</code> (recall that boolean is also treated as integer),
+float <code>d</code> , <code>e</code> and 'f' are stored at <code>-12(%ebp)</code> , <code>-16(%ebp)</code> and <code>-20(%ebp)</code>.</p>
 
 <pre><code>#c=a+b
     movl    -8(%ebp), %eax
     movl    -4(%ebp), %edx 
     addl    %edx, %eax
     movl    %eax, -12(%ebp)
-#b=a-b
+#c=a-b
     movl    -8(%ebp), %eax
     movl    -4(%ebp), %edx
     subl    %eax, %edx
     movl    %edx, %eax
-    movl    %eax, -8(%ebp)
+    movl    %eax, -12(%ebp)
 #c=a*b
     movl    -4(%ebp), %eax
     imull   -8(%ebp), %eax
@@ -56,23 +94,159 @@ each calculation would take operants from stack, compute, and store the result t
     fildl   12(%esp)
     fdivrp  %st, %st(1)
     fstps   8(%esp)
+#f=d+e
+    flds    -12(%ebp)
+    fadds   -16(%ebp)
+    fstps   -20(%ebp)
+#f=d-e
+    flds    -12(%ebp)
+    fsubs   -16(%ebp)
+    fstps   -20(%ebp)
+#f=d*e
+    flds    -12(%ebp)
+    fmuls   -16(%ebp)
+    fstps   -20(%ebp)
+#f=d/e
+    flds    -12(%ebp)
+    fdivs   -16(%ebp)
+    fstps   -20(%ebp)
+#c=a&amp;&amp;b
+    cmpl    $0, -4(%ebp)
+    je  .L2
+    cmpl    $0, -8(%ebp)
+    je  .L2
+    movl    $1, %eax
+    jmp .L3
+.L2:
+    movl    $0, %eax
+.L3:
+    movl    %eax, -12(%ebp)
+
+#c=a||b
+    cmpl    $0, -4(%ebp)
+    jne .L2
+    cmpl    $0, -8(%ebp)
+    je  .L3
+.L2:
+    movl    $1, %eax
+    jmp .L4
+.L3:
+    movl    $0, %eax
+.L4:
+    movl    %eax, -12(%ebp)
+
+#c=!a
+    cmpl    $0, -4(%ebp)
+    sete    %al
+    movzbl  %al, %eax
+    movl    %eax, -12(%ebp)
 </code></pre>
 
 <p>The integer-to-real conversion can be done by <code>fildl</code> instruction.</p>
 
 <h2>Frame</h2>
 
-<p>The <strong>cdecl</strong> calling conversion says that</p>
+<p>The EBP of the caller is stored at <code>+0(%ebp)</code>, the return address is stored at <code>+4(%ebp)</code>. 
+The first paramater (here static links) is stored at <code>+8(%ebp)</code>, 
+the second is at <code>+12(%ebp)</code>, etc.
+Local variables are stoed at <code>-4(%ebp)</code>,<code>-8(%ebp)</code>, etc.</p>
 
-<blockquote>
-  <p>In cdecl, subroutine arguments are passed on the stack. </p>
+<p>Following <strong>cdecl</strong> calling conversion,
+integer values are returned in the <code>%eax</code> register, floating point values—in the <code>ST0</code> x87 register. 
+Registers <code>%eax</code>, <code>%ecx</code>, and <code>%edx</code> are caller-saved, and the rest are callee-saved. 
+Float point registers other than <code>st0</code> is not used.</p>
 
-<p>Integer values and memory addresses are returned in the EAX register, floating point values—in the ST0 x87 register. </p>
+<p>The static link is stored at <code>+8(%ebp)</code>. To set up static link for next frame,
+first load it by <code>movl +8(%ebp),%eax</code>, then do <code>movl (%eax),%eax</code> for <code>scope_now-scope_next</code> times.
+If <code>scope_next</code> > <code>scope_now</code>, set static link as <code>%ebp</code></p>
 
-<p>Registers EAX, ECX, and EDX are caller-saved, and the rest are callee-saved. </p>
+<p>Only two registers are used: <code>%eax</code> and <code>%edx</code> (they are caller-saved).
+Loading local variable can be simply done by something like <code>movl -8(%ebp),%eax</code>.
+To load variables into <code>%eax</code> via static link, 
+first load it by <code>movl +8(%ebp),%eax</code>, then do <code>movl (%eax),%eax</code> for <code>scope_now-scope_next</code> times, 
+finally add the offset to get the finally address for accessing by something like
+<code>movl -4(%eax),eax</code>. 
+The same holds for loading into <code>%edx</code></p>
 
-<p>The x87 floating point registers ST0 to ST7 must be empty (popped or freed) when calling a new function, and ST1 to ST7 must be empty on exiting a function.</p>
-</blockquote>
+<p>Variable initialization is done upon the entry just like normal assignment.
+But this value should be known at the compiling time.</p>
+
+<p>All local variables (including declared and <em>temporary</em>) are allocated on
+the stack. To make things simplier, temporary variables are not reused.</p>
+
+<p>To make stack align to 16-byte boundary, a commen trick is </p>
+
+<pre><code>andl    $-16, %esp
+subl    $32, %esp
+</code></pre>
+
+<h3>Example</h3>
+
+<p>so for a piece PCAT code</p>
+
+<pre><code>(* callle is at scope 1 *)
+PROCEDURE calee(a : INTEGER, b : INTEGER, c : INTEGER ) : INTEGER is
+BEGIN
+    RETURN a + b + c;
+END;
+(* x is at scope 1 *)
+VAR x : INTEGER; (*stored at `-4(%ebp)`)
+
+...
+
+        (* caller is at scope 3 *)
+        PROCEDURE caller () : INTEGER is
+            var ret : INTEGER;    (* stored at `-4(%ebp)` *)
+            var x : INTEGER := 1; (* stored at `-8(%ebp)` *)
+        BEGIN
+            ret := callee(1,2,3);
+            ret := x + ret;
+            RETURN ret;
+        END;
+</code></pre>
+
+<p>the generated code for caller shouled be</p>
+
+<pre><code>    .global caller
+    .type   caller, @function
+caller:
+    pushl   %ebp
+    movl    %esp,%ebp
+    # make some room
+    subl    $16, %esp
+    # variable initialization
+    movl    $1,-8(%ebp)
+    # push parameters
+    pushl   $3
+    pushl   $2
+    pushl   $1
+    # set up staic link
+    movl    +8(%ebp),%eax
+    movl    (%eax),%eax
+    movl    (%eax),%eax
+    pushl   %eax
+    # call
+    call    callee
+    # restore stack
+    addl    $16,%esp
+    # store the reuslt
+    movl    %eax,-4(%ebp)
+    # load x
+    movl    +8(%ebp),%eax
+    movl    (%eax),%eax
+    movl    (%eax),%eax
+    movl    -4(%eax),%eax
+    # load ret
+    movl    -4(%ebp),%edx
+    # plus
+    addl    %edx,%eax
+    # store
+    movl    %eax,%-4(%ebp)
+    # pick return value
+    movl    %-4(%ebp),%eax
+    leave
+    ret
+</code></pre>
 
 <h1>Supporting routing</h1>
 
