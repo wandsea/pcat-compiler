@@ -58,7 +58,9 @@ unop                     -> UPLUS | UMINUS | NOT
 ===========================
 Abstruct Syntax - Extension
 ===========================
-proc-dec                 -> ( ProcDec ( ID formal-param-list type body #level ) ) 
+
+program                  -> ( Program ( body #local-offset) )
+proc-dec                 -> ( ProcDec ( ID formal-param-list type body #level #local-offset ) ) 
 var-dec                  -> ( VarDec ( ID type expression #level #offset ) )
 formal-param             -> ( Param ( ID type #level #offset ) )
 statement                -> 

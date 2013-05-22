@@ -197,7 +197,7 @@ ast* _check_type( ast* x ){
                     begin_scope();    
                     SCOPE_PUSH;   
                     GOPICK(0);        
-                    result=no_type; 
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP; 
                     end_scope();
                     break;
@@ -277,16 +277,17 @@ ast* _check_type( ast* x ){
                     SCOPE_PUSH;
                     GOPICK(1);  //check formal list, adding to scope
                     GOPICK(3);  //check procedure body
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP;
                     end_scope();
                     break;
                 case NamedTyp:
                     id = pick_ast(x,0)->info.variable;
-                    if ( same_name(id,"INT") || same_name(id,"INTEGER") )
+                    if ( same_name(id,"INT") || same_name(id,"INTEGER") || same_name(id,"basic_int") )
                         result = basic_int;
-                    else if ( same_name(id,"REAL") )
+                    else if ( same_name(id,"REAL") || same_name(id,"basic_real") )
                         result = basic_real;
-                    else if ( same_name(id,"BOOLEAN") )
+                    else if ( same_name(id,"BOOLEAN") || same_name(id,"basic_bool") )
                         result = basic_bool;
                     else{
                         nx = lookup( id, NULL );
@@ -455,54 +456,80 @@ ast* _check_type( ast* x ){
                     else if ( ( t1!=basic_int && t1!=basic_real && t1!=basic_bool ) ||
                               ( t2!=basic_int && t2!=basic_real && t2!=basic_bool ) )
                         error(x,"Non-basic type couldn't be used for binary operation");
-                    else if ( (tag(pick_ast(x,0)) == And || tag(pick_ast(x,0)) == Or) && 
-                              (t1!=basic_bool || t2!=basic_bool) )
-                        error(x,"Binary boolean operation expects BOOLEAN type on both sides");
-                    else if ( !(tag(pick_ast(x,0)) == And || tag(pick_ast(x,0)) == Or) &&
-                              (t1==basic_bool || t2==basic_bool) )
-                        error(x,"Binary arithmic operation expects INTEGER or REAL type on both sides");
                     else{
-                        if ( tag(pick_ast(x,0)) == Gt ||
-                             tag(pick_ast(x,0)) == Lt ||
-                             tag(pick_ast(x,0)) == Eq ||
-                             tag(pick_ast(x,0)) == Ge ||
-                             tag(pick_ast(x,0)) == Le ||
-                             tag(pick_ast(x,0)) == Ne ||
-                             tag(pick_ast(x,0)) == And||
-                             tag(pick_ast(x,0)) == Or )
-                            result = basic_bool;
-                        else{
-                            if (t1==basic_real || t2==basic_real)
-                                result = basic_real;
-                            else
-                                result = basic_int;
+                        switch( tag(pick_ast(x,0)) ){
+                            case Plus: case Minus: case Times:
+                                if ( ( t1==basic_int || t1==basic_real ) &&
+                                     ( t2==basic_int || t2==basic_real ) ){
+                                    if ( t1==basic_int && t2==basic_int )
+                                        result = basic_int;
+                                    else
+                                        result = basic_real;
+                                }else
+                                    error(x,"Binary arithmic operation expects INTEGER or REAL type on both sides");
+                                break;
+                            case Div: case Mod:
+                                if ( t1==basic_int && t2==basic_int )
+                                    result = basic_int;
+                                else
+                                    error(x,"Binary arithmic operation expects INTEGER type on both sides");
+                                break;
+                            case Slash:
+                                if ( ( t1==basic_int || t1==basic_real ) &&
+                                     ( t2==basic_int || t2==basic_real ) )
+                                    result = basic_real;
+                                else
+                                    error(x,"Binary arithmic operation expects INTEGER or type on both sides");
+                                break;
+                            case Gt: case Lt: case Eq: case Ge: case Le: case Ne:
+                                if ( ( t1==basic_int || t1==basic_real ) &&
+                                     ( t2==basic_int || t2==basic_real ) )
+                                    result = basic_bool;
+                                else
+                                    error(x,"Binary Comparation operation expects INTEGER or REAL type on both sides");
+                                break;
+                            case And: case Or:
+                                if ( t1==basic_bool && t2==basic_bool )
+                                    result = basic_bool;
+                                else
+                                    error(x,"Binary boolean operation expects BOOLEAN type on both sides");
+                                break;
+                            default:
+                                break;
                         }
                     }
-
+                    
                     append_ast(x,result);
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case UnOpExp:
                     t1 = GOPICK(1);                    
                     if ( t1==no_type )
-                        ;
+                        ; 
                     else if ( t1!=basic_int && t1!=basic_real && t1!=basic_bool )
                         error(x,"Non-basic type couldn't be used for unary operation");
-                    else if ( (tag(pick_ast(x,0)) == Not) && t1!=basic_bool )
-                        error(x,"Unary boolean operation expects BOOLEAN type");
-                    else if ( !(tag(pick_ast(x,0)) == Not) && t1!=basic_int )
-                        error(x,"Unary arithmic operation expects INTEGER or REAL type");
                     else{
-                        if ( tag(pick_ast(x,0)) == Not )
-                            result = basic_bool;
-                        else{
-                            if (t1==basic_real)
-                                result = basic_real;
-                            else
-                                result = basic_int;
+                        switch( tag(pick_ast(x,0)) ){
+                            case UPlus: case UMinus:
+                                if ( t1==basic_int || t1==basic_real ){
+                                    if ( t1==basic_int )
+                                        result = basic_int;
+                                    else
+                                        result = basic_real;
+                                }else
+                                    error(x,"Unary arithmic operation expects INTEGER or REAL type");                      
+                                break;
+                            case Not:
+                                if ( t1==basic_bool )
+                                    result = basic_bool;
+                                else
+                                    error(x,"Unary boolean operation expects BOOLEAN type");
+                                break;
+                            default:
+                                break;
                         }
                     }
-
+                   
                     append_ast(x,result);
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;

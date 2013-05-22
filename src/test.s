@@ -6,15 +6,8 @@ _f:
 	pushl	%ebp
 	movl	%esp, %ebp
 	subl	$16, %esp
-	cmpl	$0, 8(%ebp)
-	je	L2
-	cmpl	$0, 12(%ebp)
-	je	L2
-	movl	$1, %eax
-	jmp	L3
-L2:
-	movl	$0, %eax
-L3:
+	movl	8(%ebp), %eax
+	negl	%eax
 	movl	%eax, -4(%ebp)
 	movl	-4(%ebp), %eax
 	leave

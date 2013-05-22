@@ -58,11 +58,16 @@ void _gen_code( ast* x ){
         case node_ast : {
             ast_list * l;
             ast *t,*t1,*t2;
-            char *l2,*l3;
+            char *l2,*l3,*l4;
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"_%s:\n","MainEntry");  // name for main
+                    fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
+                    fprintf(code_out,"\t andl $-16, %%esp");
+                    fprintf(code_out,"\t subl $%d, %%esp",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t andl $-16, %%esp");
                     GO(0);    // body
+                    fprintf(code_out,"\t leave\n\t ret\n");// epilogue
                     break;
                 case BodyDef:
                     GOPICK(0); // declarations-list
@@ -94,8 +99,13 @@ void _gen_code( ast* x ){
                     break;
                 case ProcDec:   
                     fprintf(code_out,"_%s:\n",ast_str(pick_ast(x,0)));  
+                    fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
+                    fprintf(code_out,"\t andl $-16, %%esp");
+                    fprintf(code_out,"\t subl $%d, %%esp",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t andl $-16, %%esp");
                     // name for sub-routine
-                    GOPICK(3); // generate code for body    
+                    GOPICK(3); // generate code for body   
+                    fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
                     break;
                 case NamedTyp: 
                     // Shouldn't reach here
@@ -188,7 +198,7 @@ void _gen_code( ast* x ){
                             if ( tag(pick_ast(x,0)) == Plus )
                                 fprintf(code_out,"\t addl %%ecx, %%eax\n");
                             else if ( tag(pick_ast(x,0)) == Minus ){
-                                fprintf(code_out,"\t addl %%eax, %%ecx\n");
+                                fprintf(code_out,"\t subl %%eax, %%ecx\n");
                                 fprintf(code_out,"\t movl %%ecx, %%eax\n");
                             }else if ( tag(pick_ast(x,0)) == Times )
                                 fprintf(code_out,"\t imull %%ecx, %%eax\n");
@@ -299,31 +309,79 @@ void _gen_code( ast* x ){
                            tag(pick_ast(x,0)) == Or ){
                     // Boolean operation: and / or
                         // value of two sub-expr
-                        l2 = make_label(); l3 = make_label();
-                        
-                        GOPICK(1);
-                        load_int(pick_ast(x,1),"%eax");
-                        fprintf(code_out,"\t cmpl 0, %%eax\n");
-                        fprintf(code_out,"\t je %s\n",l2);                        
-                        GOPICK(2);
-                        load_int(pick_ast(x,2),"%eax");
-                        fprintf(code_out,"\t cmpl 0, %%eax\n");
-                        fprintf(code_out,"\t je %s\n",l2);    
-                        fprintf(code_out,"\t movl $1, %%eax\n");    
-                        fprintf(code_out,"\t jmp %s\n",l3);
-                        fprintf(code_out,"%s:\n",l2);
-                        fprintf(code_out,"\t movl $0, %%eax\n");                         
-                        fprintf(code_out,"%s:\n",l3);
+                        if ( tag(pick_ast(x,0)) == And ){
+                            l2 = make_label(); l3 = make_label();
+                            
+                            GOPICK(1);
+                            load_int(pick_ast(x,1),"%eax");
+                            fprintf(code_out,"\t cmpl 0, %%eax\n");
+                            fprintf(code_out,"\t je %s\n",l2);                        
+                            GOPICK(2);
+                            load_int(pick_ast(x,2),"%eax");
+                            fprintf(code_out,"\t cmpl 0, %%eax\n");
+                            fprintf(code_out,"\t je %s\n",l2);    
+                            fprintf(code_out,"\t movl $1, %%eax\n");    
+                            fprintf(code_out,"\t jmp %s\n",l3);
+                            fprintf(code_out,"%s:\n",l2);
+                            fprintf(code_out,"\t movl $0, %%eax\n");                         
+                            fprintf(code_out,"%s:\n",l3);
+                        }else{                            
+                            l2 = make_label(); l3 = make_label(); l4 = make_label();
+                            
+                            GOPICK(1);
+                            load_int(pick_ast(x,1),"%eax");
+                            fprintf(code_out,"\t cmpl 0, %%eax\n");
+                            fprintf(code_out,"\t jne %s\n",l2);  
+                            GOPICK(2);
+                            load_int(pick_ast(x,2),"%eax");
+                            fprintf(code_out,"\t cmpl 0, %%eax\n");
+                            fprintf(code_out,"\t je %s\n",l3);
+                            fprintf(code_out,"%s:\n",l2);
+                            fprintf(code_out,"\t movl $1, %%eax\n");       
+                            fprintf(code_out,"\t jmp %s\n",l4);                      
+                            fprintf(code_out,"%s:\n",l3);       
+                            fprintf(code_out,"\t movl $0, %%eax\n");                 
+                            fprintf(code_out,"%s:\n",l4);
+                        }
                     }
-                         /*
-                         
-                             tag(pick_ast(x,0)) == And||
-                             tag(pick_ast(x,0)) == Or 
-                         */
                     break;
                 case UnOpExp:
+                    
+                    // result type
+                    t = pick_ast(x,4);
+                    t1 = pick_ast(pick_ast(x,1),4);                    
+                    GOPICK(1);
+                    if ( tag(pick_ast(x,0)) == UPlus ||
+                         tag(pick_ast(x,0)) == UMinus ){
+                        if ( same_name(ast_str(pick_ast(t,0)),"basic_int") ){
+                            load_int(pick_ast(x,1),"%eax");
+                            
+                            if ( tag(pick_ast(x,0)) == UPlus )
+                                ;
+                            else if ( tag(pick_ast(x,0)) == UMinus )
+                                fprintf(code_out,"\t negl %%eax\n");
+                                
+                            store_int("%eax",x);
+                        }else if ( same_name(ast_str(pick_ast(t,0)),"basic_real") ){
+                            load_float(pick_ast(x,1));
+                            
+                            if ( tag(pick_ast(x,0)) == UPlus )
+                                ;
+                            else if ( tag(pick_ast(x,0)) == UMinus )
+                                fprintf(code_out,"\t fchs\n");
+                                
+                            store_float(x);
+                        }
+                    }else if ( tag(pick_ast(x,0)) == Not ){
+                        load_int(pick_ast(x,1),"%eax");
+                        fprintf(code_out,"\t cmpl $0, %%eax\n");
+                        fprintf(code_out,"\t sete %%al\n");
+                        fprintf(code_out,"\t movzbl %%al, %%eax\n");
+                        store_int("%eax",x);
+                    }
                     break;
                 case LvalExp:
+                    
                     break;
                 case CallExp:   
                     break;
