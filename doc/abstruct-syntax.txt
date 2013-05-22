@@ -58,5 +58,12 @@ unop                     -> UPLUS | UMINUS | NOT
 ===========================
 Abstruct Syntax - Extension
 ===========================
-proc-dec                 -> ( ProcDec ( ID formal-param-list type body level ) ) 
-var-dec                  -> ( VarDec ( ID type expression level offset ) )
+proc-dec                 -> ( ProcDec ( ID formal-param-list type body #level ) ) 
+var-dec                  -> ( VarDec ( ID type expression #level #offset ) )
+formal-param             -> ( Param ( ID type #level #offset ) )
+statement                -> 
+                         -> ( CallSt ( ID expression-list #level-diff ) )
+expression               -> ( BinOpExp ( binop expression expression #offset ) )
+                         -> ( UnOpExp  ( unop expression #offset) )
+                         -> ( CallExp ( ID expression-list #level-diff #offset) )
+lvalue                   -> ( Var ( ID #level-diff #diff ) )
