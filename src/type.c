@@ -431,6 +431,8 @@ ast* _check_type( ast* x ){
                         error(x,"Step of range in FOR must be of INT type");
                         
                     GOPICK(4);                      // do  *e*
+
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case ExitSt:
                     break;

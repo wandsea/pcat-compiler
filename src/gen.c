@@ -21,10 +21,54 @@ char * make_label(){
 }
 
 void load_int( ast* x, char* reg ){
-    
+    int level_diff,offset;
+    int i;
+    switch( tag(x) ){
+        case Var:
+            level_diff = ast_int( pick_ast(x,1) );
+            offset = ast_int( pick_ast(x,2) );
+            assert(level_diff>=0);
+            if ( level_diff == 0 )
+                fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            else{
+                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                for(i = 0; i < level_diff-1; i++ )
+                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            }
+            break;
+        case BinOpExp:
+            offset = ast_int( pick_ast(x,4) );
+            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            break;
+        case UnOpExp:
+            offset = ast_int( pick_ast(x,3) );
+            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            break;
+        case CallExp:
+            offset = ast_int( pick_ast(x,3) );
+            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            break;
+        case IntConst:
+            fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast(x,1)),reg);
+            break;
+        case RealConst:
+            assert(0); // shouln't be here
+            // cannot load real as int
+            break;
+        case StringConst:
+            assert(0); // shouln't be here
+            // cannot load real as int
+            break;
+        default: break;
+    }
 }
 
 void store_int( char* reg, ast* x ){
+    
+}
+
+void store_int_lvalue( char* reg, ast* x ){
     
 }
 
@@ -59,13 +103,16 @@ void _gen_code( ast* x ){
             ast_list * l;
             ast *t,*t1,*t2;
             char *l2,*l3,*l4;
+            int i;
+            int level_diff;
+            ast *var;
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"_%s:\n","MainEntry");  // name for main
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
-                    fprintf(code_out,"\t andl $-16, %%esp");
-                    fprintf(code_out,"\t subl $%d, %%esp",ast_int(pick_ast(x,5)));
-                    fprintf(code_out,"\t andl $-16, %%esp");
+                    fprintf(code_out,"\t andl $-16, %%esp\n");
+                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t andl $-16, %%esp\n");
                     GO(0);    // body
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue
                     break;
@@ -100,9 +147,9 @@ void _gen_code( ast* x ){
                 case ProcDec:   
                     fprintf(code_out,"_%s:\n",ast_str(pick_ast(x,0)));  
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
-                    fprintf(code_out,"\t andl $-16, %%esp");
-                    fprintf(code_out,"\t subl $%d, %%esp",ast_int(pick_ast(x,5)));
-                    fprintf(code_out,"\t andl $-16, %%esp");
+                    fprintf(code_out,"\t andl $-16, %%esp\n");
+                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t andl $-16, %%esp\n");
                     // name for sub-routine
                     GOPICK(3); // generate code for body   
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
@@ -149,36 +196,171 @@ void _gen_code( ast* x ){
                     assert(0); 
                     break;
                 case AssignSt:
+                    GOPICK(1);
+                    load_int(pick_ast(x,0),"%eax");
+                    store_int_lvalue("%eax",pick_ast(x,0));
                     break;
                 case CallSt:
+                // synchronize with CallExpr
+                    FOREACH(pick_ast(x,1))
+                        _gen_code(ELEML);
+                    // static link
+                    level_diff = ast_int( pick_ast(x,4) );
+                    if ( level_diff == -1 )
+                        fprintf(code_out,"\t pushl %%ebp\n");
+                    else{
+                        fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                        for(i = 0; i < level_diff; i++ )
+                            fprintf(code_out, "\t movl (%%edx), %%edx\n");
+                        fprintf(code_out,"\t pushl %%edx\n");
+                    }
+                    // parameters
+                    FOREACH(pick_ast(x,1)){
+                        load_int(ELEML,"%eax");
+                        fprintf(code_out,"\t pushl %%eax\n");
+                    }
+                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast(x,0)));
+                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast(x,1))));
+
                     break;
                 case ReadSt:
+                    FOREACH(pick_ast(x,0)){
+                        // TODO
+                    }
                     break;
                 case WriteSt:
+                    FOREACH(pick_ast(x,0)){
+                        // TODO
+                    }
                     break;
                 case IfSt:
+                /*
+                    If A then B else C:
+                    
+                    [get A]
+                    cmpl $0,A
+                    jne L2
+                    C
+                    jmp L3:
+                L2: 
+                    B
+                L3:
+                */
+                    l2 = make_label(); l3 = make_label();
+
+                    GOPICK(0);
+                    load_int(pick_ast(x,0),"%eax");
+                    fprintf(code_out,"\t cmpl $0, %%eax\n");
+                    fprintf(code_out,"\t jne %s\n",l2);
+                    GOPICK(2);
+                    fprintf(code_out,"\t jmp %s\n",l3);
+                    fprintf(code_out,"%s:\n",l2);
+                    GOPICK(1);
+                    fprintf(code_out,"%s:\n",l3);
                     break;
                 case WhileSt:
+                /*
+                    while A do B
+
+                L2:
+                    [get A]
+                    cmpl $0,A
+                    je L3
+                    B
+                    jmp L2;
+                L3:
+                */
+                    l2 = make_label(); l3 = make_label();
+                    fprintf(code_out,"%s:\n",l2);
+                    GOPICK(0);
+                    load_int(pick_ast(x,0),"%eax");
+                    fprintf(code_out,"\t cmpl $0, %%eax\n");
+                    fprintf(code_out,"\t je %s\n",l3);
+                    GOPICK(1);
+                    fprintf(code_out,"\t jmp %s\n",l2);
+                    fprintf(code_out,"%s:\n",l3);
                     break;
                 case LoopSt:
+                /*
+                    Loop B:
+
+                L2:
+                    B
+                    jmp L2;
+                */
+                    l2 = make_label();
+                    fprintf(code_out,"%s:",l2);
+                    GOPICK(0);
+                    fprintf(code_out,"\t jmp %s\n",l2);
                     break;
                 case ForSt:
+                /*
+                    For A := B to C by D do E:
+
+                    A := B
+                    while A <= C:
+                        E
+                        A = A + E
+
+                    [A := B]
+                L2:
+                    [test A,C]
+                    je L3
+                    E
+                    [ A = A + D ]
+                    jmp L2
+                L3;
+                */
+                    l2 = make_label(); l3 = make_label();
+                    var = mk_node(Var,
+                                  cons(pick_ast(x,0),
+                                       cons(mk_int(0),
+                                            cons(pick_ast(x,5),
+                                                 NULL))));
+
+                    _gen_code(mk_node(AssignSt,
+                                      cons(var,
+                                           cons(pick_ast(x,1),
+                                                NULL))));
+                    fprintf(code_out,"%s:",l2);
+                    GOPICK(2);
+                    load_int(var,"%eax");
+                    load_int(pick_ast(x,2),"%ecx");
+                    fprintf(code_out,"\t testl %%eax, %%ecx\n");
+                    fprintf(code_out,"\t je %s\n",l3);
+                    GOPICK(4);
+                    GOPICK(3);
+                    load_int(var,"%eax");
+                    load_int(pick_ast(x,3),"%ecx");
+                    fprintf(code_out,"\t addl %%ecx, %%eax\n");
+                    store_int("%eax",var);
+                    fprintf(code_out,"\t jmp %s\n",l2);
+                    fprintf(code_out,"%s:",l3);
                     break;
                 case ExitSt:
+                    fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
                     break;
                 case RetSt:
+                    if ( tag(pick_ast(x,0)) == EmptyExpression )
+                        ;
+                    else{
+                        GOPICK(0);
+                        load_int(pick_ast(x,0),"%eax");
+                    } 
+                    fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
                     break;
-                case SeqSt:                  
+                case SeqSt:  
+                    FOREACH(x) _gen_code(ELEML);                
                     break;
                 case ExprList:
+                    assert(0);
                     break;
                 /*
                     For expression, return no-type if something wrong or some 
                         component is of no-type, which means I couldn't
                         handle the type of this expression.
                 */
-                case BinOpExp:
-                    
+                case BinOpExp:                    
                     // result type
                     t = pick_ast(x,4);
                     t1 = pick_ast(pick_ast(x,1),4);
@@ -274,7 +456,7 @@ void _gen_code( ast* x ){
                             load_int(pick_ast(x,1),"%eax");
                             load_int(pick_ast(x,2),"%ecx");                            
                             
-                            fprintf(code_out,"\t cmpl %%eax, %%ebx\n");
+                            fprintf(code_out,"\t cmpl %%eax, %%ecx\n");
                             switch (tag(pick_ast(x,0))){
                                 case Gt: fprintf(code_out,"\t setg %%al\n"); break;
                                 case Lt: fprintf(code_out,"\t setl %%al\n"); break;
@@ -384,18 +566,30 @@ void _gen_code( ast* x ){
                     load_int(pick_ast(x,0),"%eax");
                     store_int("%eax",x);
                     break;
-                case CallExp:
+                case CallExp:                
+                // synchronize with CallSt
                     FOREACH(pick_ast(x,1))
                         _gen_code(ELEML);
                     // static link
-                    // ...
+                    level_diff = ast_int( pick_ast(x,4) );
+                    if ( level_diff == -1 )
+                        fprintf(code_out,"\t pushl %%ebp\n");
+                    else{
+                        fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                        for(i = 0; i < level_diff; i++ )
+                            fprintf(code_out, "\t movl (%%edx), %%edx");
+                        fprintf(code_out,"\t pushl %%edx");
+                    }
                     // parameters
                     FOREACH(pick_ast(x,1)){
                         load_int(ELEML,"%eax");
-                        fprintf(code_out,"\t push %%eax\n");
+                        fprintf(code_out,"\t pushl %%eax\n");
                     }
                     fprintf(code_out,"\t call _%s\n",ast_str(pick_ast(x,0)));
                     fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast(x,1))));
+
+                    // store return
+                    store_int("%eax",x);
                     break;
                 case RecordExp:
                 /*
@@ -403,31 +597,43 @@ void _gen_code( ast* x ){
                 */
                     break;
                 case ArrayExp:   
+                    assert(0); // shouln't be here
                     break;
                 case IntConst:
+                    // do nothing
                     break;
                 case RealConst:
+                    // do nothing
                     break;
                 case StringConst:
+                    // do nothing
                     break;
                 case RecordInitList:
+                    assert(0); // shouln't be here
                     break;
                 case RecordInit:
+                    assert(0); // shouln't be here
                     break;
                 case ArrayInitList:
+                    assert(0); // shouln't be here
                     break;
                 case ArrayInit:
+                    assert(0); // shouln't be here
                     break;
                 case LvalList:
+                    assert(0); // shouln't be here
                     break;
-                case Var:                    
+                case Var:                 
+                    // do nothing
                     break;
                 case ArrayDeref:
+                    assert(0); // shouln't be here
                 /*
                     // Not Implemented !!
                 */                
                     break;
                 case RecordDeref:
+                    assert(0); // shouln't be here
                     break;
                 
                 /* binary/unary operator wouldn't be used here */                
@@ -447,16 +653,21 @@ void _gen_code( ast* x ){
                 case Or:
                 case UPlus:
                 case UMinus:
-                case Not:             
+                case Not:                       
+                    assert(0); // shouln't be here      
                     break;
                 
-                case TypeInferenceNeeded:
+                case TypeInferenceNeeded:                
+                    assert(0); // shouln't be here
                     break;
-                case VoidType:
+                case VoidType:                
+                    assert(0); // shouln't be here
                     break;
                 case EmptyStatement:
+                    // do nothing
                     break;
                 case EmptyExpression:
+                    // do nothing
                     break;
             }
             break;
