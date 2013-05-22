@@ -109,6 +109,11 @@ ast_list* reverse ( ast_list* );
 
 /* access */
 int tag( ast* a );
+#define ast_int(a) a->info.integer
+int ast_real_repr( ast* a );
+#define ast_var(a) a->info.variable
+#define ast_str(a) a->info.string
+
 ast_list* args( ast* a );
 ast* pick_ast_list( ast_list* a, int k );
 ast* pick_ast( ast* a, int k );

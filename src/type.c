@@ -154,8 +154,8 @@ int scope_offset[1000];
 int scope_offset_top;
 #define SCOPE_PUSH scope_offset[scope_offset_top++] = 0
 #define SCOPE_POP  scope_offset[--scope_offset_top] = 0
-#define CURR_OFFSET scope_offset[scope_offset_top-1]
-#define TAKE_OFFSET (CURR_OFFSET-=4,CURR_OFFSET)
+#define CURR_LOCAL_OFFSET scope_offset[scope_offset_top-1]
+#define TAKE_LOCAL_OFFSET (CURR_LOCAL_OFFSET-=4,CURR_LOCAL_OFFSET)
 
 int param_offset;
 #define TAKE_PARAM_OFFSET (param_offset+=4,param_offset)
@@ -226,7 +226,7 @@ ast* _check_type( ast* x ){
                 case VarDec:
                     // append level/offset
                     append_ast(x,mk_int(curr_level()));
-                    append_ast(x,mk_int(TAKE_OFFSET));
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
 
                     // real works
                     id = pick_ast(x,0)->info.variable;
@@ -479,7 +479,8 @@ ast* _check_type( ast* x ){
                         }
                     }
 
-                    append_ast(x,mk_int(TAKE_OFFSET));
+                    append_ast(x,result);
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case UnOpExp:
                     t1 = GOPICK(1);                    
@@ -502,7 +503,8 @@ ast* _check_type( ast* x ){
                         }
                     }
 
-                    append_ast(x,mk_int(TAKE_OFFSET));
+                    append_ast(x,result);
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case LvalExp:
                     result = GOPICK(0);
@@ -538,7 +540,7 @@ ast* _check_type( ast* x ){
 
 
                     append_ast(x,mk_int(curr_level()-pick_ast(decl,4)->info.integer));
-                    append_ast(x,mk_int(TAKE_OFFSET));
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case RecordExp:
                     error(x,"RecordExp checking not implement");
@@ -664,10 +666,10 @@ ast* _check_type( ast* x ){
 
 int typecheck( ast* x ){
     //basic types
-    basic_int  = mk_node(NamedTyp,cons(mk_var("INT"),NULL));
-    basic_real = mk_node(NamedTyp,cons(mk_var("REAL"),NULL));
-    basic_bool = mk_node(NamedTyp,cons(mk_var("BOOLEAN"),NULL));
-    basic_str  = mk_node(NamedTyp,cons(mk_var("basic_string"),NULL));
+    basic_int  = mk_node(NamedTyp,cons(mk_var("basic_int"),NULL));
+    basic_real = mk_node(NamedTyp,cons(mk_var("basic_real"),NULL));
+    basic_bool = mk_node(NamedTyp,cons(mk_var("basic_bool"),NULL));
+    basic_str  = mk_node(NamedTyp,cons(mk_var("basic_str"),NULL));
     no_type    = mk_node(NamedTyp,cons(mk_var("no_type"),NULL));
     need_infer = mk_node(NamedTyp,cons(mk_var("need_infer"),NULL));
     void_type  = mk_node(NamedTyp,cons(mk_var("void_type"),NULL));

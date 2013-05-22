@@ -97,6 +97,12 @@ int tag( ast* a ){
     return a->info.node.tag;
 }
 
+int ast_real_repr( ast* a ){
+    float fv = a->info.real;
+    int iv = *( (int*)(void*)(&fv) );
+    return iv;
+}
+
 ast_list* args( ast* a ){
     return a->info.node.arguments;
 }

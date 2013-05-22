@@ -57,6 +57,9 @@ For strings, we may need
         .long	.LC0
 
 ## Arithmetic operations
+
+See https://en.wikibooks.org/wiki/X86_Assembly for more examples
+
 In the following examples, assume that integer `a` ,`b` and `c` are stored at `-4(%ebp)` `-8(%ebp)` and `-12(%ebp)` (recall that Boolean is also treated as integer),
 float `d` , `e` and 'f' are stored at `-12(%ebp)` , `-16(%ebp)` and `-20(%ebp)`.
 
@@ -140,6 +143,9 @@ float `d` , `e` and 'f' are stored at `-12(%ebp)` , `-16(%ebp)` and `-20(%ebp)`.
         movzbl	%al, %eax
         movl	%eax, -12(%ebp)
 
+for floats see
+http://www2.math.uni-wuppertal.de/~fpf/Uebungen/GdR-SS02/opcode_f.html
+
 
 The integer-to-real conversion can be done by `fildl` instruction.
 
@@ -159,7 +165,7 @@ The static link is stored at `+8(%ebp)`. To set up static link for next frame,
 first load it by `movl +8(%ebp),%eax`, then do `movl (%eax),%eax` for `scope_now-scope_next` times.
 If `scope_next` > `scope_now`, set static link as `%ebp`
 
-Only two registers are used: `%eax` and `%edx` (they are caller-saved).
+Register usage is: `%eax` for left operand, `%ecx` for right operand, `%edx` for memory dereference and expanding (like for `idivl`)
 Loading local variable can be simply done by something like `movl -8(%ebp),%eax`.
 To load variables into `%eax` via static link, 
 first load it by `movl +8(%ebp),%eax`, then do `movl (%eax),%eax` for `scope_now-scope_next` times, 
