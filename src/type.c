@@ -534,6 +534,7 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case LvalExp:
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     result = GOPICK(0);
                     break;
                 case CallExp:                    

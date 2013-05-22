@@ -381,9 +381,21 @@ void _gen_code( ast* x ){
                     }
                     break;
                 case LvalExp:
-                    
+                    load_int(pick_ast(x,0),"%eax");
+                    store_int("%eax",x);
                     break;
-                case CallExp:   
+                case CallExp:
+                    FOREACH(pick_ast(x,1))
+                        _gen_code(ELEML);
+                    // static link
+                    // ...
+                    // parameters
+                    FOREACH(pick_ast(x,1)){
+                        load_int(ELEML,"%eax");
+                        fprintf(code_out,"\t push %%eax\n");
+                    }
+                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast(x,0)));
+                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast(x,1))));
                     break;
                 case RecordExp:
                 /*

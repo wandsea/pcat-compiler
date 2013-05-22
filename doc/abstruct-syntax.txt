@@ -68,4 +68,5 @@ statement                ->
 expression               -> ( BinOpExp ( binop expression expression #type #offset ) )
                          -> ( UnOpExp  ( unop expression #type #offset) ) 
                          -> ( CallExp ( ID expression-list #level-diff #offset) )
+                         -> ( LvalExp ( lvalue #offset ) )
 lvalue                   -> ( Var ( ID #level-diff #diff ) )
