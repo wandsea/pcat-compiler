@@ -23,61 +23,193 @@ char * make_label(){
 void load_int( ast* x, char* reg ){
     int level_diff,offset;
     int i;
+    char* src = malloc(100);
     switch( tag(x) ){
-        case Var:
-            level_diff = ast_int( pick_ast(x,1) );
-            offset = ast_int( pick_ast(x,2) );
-            assert(level_diff>=0);
+        case Var:            
+            if ( same_name(ast_var(pick_ast(x,0)),"TRUE") ){
+                src = "$1";
+                level_diff = 0;
+            }else if ( same_name(ast_var(pick_ast(x,0)),"FALSE") ){
+                src = "$0";
+                level_diff = 0;
+            }else{           
+                offset = ast_int( pick_ast(x,3) );
+                sprintf(src,"%d(%%ebp)",offset);                
+                level_diff = ast_int( pick_ast(x,2) ); 
+                assert(level_diff>=0);
+            }            
+            
             if ( level_diff == 0 )
-                fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+                fprintf(code_out,"\t movl %s, %s\n",src,reg);
             else{
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
-                fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+                fprintf(code_out,"\t movl %s, %s\n",src,reg);
             }
             break;
         case BinOpExp:
-            offset = ast_int( pick_ast(x,4) );
-            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
-            break;
-        case UnOpExp:
-            offset = ast_int( pick_ast(x,3) );
-            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
-            break;
+        case UnOpExp: 
         case CallExp:
-            offset = ast_int( pick_ast(x,3) );
-            fprintf(code_out,"\t movl %d(%%ebp) %s\n",offset,reg);
+            if ( tag(x) == BinOpExp) offset = ast_int( pick_ast(x,4) );
+            if ( tag(x) == UnOpExp)  offset = ast_int( pick_ast(x,3) );
+            if ( tag(x) == CallExp)  offset = ast_int( pick_ast(x,3) );
+            sprintf(src,"%d(%%ebp)",offset);
+            fprintf(code_out,"\t movl %s, %s\n",src,reg);
             break;
         case IntConst:
             fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast(x,1)),reg);
             break;
-        case RealConst:
+        default:
             assert(0); // shouln't be here
-            // cannot load real as int
+            // other tag shouldn't call load_int
             break;
-        case StringConst:
-            assert(0); // shouln't be here
-            // cannot load real as int
-            break;
-        default: break;
     }
 }
 
 void store_int( char* reg, ast* x ){
-    
-}
-
-void store_int_lvalue( char* reg, ast* x ){
-    
+    int level_diff,offset;
+    int i;
+    char* dst = malloc(100);
+    switch( tag(x) ){
+        case Var:
+            offset = ast_int( pick_ast(x,3) );
+            sprintf(dst,"%d(%%ebp)",offset);            
+            level_diff = ast_int( pick_ast(x,2) ); 
+            assert(level_diff>=0);
+            if ( level_diff == 0 )
+                fprintf(code_out,"\t movl %s, %s\n",reg,dst);
+            else{
+                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                for(i = 0; i < level_diff-1; i++ )
+                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                fprintf(code_out,"\t movl %s, %s\n",reg,dst);
+            }
+            break;        
+        case BinOpExp:
+        case UnOpExp:
+        case CallExp:
+            if ( tag(x) == BinOpExp) offset = ast_int( pick_ast(x,4) );
+            if ( tag(x) == UnOpExp)  offset = ast_int( pick_ast(x,3) );
+            if ( tag(x) == CallExp)  offset = ast_int( pick_ast(x,3) );
+            sprintf(dst,"%d(%%ebp)",offset);       
+            fprintf(code_out,"\t movl %s, %s\n",reg,dst);
+            break;
+        default:
+            assert(0); // shouln't be here
+            // other tag shouldn't call load_int
+            break;
+    }
 }
 
 void load_float( ast* x ){
-    
+    ast* t; // type
+    int level_diff,offset;
+    int i;
+    char *opr, *load_int = "fildl", *load_float = "flds";
+    char* src = malloc(100);
+    // TODO: opr type
+    switch( tag(x) ){
+        case Var:
+            offset = ast_int( pick_ast(x,3) );
+            sprintf(src,"%d(%%ebp)",offset);                
+            level_diff = ast_int( pick_ast(x,2) ); 
+            assert(level_diff>=0);
+            
+            if ( same_name(ast_str(pick_ast_comp(x,"type")),"basic_int") )
+                opr = load_int;
+            else if ( same_name(ast_str(pick_ast_comp(x,"type")),"basic_int") )
+                opr = load_float;
+            else 
+                assert(0);
+                
+            if ( level_diff == 0 )
+                fprintf(code_out,"\t %s %s\n",opr,src);
+            else{
+                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                for(i = 0; i < level_diff-1; i++ )
+                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                fprintf(code_out,"\t %s %s\n",opr,src);
+            }
+            break;
+        case BinOpExp:
+            offset = ast_int( pick_ast(x,4) );
+            t = pick_ast(x,4);
+            if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
+                opr = load_int;
+            else if ( same_name(ast_str(pick_ast(t,0)),"basic_float") )
+                opr = load_float;
+            else
+                assert(0);
+            sprintf(src,"%d(%%ebp)",offset);      
+            fprintf(code_out,"\t %s %s\n",opr,src);
+            break;
+        case UnOpExp:
+            offset = ast_int( pick_ast(x,3) );            
+            t = pick_ast(x,4);
+            if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
+                opr = load_int;
+            else if ( same_name(ast_str(pick_ast(t,0)),"basic_float") )
+                opr = load_float;
+            else
+                assert(0);
+            sprintf(src,"%d(%%ebp)",offset);      
+            fprintf(code_out,"\t %s %s\n",opr,src);
+            break;
+        case CallExp:
+            offset = ast_int( pick_ast(x,3) );
+            opr = load_float;
+            sprintf(src,"%d(%%ebp)",offset); 
+            fprintf(code_out,"\t %s %s\n",opr,src);
+            break;
+        case IntConst:
+            fprintf(code_out,"\t fildl $%d\n",ast_int(pick_ast(x,1)));
+            break;
+        case RealConst:
+            fprintf(code_out,"\t flds $%d\n",ast_real_repr(pick_ast(x,1)));
+        default:
+            assert(0); // shouln't be here
+            // other tag shouldn't call load_int
+            break;
+    }
 }
 
 void store_float( ast* x ){
-    
+    int level_diff,offset;
+    int i;
+    char *opr = "fstps";
+    switch( tag(x) ){
+        case Var:
+            level_diff = ast_int( pick_ast(x,2) );
+            offset = ast_int( pick_ast(x,3) );
+            assert(level_diff>=0);
+            if ( level_diff == 0 )
+                fprintf(code_out,"\t %s %d(%%ebp)\n",opr,offset);
+            else{
+                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                for(i = 0; i < level_diff-1; i++ )
+                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                fprintf(code_out,"\t %s %d(%%edx)\n",opr,offset);
+            }
+            break;
+        case BinOpExp:
+        case UnOpExp:
+        case CallExp:
+            if ( tag(x) == BinOpExp ) offset = ast_int( pick_ast(x,4) );
+            if ( tag(x) == UnOpExp )  offset = ast_int( pick_ast(x,3) );
+            if ( tag(x) == CallExp )  offset = ast_int( pick_ast(x,3) );
+            fprintf(code_out,"\t %s %d(%%ebp)\n",opr,offset);
+            break;
+        case IntConst:
+            fprintf(code_out,"\t fildl $%d\n",ast_int(pick_ast(x,1)));
+            break;
+        case RealConst:
+            fprintf(code_out,"\t flds $%d\n",ast_int(pick_ast(x,1)));
+        default:
+            assert(0); // shouln't be here
+            // other tag shouldn't call load_int
+            break;
+    }
 }
 
 // change: to generate intermediate code
@@ -197,8 +329,9 @@ void _gen_code( ast* x ){
                     break;
                 case AssignSt:
                     GOPICK(1);
+                    // this works for both INTEGER and REAL
                     load_int(pick_ast(x,0),"%eax");
-                    store_int_lvalue("%eax",pick_ast(x,0));
+                    store_int("%eax",pick_ast(x,0));
                     break;
                 case CallSt:
                 // synchronize with CallExpr
@@ -314,9 +447,10 @@ void _gen_code( ast* x ){
                     l2 = make_label(); l3 = make_label();
                     var = mk_node(Var,
                                   cons(pick_ast(x,0),
-                                       cons(mk_int(0),
-                                            cons(pick_ast(x,5),
-                                                 NULL))));
+                                       cons(NULL,
+                                            cons(mk_int(0),
+                                                 cons(pick_ast(x,5),
+                                                      NULL)))));
 
                     _gen_code(mk_node(AssignSt,
                                       cons(var,
@@ -346,7 +480,7 @@ void _gen_code( ast* x ){
                     else{
                         GOPICK(0);
                         load_int(pick_ast(x,0),"%eax");
-                    } 
+                    }
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
                     break;
                 case SeqSt:  

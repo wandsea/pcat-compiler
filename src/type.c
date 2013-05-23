@@ -24,8 +24,9 @@ ast *no_type, *need_infer, *void_type;
 int has_error;
 
 void print_repr(ast* x){  
-#define GOPICK(k)      print_repr( pick_ast(x,k) ) 
-#define p              printf 
+#define GO_PICK(k)          print_repr( pick_ast(x,k) )
+#define GO_PICK_COMP(k)     print_repr( pick_ast_comp(x,k) )
+#define p                   printf 
     switch (x->tag){
         case int_ast:   break;
         case real_ast:  break;
@@ -42,7 +43,7 @@ void print_repr(ast* x){
                     case VarDec:p("VAR");               break;
                     case TypeDec:p("TYPE");             break;
                     case ProcDec: p("PROCEDURE");       break;
-                    case NamedTyp: GOPICK(0);           break;
+                    case NamedTyp: GO_PICK(0);          break;
                     case ArrayTyp: p("ARRAY OF");       break;
                     case RecordTyp:p("RECORD");         break;
                     case NoTyp:p("[No Type]");          break;
@@ -62,21 +63,21 @@ void print_repr(ast* x){
                     case RetSt:p("RETURN");             break;
                     case SeqSt:                         break;
                     case ExprList:                      break;
-                    case BinOpExp:GOPICK(0);            break;
-                    case UnOpExp:GOPICK(0);             break;
+                    case BinOpExp:GO_PICK(0);           break;
+                    case UnOpExp:GO_PICK(0);            break;
                     case LvalExp:                       break;
-                    case CallExp:GOPICK(0);             break;
+                    case CallExp:GO_PICK(0);            break;
                     case RecordExp:                     break;
-                    case ArrayExp:GOPICK(0);            break;
-                    case IntConst:GOPICK(0);            break;
-                    case RealConst:GOPICK(0);           break;
-                    case StringConst: GOPICK(0);        break;
+                    case ArrayExp:GO_PICK(0);           break;
+                    case IntConst:GO_PICK(0);           break;
+                    case RealConst:GO_PICK(0);          break;
+                    case StringConst: GO_PICK(0);       break;
                     case RecordInitList:                break;
                     case RecordInit:                    break;
                     case ArrayInitList:                 break;
                     case ArrayInit:p("OF");             break;
                     case LvalList:                      break;
-                    case Var:GOPICK(0);                 break;
+                    case Var:GO_PICK(0);                break;
                     case ArrayDeref:                    break;
                     case RecordDeref:                   break;
                         
@@ -107,7 +108,7 @@ void print_repr(ast* x){
         };
         break;
     }
-#undef GOPICK
+#undef GO_PICK
 #undef p
 }
 
@@ -161,11 +162,12 @@ int param_offset;
 #define TAKE_PARAM_OFFSET (param_offset+=4,param_offset)
 
 ast* _check_type( ast* x ){
-#define GOPICK(k)      _check_type( pick_ast(x,k) )
-#define GO(e)          _check_type( e )
-#define FOREACH(x)     for(l=args(x);l;l=l->next)
-#define ELEM(l)        l->elem
-#define ELEML          ELEM(l)
+#define GO_PICK(k)          _check_type( pick_ast(x,k) )
+#define GO_PICK_COMP(k)     _check_type( pick_ast_comp(x,k) )
+#define GO(e)               _check_type( e )
+#define FOREACH(x)          for(l=args(x);l;l=l->next)
+#define ELEM(l)             l->elem
+#define ELEML               ELEM(l)
 
     //show_trace(x);
     
@@ -196,13 +198,14 @@ ast* _check_type( ast* x ){
                 case Program:    
                     begin_scope();    
                     SCOPE_PUSH;   
-                    GOPICK(0);        
+                    GO_PICK_COMP("body");        
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP; 
                     end_scope();
                     break;
                 case BodyDef:      
-                    GOPICK(0);GOPICK(1); 
+                    GO_PICK_COMP("declarations-list");
+                    GO_PICK_COMP("statements-list"); 
                     result=no_type; 
                     break;
                 case DeclareList:    
@@ -217,7 +220,7 @@ ast* _check_type( ast* x ){
                 case VarDecs:
                     FOREACH(x) GO(ELEML);
                     break;
-                case TypeDecs:    
+                case TypeDecs:
                     FOREACH(x) GO(ELEML);
                     break;       
                 case ProcDecs:
@@ -229,9 +232,9 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
 
                     // real works
-                    id = pick_ast(x,0)->info.variable;
-                    t1 = GOPICK(1);
-                    t2 = GOPICK(2);
+                    id = ast_var(pick_ast_comp(x,"ID"));
+                    t1 = GO_PICK_COMP("type");
+                    t2 = GO_PICK_COMP("expression");
                     if (t1==need_infer)
                         if (t2==no_type)
                             error(x,"Cannot infer the type");
@@ -252,11 +255,11 @@ ast* _check_type( ast* x ){
 
                     break;
                 case TypeDec:                
-                    id = pick_ast(x,0)->info.variable;
+                    id = ast_var(pick_ast_comp(x,"ID"));
                     
                     decl = lookup(id,&level);
                     if ( !decl ){
-                        insert(id,GOPICK(1));
+                        insert(id,GO_PICK_COMP("type"));
                     }else
                         error(x,"Name conflict");
                     break;
@@ -265,24 +268,24 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(curr_level()));
 
                     // real works             
-                    id = pick_ast(x,0)->info.variable;
+                    id = ast_var(pick_ast_comp(x,"ID"));
                     decl = lookup(id,&level);
                     if ( !decl ){
                         insert(id,x);
                     }else
                         error(x,"Name conflict");                       
                     
-                    GOPICK(2);  //check return type
+                    GO_PICK_COMP("type");  //check return type
                     begin_scope();
                     SCOPE_PUSH;
-                    GOPICK(1);  //check formal list, adding to scope
-                    GOPICK(3);  //check procedure body
+                    GO_PICK_COMP("formal-param-list");  //check formal list, adding to scope
+                    GO_PICK_COMP("body");  //check procedure body
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP;
                     end_scope();
                     break;
                 case NamedTyp:
-                    id = pick_ast(x,0)->info.variable;
+                    id = ast_var(pick_ast_comp(x,"ID"));
                     if ( same_name(id,"INT") || same_name(id,"INTEGER") || same_name(id,"basic_int") )
                         result = basic_int;
                     else if ( same_name(id,"REAL") || same_name(id,"basic_real") )
@@ -297,7 +300,7 @@ ast* _check_type( ast* x ){
                     }
                     break;
                 case ArrayTyp:
-                    t0 = GOPICK(0); // check inner element's type
+                    t0 = GO_PICK_COMP("type"); // check inner element's type
                     if ( t0 == no_type )
                         ;
                     else
@@ -326,13 +329,13 @@ ast* _check_type( ast* x ){
                     FOREACH(x) GO(ELEML);   // check each param
                     break;
                 case Param:
-                    id = pick_ast(x,0)->info.variable;
+                    id = ast_var(pick_ast_comp(x,"ID"));
                     decl = lookup(id,&level);
                     if ( decl && !(level < curr_level() ) ){
                         error(x,"Name conflict is not allowed");
                         printf("%d %d\n",level,curr_level());
                     }else{
-                        t1 = GOPICK(1);
+                        t1 = GO_PICK(1);
                         insert(id,x);
                         result = t1;
                     }
@@ -340,30 +343,30 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(TAKE_PARAM_OFFSET));
                     break;
                 case AssignSt:
-                    t0 = GOPICK(0);
-                    t1 = GOPICK(1);
+                    t0 = GO_PICK_COMP("lvalue");
+                    t1 = GO_PICK_COMP("expression");
                     if ( t0==no_type || t1 == no_type )
                         ;
                     else if ( t0 != t1 )
                         error(x,"Assgining between diffrent types is not allowed");   
                     break;
                 case CallSt:
-                    id = pick_ast(x,0)->info.variable;                    
+                    id = ast_var(pick_ast_comp(x,"ID"));                 
                     decl = lookup(id,&level);
                     if ( !decl )
                         error(x,"Cannot find the called procedure");
                     else{
                         //ap -> actual parameters
                         //fp -> formal paramaters
-                        ap = pick_ast(x,1);
-                        fp = pick_ast(decl,1);
+                        ap = pick_ast_comp(x,"expression-list");
+                        fp = pick_ast_comp(decl,"formal-param-list");
                         // lap -> list of ap
                         // lfp -> list of fp
                         lap = args(ap);
                         lfp = args(fp);
                         for(;lap && lfp; lap=lap->next, lfp=lfp->next ){
                             t0 = GO(ELEM(lap));
-                            t1 = GO(pick_ast(ELEM(lfp),1));
+                            t1 = GO(pick_ast_comp(ELEM(lfp),"type"));
                             if ( t0 != t1 )
                                 error(x,"Formal and actual parameters don't match");
                         }
@@ -373,11 +376,10 @@ ast* _check_type( ast* x ){
                             error(x,"Need more actual parameters");
                     }
 
-                    append_ast(x,mk_int(curr_level()-pick_ast(decl,4)->info.integer));
+                    append_ast(x,mk_int(curr_level()-pick_ast_comp(decl,"level")->info.integer));
                     break;
                 case ReadSt:
-                    nx = pick_ast(x,0);
-                    FOREACH(nx){
+                    FOREACH(pick_ast_comp(x,"lvalue-list")){
                         t0 = GO(ELEML);
                         
                         if ( t0 != basic_int && 
@@ -387,8 +389,7 @@ ast* _check_type( ast* x ){
                     }
                     break;
                 case WriteSt:
-                    nx = pick_ast(x,0);
-                    FOREACH(nx){
+                    FOREACH(pick_ast_comp(x,"expression-list")){
                         t0 = GO(ELEML);
                         if ( t0 != basic_int && 
                              t0 != basic_real &&
@@ -398,27 +399,27 @@ ast* _check_type( ast* x ){
                     }
                     break;
                 case IfSt:
-                    t0 = GOPICK(0);
+                    t0 = GO_PICK_COMP("expression");
                     if ( t0 != basic_bool )
                         error(x,"Condition in IF must be of BOOLEAN type");
-                    GOPICK(1);
-                    GOPICK(2);
+                    GO_PICK_COMP("statement");
+                    GO_PICK_COMP("statement-else");
                     break;
                 case WhileSt:
-                    t0 = GOPICK(0);
+                    t0 = GO_PICK_COMP("expression");
                     if ( t0 != basic_bool )
                         error(x,"Condition in WHILE must be of BOOLEAN type");
-                    GOPICK(1);
+                    GO_PICK_COMP("statement");
                     break;
                 case LoopSt:
-                    GOPICK(1);
+                    GO_PICK_COMP("statement");
                     break;
                 case ForSt:
                     // For I = a to b by c do e
-                    id = pick_ast(x,0)->info.variable;   // for *I*
-                    t1 = GOPICK(1);                 // =   *a*
-                    t2 = GOPICK(2);                 // to  *b*
-                    t3 = GOPICK(3);                 // by  *c*
+                    id = ast_var(pick_ast_comp(x,"ID")); 
+                    t1 = GO_PICK_COMP("expression-from");               
+                    t2 = GO_PICK_COMP("expression-to");                
+                    t3 = GO_PICK_COMP("expression-by");               
                     
                     decl = lookup(id,&level);
                     if ( !decl )
@@ -429,8 +430,8 @@ ast* _check_type( ast* x ){
                         error(x,"End of range in FOR must be of INT type");
                     else if (t3 != basic_int)
                         error(x,"Step of range in FOR must be of INT type");
-                        
-                    GOPICK(4);                      // do  *e*
+                    
+                    GO_PICK_COMP("statement");                     
 
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
@@ -450,8 +451,8 @@ ast* _check_type( ast* x ){
                         handle the type of this expression.
                 */
                 case BinOpExp:
-                    t1 = GOPICK(1);
-                    t2 = GOPICK(2);
+                    t1 = GO_PICK_COMP("expression-left");
+                    t2 = GO_PICK_COMP("expression-right");
                     
                     if ( t1==no_type || t2 == no_type )
                         ;
@@ -459,7 +460,7 @@ ast* _check_type( ast* x ){
                               ( t2!=basic_int && t2!=basic_real && t2!=basic_bool ) )
                         error(x,"Non-basic type couldn't be used for binary operation");
                     else{
-                        switch( tag(pick_ast(x,0)) ){
+                        switch( tag(pick_ast_comp(x,"binop")) ){
                             case Plus: case Minus: case Times:
                                 if ( ( t1==basic_int || t1==basic_real ) &&
                                      ( t2==basic_int || t2==basic_real ) ){
@@ -505,13 +506,13 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case UnOpExp:
-                    t1 = GOPICK(1);                    
+                    t1 = GO_PICK_COMP("expression");                   
                     if ( t1==no_type )
                         ; 
                     else if ( t1!=basic_int && t1!=basic_real && t1!=basic_bool )
                         error(x,"Non-basic type couldn't be used for unary operation");
                     else{
-                        switch( tag(pick_ast(x,0)) ){
+                        switch( tag(pick_ast_comp(x,"unop")) ){
                             case UPlus: case UMinus:
                                 if ( t1==basic_int || t1==basic_real ){
                                     if ( t1==basic_int )
@@ -537,25 +538,25 @@ ast* _check_type( ast* x ){
                     break;
                 case LvalExp:
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
-                    result = GOPICK(0);
+                    result = GO_PICK_COMP("lvalue");
                     break;
                 case CallExp:                    
-                    id = pick_ast(x,0)->info.variable;                    
+                    id = ast_var(pick_ast_comp(x,"ID"));                 
                     decl = lookup(id,&level);
                     if ( !decl )
                         error(x,"Cannot find the called procedure");
                     else{
                         //ap -> actual parameters
                         //fp -> formal paramaters
-                        ap = pick_ast(x,1);
-                        fp = pick_ast(decl,1);
+                        ap = pick_ast_comp(x,"expression-list");
+                        fp = pick_ast_comp(decl,"formal-param-list");
                         // lap -> list of ap
                         // lfp -> list of fp
                         lap = args(ap);
                         lfp = args(fp);
                         for(;lap && lfp; lap=lap->next, lfp=lfp->next ){
                             t0 = GO(ELEM(lap));
-                            t1 = GO(pick_ast(ELEM(lfp),1));
+                            t1 = GO(pick_ast_comp(ELEM(lfp),"type"));
                             if ( t0 != t1 )
                                 error(x,"Formal and actual parameters don't match");
                         }
@@ -563,31 +564,30 @@ ast* _check_type( ast* x ){
                             error(x,"Too many actual parameters");
                         if ( !lap && lfp )
                             error(x,"Need more actual parameters");
-                        
+                   
                         // type of procedure
-                        result = GO( pick_ast(decl,2) );
+                        result = GO( pick_ast_comp(decl,"type") );
                     }
 
-
-                    append_ast(x,mk_int(curr_level()-pick_ast(decl,4)->info.integer));
+                    append_ast(x,mk_int(curr_level()-pick_ast_comp(decl,"level")->info.integer));
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case RecordExp:
                     error(x,"RecordExp checking not implement");
                     break;
                 case ArrayExp:                 
-                    id = pick_ast(x,0)->info.variable;                    
+                    id = ast_var(pick_ast_comp(x,"ID"));                    
                     decl = lookup(id,&level);
                     if ( !decl )
                         error(x,"Cannot find the ARRAY constructor's type");
                     
                     
-                    array_elem_type = GO( pick_ast(decl,0) );
+                    array_elem_type = GO( pick_ast_comp(decl,"type") );
                     
-                    ail = pick_ast(x,1)->info.node.arguments;
+                    ail = args(pick_ast_comp(x,"array-init-list"));
                     for(;ail;ail=ail->next){
-                        t0 = GO( pick_ast(ELEM(ail),0) );
-                        t1 = GO( pick_ast(ELEM(ail),1) );
+                        t0 = GO( pick_ast_comp(ELEM(ail),"expression-count") );
+                        t1 = GO( pick_ast_comp(ELEM(ail),"expression-instance") );
                         if ( t0 != basic_int )
                             error(x,"Counter in ARRAY constructor must be of INT type");
                         if ( t1 != array_elem_type )
@@ -614,29 +614,34 @@ ast* _check_type( ast* x ){
                 case ArrayInit:
                     break;
                 case LvalList:
-                    result = GOPICK(0);
+                    result = GO_PICK(0);
                     break;
                 case Var:                    
-                    id = pick_ast(x,0)->info.variable;                    
-                    decl = lookup(id,&level);
-                    if ( !decl )
-                        error(x,"Unknow variable name");
-                    else{
-                        result = GO( pick_ast(decl,1) );
-                    }
-                    // TODO: Param vs. VarDecl
-                    if (tag(decl)==Param){
-                        append_ast(x,mk_int(curr_level()-pick_ast(decl,2)->info.integer));
-                        append_ast(x,mk_int(pick_ast(decl,3)->info.integer));
+                    id = ast_var(pick_ast_comp(x,"ID"));                    
+                    if ( same_name(id,"TRUE") || same_name(id,"FALSE") ){
+                        result = basic_bool;
+                        append_ast(x,result);
                     }else{
-                        append_ast(x,mk_int(curr_level()-pick_ast(decl,3)->info.integer));
-                        append_ast(x,mk_int(pick_ast(decl,4)->info.integer));
+                        decl = lookup(id,&level);
+                        if ( !decl )
+                            error(x,"Unknow variable name");
+                        else{
+                            result = GO( pick_ast_comp(decl,"type") );
+                        }
+                        append_ast(x,result);
+                        if (tag(decl)==Param){
+                            append_ast(x,mk_int(curr_level()-pick_ast(decl,2)->info.integer));
+                            append_ast(x,mk_int(pick_ast(decl,3)->info.integer));
+                        }else{
+                            append_ast(x,mk_int(curr_level()-pick_ast(decl,3)->info.integer));
+                            append_ast(x,mk_int(pick_ast(decl,4)->info.integer));
+                        }
                     }
                     
                     break;
                 case ArrayDeref:
-                    t0 = GOPICK(0);
-                    t1 = GOPICK(1);
+                    t0 = GO_PICK_COMP("lvalue");
+                    t1 = GO_PICK_COMP("expression");
                     
                     if ( t1 == no_type )
                         ;

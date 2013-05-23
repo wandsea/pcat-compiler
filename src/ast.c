@@ -12,6 +12,8 @@
 
 #include "ast.h"
 
+#include <assert.h>
+
 
 ast* mk_int ( const long x ) {
   ast* res = (ast*) malloc(sizeof(ast));
@@ -120,6 +122,68 @@ ast* pick_ast( ast* a, int k ){
 void append_ast( ast* a, ast* b ){
     a->info.node.arguments=append(a->info.node.arguments,b);
 }
+
+int get_comp_id( ast* a, char * name ){
+    assert( a->tag == node_ast );
+    int b = 0;
+    #define r(a) do{ if(strcmp(name,a)==0){return b;}; b++; }while(0)
+    #define die assert(0)
+    switch ( tag(a) ){
+        case Program:   r("body");r("local-offset"); die;
+        case BodyDef:   r("declarations-list");r("statements-list"); die;
+        case DeclareList: case VarDecs: case TypeDecs: case ProcDecs: die;
+        case VarDec:    r("ID");r("type");r("expression");r("level");r("local-offset"); die;
+        case TypeDec:   r("ID");r("type"); die;
+        case ProcDec:   r("ID");r("formal-param-list");r("type");r("body");r("level");r("local-offset"); die;
+        case NamedTyp:  r("ID"); die;
+        case ArrayTyp:  r("type"); die;
+        case RecordTyp: r("component-list"); die;
+        case NoTyp: case CompList: die;
+        case Comp:      r("ID");r("type"); die;
+        case FormalParamList: die;
+        case Param:     r("ID");r("type"); die;
+        case SeqSt:     r("statements-list"); die;
+        case AssignSt:  r("lvalue");r("expression"); die;
+        case CallSt:    r("ID");r("expression-list");r("level-diff"); die;
+        case ReadSt:    r("lvalue-list"); die;
+        case WriteSt:   r("expression-list"); die;
+        case IfSt:      r("expression");r("statement");r("statement-else"); die;
+        case WhileSt:   r("expression");r("statement"); die;
+        case LoopSt:    r("statement"); die;
+        case ForSt:     r("ID");r("expression-from");r("expression-to");r("expression-by");r("statement");r("offset"); die;
+        case ExitSt:    die;
+        case RetSt:     r("expression"); die;
+        case ExprList:  die;
+        case BinOpExp:  r("binop");r("expression-left");r("expression-right");r("type");r("offset"); die;
+        case UnOpExp:   r("unop");r("expression");r("type");r("offset"); die;
+        case LvalExp:   r("lvalue");r("offset"); die;
+        case CallExp:   r("ID");r("expression-list");r("level-diff");r("offset"); die;
+        case RecordExp: r("ID");r("record-init-list"); die;
+        case ArrayExp:  r("ID");r("array-init-list"); die;
+        case IntConst:  r("INTEGER"); die;
+        case RealConst: r("REAL"); die;
+        case StringConst: r("STRING"); die;
+        case RecordInitList: die;
+        case RecordInit:r("ID");r("expression"); die;
+        case ArrayInitList: die;
+        case ArrayInit: r("expression-count");r("expression-instance"); die;
+        case LvalList:  die;
+        case Var:       r("ID");r("type");r("level-diff");r("offset"); die;
+        case ArrayDeref:r("lvalue");r("expression"); die;
+        case RecordDeref:r("lvalue");r("ID"); die;
+        default: die;
+    }
+}
+
+
+ast* pick_ast_comp( ast* a, char* name ){
+    return pick_ast(a,get_comp_id(a,name));
+}
+
+
+
+
+/// printing
 
 void print_ast_list ( ast_list* r ) {
   if (r == null)
