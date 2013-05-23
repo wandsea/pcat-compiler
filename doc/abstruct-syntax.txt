@@ -71,6 +71,6 @@ statement                ->
 expression               -> ( BinOpExp ( binop expression-left expression-right #type #offset ) )
                          -> ( UnOpExp  ( unop expression #type #offset) ) 
                          -> ( CallExp ( ID expression-list #level-diff #offset) )
-                         -> ( LvalExp ( lvalue #offset ) )
+                         -> ( LvalExp ( lvalue #type #offset ) )
 lvalue                   -> ( Var ( ID type #level-diff #offset ) )
                          -> ( Var ( ID type) )   !! for TRUE/FALSE

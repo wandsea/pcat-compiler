@@ -9,6 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+char * main_entry_name = "MainEntry";
+//char * routine_prefix = "_";
+char * routine_prefix = "";
+
 FILE *code_out, *data_out;
 
 int label_count;
@@ -26,6 +30,11 @@ void load_int( ast* x, char* reg ){
     char* src = malloc(100);
     char* lc;
     switch( tag(x) ){
+        case LvalExp:
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            sprintf(src,"%d(%%ebp)",offset);   
+            fprintf(code_out,"\t movl %s, %s\n",src,reg);
+            break;
         case Var:            
             if ( same_name(ast_var(pick_ast(x,0)),"TRUE") ){
                 src = "$1";
@@ -81,6 +90,11 @@ void store_int( char* reg, ast* x ){
     int i;
     char* dst = malloc(100);
     switch( tag(x) ){
+        case LvalExp:
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            sprintf(dst,"%d(%%ebp)",offset);   
+            fprintf(code_out,"\t movl %s, %s\n",reg,dst);
+            break;
         case Var:
             offset = ast_int( pick_ast(x,3) );
             sprintf(dst,"%d(%%ebp)",offset);            
@@ -115,10 +129,16 @@ void load_float( ast* x ){
     ast* t; // type
     int level_diff,offset;
     int i;
-    char *opr, *load_int = "fildl", *load_float = "flds";
+    char *opr, *opr_load_int = "fildl", *opr_load_float = "flds";
     char* src = malloc(100);
     // TODO: opr type
     switch( tag(x) ){
+        case LvalExp:
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            sprintf(src,"%d(%%ebp)",offset);   
+            opr = opr_load_float;
+            fprintf(code_out,"\t %s %s\n",opr,src);
+            break;
         case Var:
             offset = ast_int( pick_ast(x,3) );
             sprintf(src,"%d(%%ebp)",offset);                
@@ -126,9 +146,9 @@ void load_float( ast* x ){
             assert(level_diff>=0);
             
             if ( same_name(ast_str(pick_ast_comp(x,"type")),"basic_int") )
-                opr = load_int;
+                opr = opr_load_int;
             else if ( same_name(ast_str(pick_ast_comp(x,"type")),"basic_int") )
-                opr = load_float;
+                opr = opr_load_float;
             else 
                 assert(0);
                 
@@ -145,9 +165,9 @@ void load_float( ast* x ){
             offset = ast_int( pick_ast(x,4) );
             t = pick_ast(x,4);
             if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
-                opr = load_int;
+                opr = opr_load_int;
             else if ( same_name(ast_str(pick_ast(t,0)),"basic_float") )
-                opr = load_float;
+                opr = opr_load_float;
             else
                 assert(0);
             sprintf(src,"%d(%%ebp)",offset);      
@@ -157,9 +177,9 @@ void load_float( ast* x ){
             offset = ast_int( pick_ast(x,3) );            
             t = pick_ast(x,4);
             if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
-                opr = load_int;
+                opr = opr_load_int;
             else if ( same_name(ast_str(pick_ast(t,0)),"basic_float") )
-                opr = load_float;
+                opr = opr_load_float;
             else
                 assert(0);
             sprintf(src,"%d(%%ebp)",offset);      
@@ -167,7 +187,7 @@ void load_float( ast* x ){
             break;
         case CallExp:
             offset = ast_int( pick_ast(x,3) );
-            opr = load_float;
+            opr = opr_load_float;
             sprintf(src,"%d(%%ebp)",offset); 
             fprintf(code_out,"\t %s %s\n",opr,src);
             break;
@@ -187,18 +207,25 @@ void store_float( ast* x ){
     int level_diff,offset;
     int i;
     char *opr = "fstps";
+    char* dst = malloc(100);
     switch( tag(x) ){
+        case LvalExp:
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            sprintf(dst,"%d(%%ebp)",offset);   
+            fprintf(code_out,"\t %s %s\n",opr,dst);
+            break;
         case Var:
             level_diff = ast_int( pick_ast(x,2) );
-            offset = ast_int( pick_ast(x,3) );
             assert(level_diff>=0);
+            offset = ast_int( pick_ast(x,3) );
+            sprintf(dst,"%d(%%ebp)",offset);   
             if ( level_diff == 0 )
-                fprintf(code_out,"\t %s %d(%%ebp)\n",opr,offset);
+                fprintf(code_out,"\t %s %s\n",opr,dst);
             else{
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
-                fprintf(code_out,"\t %s %d(%%edx)\n",opr,offset);
+                fprintf(code_out,"\t %s %s\n",opr,dst);
             }
             break;
         case BinOpExp:
@@ -223,11 +250,12 @@ void store_float( ast* x ){
 
 // change: to generate intermediate code
 void _gen_code( ast* x ){
-    #define GOPICK(k)      _gen_code( pick_ast(x,k) )
-    #define GO(e)          _gen_code( e )
-    #define FOREACH(x)     for(l=args(x);l;l=l->next)
-    #define ELEM(l)        l->elem
-    #define ELEML          ELEM(l)
+    #define GO_PICK(k)          _gen_code( pick_ast(x,k) )
+    #define GO_PICK_COMP(k)     _gen_code( pick_ast_comp(x,k) )
+    #define GO(e)               _gen_code( e )
+    #define FOREACH(x)          for(l=args(x);l;l=l->next)
+    #define ELEM(l)             l->elem
+    #define ELEML               ELEM(l)
 
     if ( x == NULL )
         ;
@@ -250,26 +278,27 @@ void _gen_code( ast* x ){
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"\t .text\n");
-                    fprintf(code_out,"_%s:\n","MainEntry");  // name for main
+                    fprintf(code_out,"\t .globl %s\n",main_entry_name);
+                    fprintf(code_out,"%s%s:\n",routine_prefix, main_entry_name);  // name for main
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
                     fprintf(code_out,"\t andl $-16, %%esp\n");
-                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast_comp(x,"local-offset")));
                     fprintf(code_out,"\t andl $-16, %%esp\n");
-                    GO(0);    // body
+                    GO_PICK_COMP("body");   // body
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue
                     break;
                 case BodyDef:
-                    GOPICK(0); // declarations-list
-                    GOPICK(1); // statements-list
+                    GO_PICK_COMP("declarations-list");
+                    GO_PICK_COMP("statements-list"); 
                     break;
                 case DeclareList:   
-                    // type & var not need for generating code
-                    // only generate code of sub-routine 
-                    FOREACH(x) if (tag(ELEML)==ProcDecs) GO(ELEML); 
+                    // subroutine
+                    //FOREACH(x) if (tag(ELEML)==ProcDecs) GO(ELEML); 
+                    FOREACH(x) if (tag(ELEML)==VarDecs) GO(ELEML); 
+                    
                     break;
                 case VarDecs:
-                    // Shouldn't reach here
-                    assert(0);
+                    FOREACH(x) GO(ELEML);
                     break;
                 case TypeDecs:
                     // Shouldn't reach here
@@ -279,21 +308,30 @@ void _gen_code( ast* x ){
                     FOREACH(x) GO(ELEML);
                     break;
                 case VarDec:
-                    // Shouldn't reach here
-                    assert(0);
+                    var = 
+                        mk_node(AssignSt,
+                                cons(mk_node(Var,
+                                             cons(pick_ast_comp(x,"ID"),
+                                                  cons(pick_ast_comp(x,"type"),
+                                                       cons(mk_int(0),
+                                                            cons(pick_ast_comp(x,"offset"),
+                                                                 NULL))))),
+                                     cons(pick_ast_comp(x,"expression"),
+                                          NULL)));
+                    _gen_code(var);
                     break;
                 case TypeDec:    
                     // Shouldn't reach here
                     assert(0);            
                     break;
                 case ProcDec:   
-                    fprintf(code_out,"_%s:\n",ast_str(pick_ast(x,0)));  
+                    fprintf(code_out,"%s%s:\n",routine_prefix,ast_str(pick_ast_comp(x,"ID")));  
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
                     fprintf(code_out,"\t andl $-16, %%esp\n");
-                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast(x,5)));
+                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast_comp(x,"local-offset")));
                     fprintf(code_out,"\t andl $-16, %%esp\n");
                     // name for sub-routine
-                    GOPICK(3); // generate code for body   
+                    GO_PICK(3); // generate code for body   
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
                     break;
                 case NamedTyp: 
@@ -338,7 +376,7 @@ void _gen_code( ast* x ){
                     assert(0); 
                     break;
                 case AssignSt:
-                    GOPICK(1);
+                    GO_PICK(1);
                     // this works for both INTEGER and REAL
                     load_int(pick_ast(x,0),"%eax");
                     store_int("%eax",pick_ast(x,0));
@@ -370,9 +408,9 @@ void _gen_code( ast* x ){
                     FOREACH(pick_ast_comp(x,"lvalue-list")){
                         char* t_name = ast_str( pick_ast_comp(l->elem,"type") );
                         if ( same_name(t_name,"basic_int") )
-                            fprintf(code_out,"\t call _read_int\n");
+                            fprintf(code_out,"\t call %sread_int\n",routine_prefix);
                         else if ( same_name(t_name,"basic_real") )
-                            fprintf(code_out,"\t call _read_float\n");
+                            fprintf(code_out,"\t call %sread_float\n",routine_prefix);
                         else
                             assert(0);
                         store_int("%eax",l->elem);
@@ -380,22 +418,23 @@ void _gen_code( ast* x ){
                     break;
                 case WriteSt:
                     FOREACH(pick_ast_comp(x,"expression-list")){
+                        GO(l->elem);
                         load_int(l->elem,"%eax");
                         fprintf(code_out,"\t push %%eax\n");
                         
-                        char* t_name = ast_str( pick_ast_comp(l->elem,"type") );
+                        char* t_name = ast_str( pick_ast_comp(pick_ast_comp(l->elem,"type"),"ID") );
                         if ( same_name(t_name,"basic_int") )
-                            fprintf(code_out,"\t call _print_int\n");
+                            fprintf(code_out,"\t call %sprint_int\n",routine_prefix);
                         else if ( same_name(t_name,"basic_real") )
-                            fprintf(code_out,"\t call _print_float\n");
+                            fprintf(code_out,"\t call %sprint_float\n",routine_prefix);
                         else if ( same_name(t_name,"basic_string") )
-                            fprintf(code_out,"\t call _print_float\n");
+                            fprintf(code_out,"\t call %sprint_float\n",routine_prefix);
                         else
                             assert(0);
                         
                         fprintf(code_out,"\t addl $4, %%esp\n");
                     }
-                    fprintf(code_out,"\t call _print_line\n");
+                    fprintf(code_out,"\t call %sprint_line\n",routine_prefix);
                     break;
                 case IfSt:
                 /*
@@ -412,14 +451,14 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label(); l3 = make_label();
 
-                    GOPICK(0);
+                    GO_PICK(0);
                     load_int(pick_ast(x,0),"%eax");
                     fprintf(code_out,"\t cmpl $0, %%eax\n");
                     fprintf(code_out,"\t jne %s\n",l2);
-                    GOPICK(2);
+                    GO_PICK(2);
                     fprintf(code_out,"\t jmp %s\n",l3);
                     fprintf(code_out,"%s:\n",l2);
-                    GOPICK(1);
+                    GO_PICK(1);
                     fprintf(code_out,"%s:\n",l3);
                     break;
                 case WhileSt:
@@ -436,11 +475,11 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label(); l3 = make_label();
                     fprintf(code_out,"%s:\n",l2);
-                    GOPICK(0);
+                    GO_PICK(0);
                     load_int(pick_ast(x,0),"%eax");
                     fprintf(code_out,"\t cmpl $0, %%eax\n");
                     fprintf(code_out,"\t je %s\n",l3);
-                    GOPICK(1);
+                    GO_PICK(1);
                     fprintf(code_out,"\t jmp %s\n",l2);
                     fprintf(code_out,"%s:\n",l3);
                     break;
@@ -454,7 +493,7 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label();
                     fprintf(code_out,"%s:",l2);
-                    GOPICK(0);
+                    GO_PICK(0);
                     fprintf(code_out,"\t jmp %s\n",l2);
                     break;
                 case ForSt:
@@ -488,13 +527,13 @@ void _gen_code( ast* x ){
                                            cons(pick_ast(x,1),
                                                 NULL))));
                     fprintf(code_out,"%s:",l2);
-                    GOPICK(2);
+                    GO_PICK(2);
                     load_int(var,"%eax");
                     load_int(pick_ast(x,2),"%ecx");
                     fprintf(code_out,"\t testl %%eax, %%ecx\n");
                     fprintf(code_out,"\t je %s\n",l3);
-                    GOPICK(4);
-                    GOPICK(3);
+                    GO_PICK(4);
+                    GO_PICK(3);
                     load_int(var,"%eax");
                     load_int(pick_ast(x,3),"%ecx");
                     fprintf(code_out,"\t addl %%ecx, %%eax\n");
@@ -509,7 +548,7 @@ void _gen_code( ast* x ){
                     if ( tag(pick_ast(x,0)) == EmptyExpression )
                         ;
                     else{
-                        GOPICK(0);
+                        GO_PICK(0);
                         load_int(pick_ast(x,0),"%eax");
                     }
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
@@ -536,8 +575,8 @@ void _gen_code( ast* x ){
                          tag(pick_ast(x,0)) == Times ) {
                     // Arithmic, integer/real
                         // value of two sub-expr
-                        GOPICK(1);
-                        GOPICK(2);
+                        GO_PICK(1);
+                        GO_PICK(2);
                         if ( same_name(ast_str(pick_ast(t,0)),"basic_int") ){
                             load_int(pick_ast(x,1),"%eax");
                             load_int(pick_ast(x,2),"%ecx");
@@ -573,8 +612,8 @@ void _gen_code( ast* x ){
                               tag(pick_ast(x,0)) == Mod){                    
                     // Arithmic, integer
                         // value of two sub-expr
-                        GOPICK(1);
-                        GOPICK(2);
+                        GO_PICK(1);
+                        GO_PICK(2);
                         if ( same_name(ast_str(pick_ast(t,0)),"basic_int") ){
                             load_int(pick_ast(x,1),"%eax");
                             load_int(pick_ast(x,2),"%ecx");
@@ -595,8 +634,8 @@ void _gen_code( ast* x ){
                     }else if ( tag(pick_ast(x,0)) == Slash ){             
                     // Arithmic, real
                         // value of two sub-expr
-                        GOPICK(1);
-                        GOPICK(2);
+                        GO_PICK(1);
+                        GO_PICK(2);
                         if ( same_name(ast_str(pick_ast(t,0)),"basic_real") ){
                             load_float(pick_ast(x,1));
                             load_float(pick_ast(x,2));
@@ -614,8 +653,8 @@ void _gen_code( ast* x ){
                              tag(pick_ast(x,0)) == Ne ){          
                     // Comparation
                         // value of two sub-expr
-                        GOPICK(1);
-                        GOPICK(2);
+                        GO_PICK(1);
+                        GO_PICK(2);
                         if ( same_name(ast_str(pick_ast(t1,0)),"basic_int") && 
                              same_name(ast_str(pick_ast(t2,0)),"basic_int") ){
                             load_int(pick_ast(x,1),"%eax");
@@ -659,11 +698,11 @@ void _gen_code( ast* x ){
                         if ( tag(pick_ast(x,0)) == And ){
                             l2 = make_label(); l3 = make_label();
                             
-                            GOPICK(1);
+                            GO_PICK(1);
                             load_int(pick_ast(x,1),"%eax");
                             fprintf(code_out,"\t cmpl 0, %%eax\n");
                             fprintf(code_out,"\t je %s\n",l2);                        
-                            GOPICK(2);
+                            GO_PICK(2);
                             load_int(pick_ast(x,2),"%eax");
                             fprintf(code_out,"\t cmpl 0, %%eax\n");
                             fprintf(code_out,"\t je %s\n",l2);    
@@ -675,11 +714,11 @@ void _gen_code( ast* x ){
                         }else{                            
                             l2 = make_label(); l3 = make_label(); l4 = make_label();
                             
-                            GOPICK(1);
+                            GO_PICK(1);
                             load_int(pick_ast(x,1),"%eax");
                             fprintf(code_out,"\t cmpl 0, %%eax\n");
                             fprintf(code_out,"\t jne %s\n",l2);  
-                            GOPICK(2);
+                            GO_PICK(2);
                             load_int(pick_ast(x,2),"%eax");
                             fprintf(code_out,"\t cmpl 0, %%eax\n");
                             fprintf(code_out,"\t je %s\n",l3);
@@ -697,7 +736,7 @@ void _gen_code( ast* x ){
                     // result type
                     t = pick_ast(x,4);
                     t1 = pick_ast(pick_ast(x,1),4);                    
-                    GOPICK(1);
+                    GO_PICK(1);
                     if ( tag(pick_ast(x,0)) == UPlus ||
                          tag(pick_ast(x,0)) == UMinus ){
                         if ( same_name(ast_str(pick_ast(t,0)),"basic_int") ){

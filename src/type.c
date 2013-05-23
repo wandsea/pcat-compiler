@@ -109,6 +109,7 @@ void print_repr(ast* x){
         break;
     }
 #undef GO_PICK
+#undef GO_PICK_COMP
 #undef p
 }
 
@@ -537,8 +538,9 @@ ast* _check_type( ast* x ){
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case LvalExp:
-                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     result = GO_PICK_COMP("lvalue");
+                    append_ast(x,result);
+                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case CallExp:                    
                     id = ast_var(pick_ast_comp(x,"ID"));                 
@@ -614,6 +616,7 @@ ast* _check_type( ast* x ){
                 case ArrayInit:
                     break;
                 case LvalList:
+                // right??
                     result = GO_PICK(0);
                     break;
                 case Var:                    

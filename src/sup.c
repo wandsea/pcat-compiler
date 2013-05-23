@@ -23,8 +23,8 @@ void print_real( int a ){
 }
 
 void print_str( int a ){
-    char* p = a;
-    printf("%s",a);
+    char* p = (char*)a;
+    printf("%s",p);
 }
 
 void print_line(){

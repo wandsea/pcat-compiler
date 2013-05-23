@@ -1,6 +1,7 @@
 #include "action.h"
 
 #include "type.h"
+#include "gen.h"
 
 void action( ast* prog ){
     //print_ast_pretty(prog); 
@@ -10,5 +11,6 @@ void action( ast* prog ){
     if ( has_error )
     	return;
 
-    
+    gen_code(prog);
+        
 }

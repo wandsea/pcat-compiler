@@ -1,14 +1,3 @@
-/********************************************************************************
-*
-* File: ast.c
-* The abstract syntax trees for the calculator
-* Programmer: Leonidas Fegaras, UTA
-* Date: 12/17/97
-*
-* modified to fit contemporary 64-bit gcc
-*
-********************************************************************************/
-
 
 #include "ast.h"
 
@@ -132,7 +121,7 @@ int get_comp_id( ast* a, char * name ){
         case Program:   r("body");r("local-offset"); die;
         case BodyDef:   r("declarations-list");r("statements-list"); die;
         case DeclareList: case VarDecs: case TypeDecs: case ProcDecs: die;
-        case VarDec:    r("ID");r("type");r("expression");r("level");r("local-offset"); die;
+        case VarDec:    r("ID");r("type");r("expression");r("level");r("offset"); die;
         case TypeDec:   r("ID");r("type"); die;
         case ProcDec:   r("ID");r("formal-param-list");r("type");r("body");r("level");r("local-offset"); die;
         case NamedTyp:  r("ID"); die;
@@ -156,7 +145,7 @@ int get_comp_id( ast* a, char * name ){
         case ExprList:  die;
         case BinOpExp:  r("binop");r("expression-left");r("expression-right");r("type");r("offset"); die;
         case UnOpExp:   r("unop");r("expression");r("type");r("offset"); die;
-        case LvalExp:   r("lvalue");r("offset"); die;
+        case LvalExp:   r("lvalue");r("type");r("offset"); die;
         case CallExp:   r("ID");r("expression-list");r("level-diff");r("offset"); die;
         case RecordExp: r("ID");r("record-init-list"); die;
         case ArrayExp:  r("ID");r("array-init-list"); die;
