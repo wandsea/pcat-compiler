@@ -24,6 +24,7 @@ void load_int( ast* x, char* reg ){
     int level_diff,offset;
     int i;
     char* src = malloc(100);
+    char* lc;
     switch( tag(x) ){
         case Var:            
             if ( same_name(ast_var(pick_ast(x,0)),"TRUE") ){
@@ -37,7 +38,7 @@ void load_int( ast* x, char* reg ){
                 sprintf(src,"%d(%%ebp)",offset);                
                 level_diff = ast_int( pick_ast(x,2) ); 
                 assert(level_diff>=0);
-            }            
+            }
             
             if ( level_diff == 0 )
                 fprintf(code_out,"\t movl %s, %s\n",src,reg);
@@ -58,7 +59,15 @@ void load_int( ast* x, char* reg ){
             fprintf(code_out,"\t movl %s, %s\n",src,reg);
             break;
         case IntConst:
-            fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast(x,1)),reg);
+            fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast(x,0)),reg);
+            break;
+        case StringConst:
+            lc = make_label();
+            fprintf(data_out,"\t .section .rdata,\"dr\"\n"
+                             "%s:\n"
+                             "\t .ascii \"%s\\0\"\n"
+                             ,lc,ast_str(pick_ast_comp(x,"STRING")));
+            fprintf(code_out,"\t movl $%s, %s",lc,reg);
             break;
         default:
             assert(0); // shouln't be here
@@ -163,10 +172,10 @@ void load_float( ast* x ){
             fprintf(code_out,"\t %s %s\n",opr,src);
             break;
         case IntConst:
-            fprintf(code_out,"\t fildl $%d\n",ast_int(pick_ast(x,1)));
+            fprintf(code_out,"\t fildl $%d\n",ast_int(pick_ast(x,0)));
             break;
         case RealConst:
-            fprintf(code_out,"\t flds $%d\n",ast_real_repr(pick_ast(x,1)));
+            fprintf(code_out,"\t flds $%d\n",ast_real_repr(pick_ast(x,0)));
         default:
             assert(0); // shouln't be here
             // other tag shouldn't call load_int
@@ -240,6 +249,7 @@ void _gen_code( ast* x ){
             ast *var;
             switch (x->info.node.tag){
                 case Program: 
+                    fprintf(code_out,"\t .text\n");
                     fprintf(code_out,"_%s:\n","MainEntry");  // name for main
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
                     fprintf(code_out,"\t andl $-16, %%esp\n");
@@ -357,14 +367,35 @@ void _gen_code( ast* x ){
 
                     break;
                 case ReadSt:
-                    FOREACH(pick_ast(x,0)){
-                        // TODO
+                    FOREACH(pick_ast_comp(x,"lvalue-list")){
+                        char* t_name = ast_str( pick_ast_comp(l->elem,"type") );
+                        if ( same_name(t_name,"basic_int") )
+                            fprintf(code_out,"\t call _read_int\n");
+                        else if ( same_name(t_name,"basic_real") )
+                            fprintf(code_out,"\t call _read_float\n");
+                        else
+                            assert(0);
+                        store_int("%eax",l->elem);
                     }
                     break;
                 case WriteSt:
-                    FOREACH(pick_ast(x,0)){
-                        // TODO
+                    FOREACH(pick_ast_comp(x,"expression-list")){
+                        load_int(l->elem,"%eax");
+                        fprintf(code_out,"\t push %%eax\n");
+                        
+                        char* t_name = ast_str( pick_ast_comp(l->elem,"type") );
+                        if ( same_name(t_name,"basic_int") )
+                            fprintf(code_out,"\t call _print_int\n");
+                        else if ( same_name(t_name,"basic_real") )
+                            fprintf(code_out,"\t call _print_float\n");
+                        else if ( same_name(t_name,"basic_string") )
+                            fprintf(code_out,"\t call _print_float\n");
+                        else
+                            assert(0);
+                        
+                        fprintf(code_out,"\t addl $4, %%esp\n");
                     }
+                    fprintf(code_out,"\t call _print_line\n");
                     break;
                 case IfSt:
                 /*
