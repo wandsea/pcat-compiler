@@ -66,11 +66,14 @@ proc-dec                 -> ( ProcDec ( ID formal-param-list type body #level #l
 var-dec                  -> ( VarDec ( ID type expression #level #offset ) )
 formal-param             -> ( Param ( ID type #level #offset ) )
 statement                -> 
-                         -> ( CallSt ( ID expression-list #level-diff ) )
+                         -> ( CallSt ( ID expression-list #type #level-diff ) )
                          -> ( ForSt ( ID expression-from expression-to expression-by statement #offset ) )
 expression               -> ( BinOpExp ( binop expression-left expression-right #type #offset ) )
                          -> ( UnOpExp  ( unop expression #type #offset) ) 
-                         -> ( CallExp ( ID expression-list #level-diff #offset) )
                          -> ( LvalExp ( lvalue #type #offset ) )
+                         -> ( CallExp ( ID expression-list #type #level-diff #offset) )
+                         -> ( IntConst ( INTEGER #type ) )
+                         -> ( RealConst ( REAL #type ) )
+                         -> ( StringConst ( STRING #type ) )
 lvalue                   -> ( Var ( ID type #level-diff #offset ) )
                          -> ( Var ( ID type) )   !! for TRUE/FALSE

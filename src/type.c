@@ -377,6 +377,7 @@ ast* _check_type( ast* x ){
                             error(x,"Need more actual parameters");
                     }
 
+                    append_ast(x,result);
                     append_ast(x,mk_int(curr_level()-pick_ast_comp(decl,"level")->info.integer));
                     break;
                 case ReadSt:
@@ -570,7 +571,8 @@ ast* _check_type( ast* x ){
                         // type of procedure
                         result = GO( pick_ast_comp(decl,"type") );
                     }
-
+                    
+                    append_ast(x,result);
                     append_ast(x,mk_int(curr_level()-pick_ast_comp(decl,"level")->info.integer));
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
@@ -600,12 +602,15 @@ ast* _check_type( ast* x ){
                     break;
                 case IntConst:
                     result = basic_int;
+                    append_ast(x,result);
                     break;
                 case RealConst:
                     result = basic_real;
+                    append_ast(x,result);
                     break;
                 case StringConst:
                     result = basic_str;
+                    append_ast(x,result);
                     break;
                 case RecordInitList:
                     break;

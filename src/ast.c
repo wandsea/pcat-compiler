@@ -133,7 +133,7 @@ int get_comp_id( ast* a, char * name ){
         case Param:     r("ID");r("type"); die;
         case SeqSt:     r("statements-list"); die;
         case AssignSt:  r("lvalue");r("expression"); die;
-        case CallSt:    r("ID");r("expression-list");r("level-diff"); die;
+        case CallSt:    r("ID");r("expression-list");r("type");r("level-diff"); die;
         case ReadSt:    r("lvalue-list"); die;
         case WriteSt:   r("expression-list"); die;
         case IfSt:      r("expression");r("statement");r("statement-else"); die;
@@ -146,12 +146,12 @@ int get_comp_id( ast* a, char * name ){
         case BinOpExp:  r("binop");r("expression-left");r("expression-right");r("type");r("offset"); die;
         case UnOpExp:   r("unop");r("expression");r("type");r("offset"); die;
         case LvalExp:   r("lvalue");r("type");r("offset"); die;
-        case CallExp:   r("ID");r("expression-list");r("level-diff");r("offset"); die;
+        case CallExp:   r("ID");r("expression-list");r("type");r("level-diff");r("offset"); die;
         case RecordExp: r("ID");r("record-init-list"); die;
         case ArrayExp:  r("ID");r("array-init-list"); die;
-        case IntConst:  r("INTEGER"); die;
-        case RealConst: r("REAL"); die;
-        case StringConst: r("STRING"); die;
+        case IntConst:  r("INTEGER");r("type"); die;
+        case RealConst: r("REAL");r("type"); die;
+        case StringConst: r("STRING");r("type"); die;
         case RecordInitList: die;
         case RecordInit:r("ID");r("expression"); die;
         case ArrayInitList: die;

@@ -1,5 +1,6 @@
 #include "gen.h"
 
+#include "global.h"
 #include "table.h"
 #include "ast.h"
 #include "type.h"
@@ -10,8 +11,8 @@
 #include <string.h>
 
 char * main_entry_name = "MainEntry";
-//char * routine_prefix = "_";
-char * routine_prefix = "";
+char * routine_prefix = "_";
+//char * routine_prefix = "";
 
 FILE *code_out, *data_out;
 
@@ -68,15 +69,19 @@ void load_int( ast* x, char* reg ){
             fprintf(code_out,"\t movl %s, %s\n",src,reg);
             break;
         case IntConst:
-            fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast(x,0)),reg);
+            fprintf(code_out,"\t movl $%d, %s\n",ast_int(pick_ast_comp(x,"INTEGER")),reg);
+            break;
+        case RealConst:
+            fprintf(code_out,"\t movl $%d, %s\n",ast_real_repr(pick_ast_comp(x,"REAL")),reg);
             break;
         case StringConst:
             lc = make_label();
-            fprintf(data_out,"\t .section .rdata,\"dr\"\n"
+            fprintf(data_out,"\n"
+                             "\t .section .rdata,\"dr\"\n"
                              "%s:\n"
                              "\t .ascii \"%s\\0\"\n"
                              ,lc,ast_str(pick_ast_comp(x,"STRING")));
-            fprintf(code_out,"\t movl $%s, %s",lc,reg);
+            fprintf(code_out,"\t movl $%s, %s\n",lc,reg);
             break;
         default:
             assert(0); // shouln't be here
@@ -278,11 +283,11 @@ void _gen_code( ast* x ){
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"\t .text\n");
-                    fprintf(code_out,"\t .globl %s\n",main_entry_name);
+                    fprintf(code_out,"\t .globl %s%s\n",routine_prefix,main_entry_name);
+                    fprintf(code_out,"\n");
                     fprintf(code_out,"%s%s:\n",routine_prefix, main_entry_name);  // name for main
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
-                    fprintf(code_out,"\t andl $-16, %%esp\n");
-                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast_comp(x,"local-offset")));
+                    fprintf(code_out,"\t subl $%d, %%esp\n",-ast_int(pick_ast_comp(x,"local-offset"))); // local-offset is negative, so need a '-'
                     fprintf(code_out,"\t andl $-16, %%esp\n");
                     GO_PICK_COMP("body");   // body
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue
@@ -324,11 +329,11 @@ void _gen_code( ast* x ){
                     // Shouldn't reach here
                     assert(0);            
                     break;
-                case ProcDec:   
+                case ProcDec:
+                    fprintf(code_out,"\n");
                     fprintf(code_out,"%s%s:\n",routine_prefix,ast_str(pick_ast_comp(x,"ID")));  
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
-                    fprintf(code_out,"\t andl $-16, %%esp\n");
-                    fprintf(code_out,"\t subl $%d, %%esp\n",ast_int(pick_ast_comp(x,"local-offset")));
+                    fprintf(code_out,"\t subl $%d, %%esp\n",-ast_int(pick_ast_comp(x,"local-offset"))); // local-offset is negative, so need a '-'
                     fprintf(code_out,"\t andl $-16, %%esp\n");
                     // name for sub-routine
                     GO_PICK(3); // generate code for body   
@@ -376,14 +381,14 @@ void _gen_code( ast* x ){
                     assert(0); 
                     break;
                 case AssignSt:
-                    GO_PICK(1);
+                    GO_PICK_COMP("expression");
                     // this works for both INTEGER and REAL
-                    load_int(pick_ast(x,0),"%eax");
-                    store_int("%eax",pick_ast(x,0));
+                    load_int(pick_ast_comp(x,"expression"),"%eax");
+                    store_int("%eax",pick_ast_comp(x,"lvalue"));
                     break;
                 case CallSt:
                 // synchronize with CallExpr
-                    FOREACH(pick_ast(x,1))
+                    FOREACH(pick_ast_comp(x,"expression-list"))
                         _gen_code(ELEML);
                     // static link
                     level_diff = ast_int( pick_ast(x,4) );
@@ -396,7 +401,7 @@ void _gen_code( ast* x ){
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
                     // parameters
-                    FOREACH(pick_ast(x,1)){
+                    FOREACH(pick_ast_comp(x,"expression-list")){
                         load_int(ELEML,"%eax");
                         fprintf(code_out,"\t pushl %%eax\n");
                     }
@@ -405,12 +410,12 @@ void _gen_code( ast* x ){
 
                     break;
                 case ReadSt:
-                    FOREACH(pick_ast_comp(x,"lvalue-list")){
-                        char* t_name = ast_str( pick_ast_comp(l->elem,"type") );
+                    FOREACH(pick_ast_comp(x,"lvalue-list")){                        
+                        char* t_name = ast_str( pick_ast_comp(pick_ast_comp(l->elem,"type"),"ID") );
                         if ( same_name(t_name,"basic_int") )
                             fprintf(code_out,"\t call %sread_int\n",routine_prefix);
                         else if ( same_name(t_name,"basic_real") )
-                            fprintf(code_out,"\t call %sread_float\n",routine_prefix);
+                            fprintf(code_out,"\t call %sread_real\n",routine_prefix);
                         else
                             assert(0);
                         store_int("%eax",l->elem);
@@ -426,9 +431,9 @@ void _gen_code( ast* x ){
                         if ( same_name(t_name,"basic_int") )
                             fprintf(code_out,"\t call %sprint_int\n",routine_prefix);
                         else if ( same_name(t_name,"basic_real") )
-                            fprintf(code_out,"\t call %sprint_float\n",routine_prefix);
-                        else if ( same_name(t_name,"basic_string") )
-                            fprintf(code_out,"\t call %sprint_float\n",routine_prefix);
+                            fprintf(code_out,"\t call %sprint_real\n",routine_prefix);
+                        else if ( same_name(t_name,"basic_str") )
+                            fprintf(code_out,"\t call %sprint_str\n",routine_prefix);
                         else
                             assert(0);
                         
@@ -772,7 +777,7 @@ void _gen_code( ast* x ){
                     break;
                 case CallExp:                
                 // synchronize with CallSt
-                    FOREACH(pick_ast(x,1))
+                    FOREACH(pick_ast_comp(x,"expression-list"))
                         _gen_code(ELEML);
                     // static link
                     level_diff = ast_int( pick_ast(x,4) );
@@ -784,8 +789,8 @@ void _gen_code( ast* x ){
                             fprintf(code_out, "\t movl (%%edx), %%edx");
                         fprintf(code_out,"\t pushl %%edx");
                     }
-                    // parameters
-                    FOREACH(pick_ast(x,1)){
+                    // parameters                    
+                    FOREACH(pick_ast_comp(x,"expression-list")){
                         load_int(ELEML,"%eax");
                         fprintf(code_out,"\t pushl %%eax\n");
                     }

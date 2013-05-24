@@ -18,8 +18,8 @@ void print_int( int a ){
 }
 
 void print_real( int a ){
-    float b = *(float*)(&a);
-    printf("%d",a);
+    float r = *(float*)(&a);
+    printf("%f",r);
 }
 
 void print_str( int a ){

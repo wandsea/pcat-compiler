@@ -1,175 +1,110 @@
 	.file	"sup.c"
-	.section	.rodata
-.LC0:
-	.string	"%d"
+	.section .rdata,"dr"
+LC0:
+	.ascii "%d\0"
 	.text
-	.globl	read_int
-	.type	read_int, @function
-read_int:
-.LFB0:
-	.cfi_startproc
+.globl _read_int
+	.def	_read_int;	.scl	2;	.type	32;	.endef
+_read_int:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$40, %esp
 	leal	-12(%ebp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.LC0, (%esp)
-	call	__isoc99_scanf
+	movl	$LC0, (%esp)
+	call	_scanf
 	movl	-12(%ebp), %eax
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE0:
-	.size	read_int, .-read_int
-	.section	.rodata
-.LC1:
-	.string	"%f"
+	.section .rdata,"dr"
+LC1:
+	.ascii "%f\0"
 	.text
-	.globl	read_real
-	.type	read_real, @function
-read_real:
-.LFB1:
-	.cfi_startproc
+.globl _read_real
+	.def	_read_real;	.scl	2;	.type	32;	.endef
+_read_real:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$40, %esp
 	leal	-16(%ebp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.LC1, (%esp)
-	call	__isoc99_scanf
+	movl	$LC1, (%esp)
+	call	_scanf
 	leal	-16(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, -12(%ebp)
 	movl	-12(%ebp), %eax
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE1:
-	.size	read_real, .-read_real
-	.globl	print_int
-	.type	print_int, @function
-print_int:
-.LFB2:
-	.cfi_startproc
+.globl _print_int
+	.def	_print_int;	.scl	2;	.type	32;	.endef
+_print_int:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$24, %esp
 	movl	8(%ebp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.LC0, (%esp)
-	call	printf
+	movl	$LC0, (%esp)
+	call	_printf
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE2:
-	.size	print_int, .-print_int
-	.globl	print_real
-	.type	print_real, @function
-print_real:
-.LFB3:
-	.cfi_startproc
+.globl _print_real
+	.def	_print_real;	.scl	2;	.type	32;	.endef
+_print_real:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$40, %esp
 	leal	8(%ebp), %eax
 	movl	(%eax), %eax
 	movl	%eax, -12(%ebp)
-	movl	8(%ebp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.LC0, (%esp)
-	call	printf
+	flds	-12(%ebp)
+	fstpl	4(%esp)
+	movl	$LC0, (%esp)
+	call	_printf
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE3:
-	.size	print_real, .-print_real
-	.section	.rodata
-.LC2:
-	.string	"%s"
+	.section .rdata,"dr"
+LC3:
+	.ascii "%s\0"
 	.text
-	.globl	print_str
-	.type	print_str, @function
-print_str:
-.LFB4:
-	.cfi_startproc
+.globl _print_str
+	.def	_print_str;	.scl	2;	.type	32;	.endef
+_print_str:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$40, %esp
 	movl	8(%ebp), %eax
 	movl	%eax, -12(%ebp)
-	movl	8(%ebp), %eax
+	movl	-12(%ebp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.LC2, (%esp)
-	call	printf
+	movl	$LC3, (%esp)
+	call	_printf
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE4:
-	.size	print_str, .-print_str
-	.globl	print_line
-	.type	print_line, @function
-print_line:
-.LFB5:
-	.cfi_startproc
+.globl _print_line
+	.def	_print_line;	.scl	2;	.type	32;	.endef
+_print_line:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	subl	$24, %esp
 	movl	$10, (%esp)
-	call	putchar
+	call	_putchar
 	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
 	ret
-	.cfi_endproc
-.LFE5:
-	.size	print_line, .-print_line
-	.globl	main
-	.type	main, @function
-main:
-.LFB6:
-	.cfi_startproc
+	.def	___main;	.scl	2;	.type	32;	.endef
+.globl _main
+	.def	_main;	.scl	2;	.type	32;	.endef
+_main:
 	pushl	%ebp
-	.cfi_def_cfa_offset 8
-	.cfi_offset 5, -8
 	movl	%esp, %ebp
-	.cfi_def_cfa_register 5
 	andl	$-16, %esp
-	call	MainEntry
+	call	___main
+	call	_MainEntry
 	movl	$0, %eax
-	leave
-	.cfi_restore 5
-	.cfi_def_cfa 4, 4
+	movl	%ebp, %esp
+	popl	%ebp
 	ret
-	.cfi_endproc
-.LFE6:
-	.size	main, .-main
-	.ident	"GCC: (Gentoo 4.8.0 p1.3, pie-0.5.5) 4.8.0"
-	.section	.note.GNU-stack,"",@progbits
+	.def	_scanf;	.scl	2;	.type	32;	.endef
+	.def	_printf;	.scl	2;	.type	32;	.endef
+	.def	_putchar;	.scl	2;	.type	32;	.endef
+	.def	_MainEntry;	.scl	2;	.type	32;	.endef

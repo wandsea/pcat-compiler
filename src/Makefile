@@ -10,7 +10,7 @@ YACC = bison
 YFLAGS= -d -t -y
 LEX = flex
 
-ACTIONS = action.o type.o table.o gen.o
+ACTIONS = action.o type.o table.o gen.o global.o
 
 all: parser
 
@@ -38,6 +38,9 @@ type.o: type.c type.h
 gen.o: gen.c gen.h
 	$(GCC) $(CFLAGS) -c gen.c
     
+global.o: global.c global.h
+	$(GCC) $(CFLAGS) -c global.c
+    
 
 clean:
-	/bin/rm -f *.o *~ *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core
+	/bin/rm -f *.o *~ *.exe *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core

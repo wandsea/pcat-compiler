@@ -1,7 +1,14 @@
-(*   test var decls.     *)
-(*                       *)
+(*   var decl/read/write     *)
 PROGRAM IS
-    VAR i: INTEGER := 1; 
+    VAR i : INTEGER := 1; 
+    VAR j : REAL := 2.0;
 BEGIN
 	WRITE(i);
+    WRITE(j);
+    WRITE("hello");
+    WRITE(i,j,"hello");
+    WRITE();
+    READ(i,j);
+    WRITE(i);
+    WRITE(j);
 END;

@@ -288,12 +288,12 @@ array_inits_array_init_S: array_inits_array_init_S COMMA array_init { $$=cons($3
 array_init:          expression { $$=mk_node(ArrayInit,cons(mk_int(1),cons($1,NULL))); }
                     |expression OF expression { $$=mk_node(ArrayInit,cons($1,cons($3,NULL))); }
 ;
-number:               INTEGERT { $$=mk_int(atoi(yytext)); }
-                     |REALT { $$=mk_real(atof(yytext)); }
+number:               INTEGERT { $$=mk_node(IntConst,cons(mk_int(atoi(yytext)),NULL)); }
+                     |REALT    { $$=mk_node(RealConst,cons(mk_real(atof(yytext)),NULL)); }
 ;
 identifier:          ID { $$ = mk_var(yytext); }
 ;
-string:              STRINGT { $$=mk_str(yytext); }
+string:              STRINGT { $$=mk_node(StringConst,cons(mk_str(yytext),NULL)); }
 ;
 
 %%
