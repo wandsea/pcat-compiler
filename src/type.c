@@ -3,6 +3,9 @@
 #include "ast.h"
 #include "table.h"
 
+#include "stdlib.h"
+#include "assert.h"
+
 /*
  If it is an expression, it returns the type of the expression; otherwise it returns the AST NoType
  3 basic name type: INT / REAL / BOOLEAN / STR
@@ -128,6 +131,8 @@ void error(ast* x, const char* s){
     }
     
     printf("): %s\n",s);
+
+    exit(1);
 }
 
 
@@ -153,16 +158,16 @@ notes:
  */
 
 int scope_offset[1000];
+ast* scope_return_type[1000];
 int scope_offset_top;
 #define SCOPE_PUSH scope_offset[scope_offset_top++] = 0
 #define SCOPE_POP  scope_offset[--scope_offset_top] = 0
 #define CURR_LOCAL_OFFSET scope_offset[scope_offset_top-1]
+#define CURR_RETURN_TYPE  scope_return_type[scope_offset_top-1]
 #define TAKE_LOCAL_OFFSET (CURR_LOCAL_OFFSET-=4,CURR_LOCAL_OFFSET)
 
 int param_offset;
 #define TAKE_PARAM_OFFSET (param_offset+=4,param_offset)
-
-ast* current_return_type;
 
 ast* _check_type( ast* x ){
 #define GO_PICK(k)          _check_type( pick_ast(x,k) )
@@ -201,7 +206,7 @@ ast* _check_type( ast* x ){
                 case Program:    
                     begin_scope();    
                     SCOPE_PUSH;
-                    current_return_type = void_type;
+                    CURR_RETURN_TYPE = void_type;
                     GO_PICK_COMP("body");        
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP; 
@@ -276,9 +281,9 @@ ast* _check_type( ast* x ){
                         error(x,"Name conflict");                       
                     
                     t2 = GO_PICK_COMP("type");  //check return type
-                    current_return_type = t2;
                     begin_scope();
                     SCOPE_PUSH;
+                    CURR_RETURN_TYPE = t2;
                     // append level
                     append_ast(x,mk_int(curr_level()));
                     GO_PICK_COMP("formal-param-list");  //check formal list, adding to scope
@@ -444,7 +449,7 @@ ast* _check_type( ast* x ){
                     break;
                 case RetSt:
                     t1 = GO_PICK_COMP("expression");
-                    t2 = current_return_type;
+                    t2 = CURR_RETURN_TYPE;
                     if ( t1 != t2 )
                         error(x,"This type (maybe EMPTY-TYPE) conflicts with PROCEDURE declaration");
                     break;
@@ -643,8 +648,7 @@ ast* _check_type( ast* x ){
                         else{
                             result = GO( pick_ast_comp(decl,"type") );
                         }
-                        append_ast(x,result);
-                        
+                        append_ast(x,result);                        
                         append_ast(x,mk_int(curr_level()-ast_int(pick_ast_comp(decl,"level"))));
                         append_ast(x,mk_int(ast_int(pick_ast_comp(decl,"offset"))));                        
                     }
@@ -686,7 +690,7 @@ ast* _check_type( ast* x ){
                 case UPlus:
                 case UMinus:
                 case Not:
-                    printf("!!!!!!!!!!shouldn't be here!!!!\n");                
+                    assert(0);            
                     break;
                 
                 case TypeInferenceNeeded:
@@ -725,13 +729,13 @@ int typecheck( ast* x ){
     scope_init();    
     scope_offset_top = 0;
 
-    printf("========== Type Checking Start ========\n");
+//    printf("========== Type Checking Start ========\n");
     _check_type(x);    
     if ( has_error )
         printf("Type Checking finished with *ERRORS*\n");
     else
         printf("Type Checking finished *SUCCESSFULLY*\n");
-    printf("==========  Type Checking End  ========\n");
+//    printf("==========  Type Checking End  ========\n");
 
     return has_error;
 }

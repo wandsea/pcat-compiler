@@ -5,7 +5,7 @@
 #--------------------------------------------------------------------------------
 
 GCC = gcc
-CFLAGS = -g -std=gnu99 -Wall -Wno-unused-function
+CFLAGS = -g -std=gnu99 -m32 -Wall -Wno-unused-function 
 YACC = bison
 YFLAGS= -d -t -y
 LEX = flex
@@ -40,7 +40,7 @@ gen.o: gen.c gen.h
     
 global.o: global.c global.h
 	$(GCC) $(CFLAGS) -c global.c
-    
+   
 
 clean:
 	/bin/rm -f *.o *~ *.exe *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core

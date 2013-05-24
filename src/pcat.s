@@ -4,27 +4,24 @@
 _MainEntry:
 	 pushl %ebp
 	 movl %esp, %ebp
-	 subl $16, %esp
+	 subl $12, %esp
 	 andl $-16, %esp
 	 movl $0, %eax
 	 movl %eax, -4(%ebp)
-	 movl $4, %eax
+	 movl $2, %eax
 	 pushl %eax
-	 movl $1, %eax
+	 movl $3, %eax
 	 pushl %eax
 	 pushl %ebp
-	 call _FACTORIAL
+	 call _FOO
 	 addl $12, %esp
-	 movl %eax, -8(%ebp)
-	 movl -8(%ebp), %eax
-	 movl %eax, -4(%ebp)
 	 movl $label_1, %eax
 	 push %eax
 	 call _print_str
 	 addl $4, %esp
 	 movl -4(%ebp), %eax
-	 movl %eax, -12(%ebp)
-	 movl -12(%ebp), %eax
+	 movl %eax, -8(%ebp)
+	 movl -8(%ebp), %eax
 	 push %eax
 	 call _print_int
 	 addl $4, %esp
@@ -36,181 +33,46 @@ _MainEntry:
 	 leave
 	 ret
 
-_FACTORIAL:
+_FOO:
 	 pushl %ebp
 	 movl %esp, %ebp
-	 subl $52, %esp
+	 subl $8, %esp
 	 andl $-16, %esp
-	 movl $0, %eax
-	 movl %eax, -4(%ebp)
-	 movl $label_3, %eax
-	 push %eax
-	 call _print_str
-	 addl $4, %esp
-	 movl $label_4, %eax
-	 push %eax
-	 call _print_str
-	 addl $4, %esp
-	 movl 12(%ebp), %eax
-	 movl %eax, -8(%ebp)
-	 movl -8(%ebp), %eax
-	 push %eax
-	 call _print_int
-	 addl $4, %esp
-	 movl $label_5, %eax
-	 push %eax
-	 call _print_str
-	 addl $4, %esp
-	 movl 16(%ebp), %eax
-	 movl %eax, -12(%ebp)
-	 movl -12(%ebp), %eax
-	 push %eax
-	 call _print_int
-	 addl $4, %esp
-	 call _print_line
-	 movl 16(%ebp), %eax
-	 movl %eax, -16(%ebp)
-	 movl -16(%ebp), %eax
-	 movl $0, %ecx
-	 cmpl %ecx, %eax
-	 setg %al
-	 movzbl	%al, %eax
-	 movl %eax, -20(%ebp)
-	 movl -20(%ebp), %eax
-	 cmpl $0, %eax
-	 jne label_6
-	 jmp label_7
-label_6:
-	 movl 12(%ebp), %eax
-	 movl %eax, -24(%ebp)
-	 movl 16(%ebp), %eax
-	 movl %eax, -28(%ebp)
-	 movl -28(%ebp), %eax
-	 pushl %eax
-	 movl -24(%ebp), %eax
-	 pushl %eax
 	 pushl %ebp
-	 call _MULT
-	 addl $12, %esp
-	 movl %eax, -32(%ebp)
-	 movl -32(%ebp), %eax
+	 call _BAR
+	 addl $4, %esp
+	 movl 16(%ebp), %eax
 	 movl %eax, -4(%ebp)
 	 movl -4(%ebp), %eax
-	 movl %eax, -36(%ebp)
-	 movl 16(%ebp), %eax
-	 movl %eax, -40(%ebp)
-	 movl -40(%ebp), %eax
-	 movl $1, %ecx
-	 subl %ecx, %eax
-	 movl %eax, -44(%ebp)
-	 movl -44(%ebp), %eax
-	 pushl %eax
-	 movl -36(%ebp), %eax
-	 pushl %eax
-	 movl (%ebp), %edx
-	 pushl %edx
-	 call _FACTORIAL
-	 addl $12, %esp
-	 movl %eax, -48(%ebp)
-	 movl -48(%ebp), %eax
-	 leave
-	 ret
-label_7:
-	 leave
-	 ret
-
-_ADD:
-	 pushl %ebp
-	 movl %esp, %ebp
-	 subl $16, %esp
-	 andl $-16, %esp
-	 movl 12(%ebp), %eax
-	 movl %eax, -4(%ebp)
-	 movl 16(%ebp), %eax
-	 movl %eax, -8(%ebp)
-	 movl -4(%ebp), %eax
-	 movl -8(%ebp), %ecx
-	 addl %ecx, %eax
-	 movl %eax, -12(%ebp)
-	 movl -12(%ebp), %eax
+	 movl 8(%ebp), %edx
+	 movl %eax, -4(%edx)
 	 leave
 	 ret
 	 leave
 	 ret
 
-_MULT:
+_BAR:
 	 pushl %ebp
 	 movl %esp, %ebp
-	 subl $40, %esp
+	 subl $12, %esp
 	 andl $-16, %esp
-	 movl $0, %eax
+	 movl 8(%ebp), %edx
+	 movl 12(%edx), %eax
 	 movl %eax, -4(%ebp)
-	 movl $0, %eax
-	 movl %eax, -8(%ebp)
-	 movl $1, %eax
-	 movl %eax, -4(%ebp)
-	 movl $0, %eax
-	 movl %eax, -8(%ebp)
-label_8:
-	 movl 12(%ebp), %eax
-	 movl %eax, -12(%ebp)
-	 movl -8(%ebp), %eax
-	 movl -12(%ebp), %ecx
-	 cmpl %ecx, %eax
-	 jg label_9
-	 movl -8(%ebp), %eax
-	 movl %eax, -16(%ebp)
-	 movl 16(%ebp), %eax
-	 movl %eax, -20(%ebp)
-	 movl -20(%ebp), %eax
-	 pushl %eax
-	 movl -16(%ebp), %eax
-	 pushl %eax
-	 movl (%ebp), %edx
-	 pushl %edx
-	 call _ADD
-	 addl $12, %esp
-	 movl %eax, -24(%ebp)
-	 movl -24(%ebp), %eax
-	 movl %eax, -8(%ebp)
 	 movl -4(%ebp), %eax
-	 movl %eax, -28(%ebp)
-	 movl -28(%ebp), %eax
 	 movl $1, %ecx
 	 addl %ecx, %eax
-	 movl %eax, -32(%ebp)
-	 movl -32(%ebp), %eax
-	 movl %eax, -4(%ebp)
-	 movl -8(%ebp), %eax
-	 movl $0, %ecx
-	 addl %ecx, %eax
 	 movl %eax, -8(%ebp)
-	 jmp label_8
-label_9:
 	 movl -8(%ebp), %eax
-	 movl %eax, -36(%ebp)
-	 movl -36(%ebp), %eax
-	 leave
-	 ret
+	 movl 8(%ebp), %edx
+	 movl %eax, 16(%edx)
 	 leave
 	 ret
 
 	 .section .rdata,"dr"
 label_1:
-	 .ascii "FACTORIAL(4) = \0"
+	 .ascii "C = \0"
 
 	 .section .rdata,"dr"
 label_2:
-	 .ascii " (SHOULD BE 24)\0"
-
-	 .section .rdata,"dr"
-label_3:
-	 .ascii "IN FACTORIAL\0"
-
-	 .section .rdata,"dr"
-label_4:
-	 .ascii "A=\0"
-
-	 .section .rdata,"dr"
-label_5:
-	 .ascii ", B=\0"
+	 .ascii " (should be 4)\0"

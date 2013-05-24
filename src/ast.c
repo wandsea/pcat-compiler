@@ -280,10 +280,10 @@ void _print_ast_code_style( ast* x, int curr_offset ){
                 int i;
                 switch (x->info.node.tag){
                     case Program:
-                        printf("========= Program Start ===============\n");
+                        printf("====+==============================================\n");
                         mo();recline;p("PROGRAM IS\n");
                         gop(0);
-                        printf("=========  Program End  ===============\n");
+                        printf("====+==============================================\n");
                         break;
                     case BodyDef:
                         gopi(0);

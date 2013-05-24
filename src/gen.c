@@ -53,9 +53,9 @@ void load_int( ast* x, char* reg ){
             if ( level_diff == 0 )
                 fprintf(code_out,"\t movl %s, %s\n",src,reg);
             else{
-                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
-                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                    fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                 sprintf(src,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t movl %s, %s\n",src,reg);
             }
@@ -107,9 +107,9 @@ void store_int( char* reg, ast* x ){
             if ( level_diff == 0 )
                 fprintf(code_out,"\t movl %s, %s\n",reg,dst);
             else{
-                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
-                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                    fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                 sprintf(dst,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t movl %s, %s\n",reg,dst);
             }
@@ -158,9 +158,9 @@ void load_float( ast* x ){
             if ( level_diff == 0 )
                 fprintf(code_out,"\t %s %s\n",opr,src);
             else{
-                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
-                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                    fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                 sprintf(src,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t %s %s\n",opr,src);
             }
@@ -239,9 +239,9 @@ void store_float( ast* x ){
             if ( level_diff == 0 )
                 fprintf(code_out,"\t %s %s\n",opr,dst);
             else{
-                fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
-                    fprintf(code_out, "\t movl (%%edx), %%edx");
+                    fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                 sprintf(dst,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t %s %s\n",opr,dst);
             }
@@ -423,9 +423,9 @@ void _gen_code( ast* x ){
                     if ( level_diff == -1 )
                         fprintf(code_out,"\t pushl %%ebp\n");
                     else{
-                        fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                        fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                         for(i = 0; i < level_diff; i++ )
-                            fprintf(code_out, "\t movl (%%edx), %%edx\n");
+                            fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
                     fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));
@@ -819,9 +819,9 @@ void _gen_code( ast* x ){
                     if ( level_diff == -1 )
                         fprintf(code_out,"\t pushl %%ebp\n");
                     else{
-                        fprintf(code_out,"\t movl (%%ebp), %%edx\n");
+                        fprintf(code_out,"\t movl 8(%%ebp), %%edx\n");
                         for(i = 0; i < level_diff; i++ )
-                            fprintf(code_out, "\t movl (%%edx), %%edx\n");
+                            fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
                     fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));

@@ -1,0 +1,12 @@
+How to configure?
+    Locate routine_prefix at begining of gen.c
+    set it to "_" or "" according to the manner in which your gcc treat function symbol
+        e.g.  "_func" or "func" for subroutine named "func"
+
+How to compile?
+    $ make 
+
+How to run?
+    $ ./parser /path/to/file.pcat  # pcat -> asm
+    $ ./compile                    # asm  -> native code e.g. ./exe (linux) or ./exe.exe (cygwin)
+    $ ./exe                        # run
