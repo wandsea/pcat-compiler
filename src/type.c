@@ -395,8 +395,9 @@ ast* _check_type( ast* x ){
                         t0 = GO(ELEML);
                         if ( t0 != basic_int && 
                              t0 != basic_real &&
-                             t0 != basic_str ){
-                            error(x,"In WRITE statement only basic types (INT/REAL) and STRING are allowed");
+                             t0 != basic_str &&
+                             t0 != basic_bool ){
+                            error(x,"In WRITE statement only basic types (INT/REAL), STRING and BOOL are allowed");
                         }
                     }
                     break;
@@ -435,7 +436,7 @@ ast* _check_type( ast* x ){
                     
                     GO_PICK_COMP("statement");                     
 
-                    append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
+                    append_ast(x,pick_ast_comp(decl,"offset"));
                     break;
                 case ExitSt:
                     break;

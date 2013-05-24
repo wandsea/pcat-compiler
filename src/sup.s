@@ -59,7 +59,7 @@ _print_real:
 	movl	%eax, -12(%ebp)
 	flds	-12(%ebp)
 	fstpl	4(%esp)
-	movl	$LC0, (%esp)
+	movl	$LC1, (%esp)
 	call	_printf
 	leave
 	ret
@@ -79,6 +79,29 @@ _print_str:
 	movl	%eax, 4(%esp)
 	movl	$LC3, (%esp)
 	call	_printf
+	leave
+	ret
+	.section .rdata,"dr"
+LC4:
+	.ascii "TRUE\0"
+LC5:
+	.ascii "FALSE\0"
+	.text
+.globl _print_bool
+	.def	_print_bool;	.scl	2;	.type	32;	.endef
+_print_bool:
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$24, %esp
+	cmpl	$0, 8(%ebp)
+	je	L7
+	movl	$LC4, (%esp)
+	call	_printf
+	jmp	L6
+L7:
+	movl	$LC5, (%esp)
+	call	_printf
+L6:
 	leave
 	ret
 .globl _print_line

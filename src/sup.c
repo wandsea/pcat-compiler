@@ -27,6 +27,10 @@ void print_str( int a ){
     printf("%s",p);
 }
 
+void print_bool( int a ){
+    if ( a ) printf("TRUE"); else printf("FALSE");
+}
+
 void print_line(){
     printf("\n");
 }

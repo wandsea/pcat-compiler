@@ -131,7 +131,7 @@ int get_comp_id( ast* a, char * name ){
         case Comp:      r("ID");r("type"); die;
         case FormalParamList: die;
         case Param:     r("ID");r("type"); die;
-        case SeqSt:     r("statements-list"); die;
+        case SeqSt:     die;
         case AssignSt:  r("lvalue");r("expression"); die;
         case CallSt:    r("ID");r("expression-list");r("type");r("level-diff"); die;
         case ReadSt:    r("lvalue-list"); die;
@@ -356,8 +356,8 @@ void _print_ast_code_style( ast* x, int curr_offset ){
                         break;
                     case WhileSt:
                         mo();recline;p("WHILE ");gop(0);p(" DO\n");
-                        mo();gopi(1);p("\n");
-                        mo();p("END");p(";\n");;
+                        gopi(1);
+                        mo();p("END");p(";\n");
                         break;    
                     case LoopSt:
                         mo();recline;p("LOOP ");p("\n");

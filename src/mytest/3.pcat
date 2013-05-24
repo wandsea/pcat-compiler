@@ -1,0 +1,94 @@
+(*   operations  *)
+PROGRAM IS
+BEGIN
+    WRITE();
+    WRITE("INTEGER arithmic operations");
+    WRITE(1," 1");
+    WRITE(-1," -1");
+    WRITE(1+2," 3");
+    WRITE(1-2," -1");
+    WRITE(3*5," 15");
+    WRITE(1243 DIV 123," 10");
+    WRITE(1243 MOD 123," 13");
+    WRITE(-123," -123");
+    WRITE(+123," 123");
+    
+    WRITE();
+    WRITE("REAL operations");
+    WRITE(1.0, " 1.0");
+    WRITE(-1.0, " -1.0");
+    WRITE(1.0+2.0, " 3.0");
+    WRITE(1.0-2.0, " -1.0");
+    WRITE(3.0*2.0, " 6.0");
+    WRITE(3.0/2.0, " 1.5");
+    WRITE(-3.0," -3.0");
+    WRITE(+3.0," 3.0");
+    
+    WRITE();
+    WRITE("INTEGER/REAL mixed operations");
+    WRITE(1+2.0," 3.0");
+    WRITE(1.0-2," -1.0");
+    WRITE(1.0*8," 8.0");
+    WRITE(1.0/8," 0.125");
+    WRITE(1/8," 0.125");
+    
+    WRITE();
+    WRITE("BOOLEAN operations");
+    WRITE(TRUE," TRUE");
+    WRITE(FALSE," FALSE");
+    WRITE(TRUE AND TRUE," TRUE");
+    WRITE(TRUE AND FALSE," FALSE");
+    WRITE(FALSE AND FALSE," FALSE");
+    WRITE(TRUE OR TRUE," TRUE");
+    WRITE(TRUE OR FALSE," TRUE");
+    WRITE(FALSE OR FALSE," FALSE");
+    WRITE(NOT FALSE," TRUE");
+    WRITE(NOT TRUE," FALSE");
+    
+    WRITE();
+    WRITE("INTEGER comparative operations");
+    WRITE(1 > 2, " FALSE");
+    WRITE(1 < 2, " TRUE");
+    WRITE(1 = 2, " FALSE");
+    WRITE(1 >= 2, " FALSE");
+    WRITE(1 <= 2, " TRUE");
+    WRITE(1 <> 2, " TRUE");
+    
+    WRITE(1 > 1, " FALSE");
+    WRITE(1 < 1, " FALSE");
+    WRITE(1 = 1, " TRUE");
+    WRITE(1 >= 1, " TRUE");
+    WRITE(1 <= 1, " TRUE");
+    WRITE(1 <> 1, " FALSE");
+    
+    WRITE(2 > 1, " TRUE");
+    WRITE(2 < 1, " FALSE");
+    WRITE(2 = 1, " FALSE");
+    WRITE(2 >= 1, " TRUE");
+    WRITE(2 <= 1, " FALSE");
+    WRITE(2 <> 1, " TRUE");
+    
+    
+    WRITE(1.0 > 2.0, " FALSE");
+    WRITE(1.0 < 2.0, " TRUE");
+    WRITE(1.0 = 2.0, " FALSE");
+    WRITE(1.0 >= 2.0, " FALSE");
+    WRITE(1.0 <= 2.0, " TRUE");
+    WRITE(1.0 <> 2.0, " TRUE");
+    
+    
+    WRITE(1.0 > 1.0, " FALSE");
+    WRITE(1.0 < 1.0, " FALSE");
+    WRITE(1.0 = 1.0, " TRUE");
+    WRITE(1.0 >= 1.0, " TRUE");
+    WRITE(1.0 <= 1.0, " TRUE");
+    WRITE(1.0 <> 1.0, " FALSE");
+    
+    WRITE(2.0 > 1.0, " TRUE");
+    WRITE(2.0 < 1.0, " FALSE");
+    WRITE(2.0 = 1.0, " FALSE");
+    WRITE(2.0 >= 1.0, " TRUE");
+    WRITE(2.0 <= 1.0, " FALSE");
+    WRITE(2.0 <> 1.0, " TRUE");
+    
+END;

@@ -1,0 +1,29 @@
+(*   logic  *)
+PROGRAM IS
+    VAR i : INTEGER := 2;
+    VAR j : INTEGER := 1;
+BEGIN
+(*
+    IF i < j THEN
+        WRITE("less");
+    ELSIF i = j THEN
+        WRITE("equal");
+    ELSE
+        WRITE("larger");
+    END;
+    
+    i := 0;
+    WHILE i < 5 DO
+        WRITE(i);
+        i := i + 1;
+    END;
+*)
+    
+    FOR i := 1 TO 6 DO
+        WRITE(i);
+    END;
+    
+    FOR i := 1 TO 6 BY 2 DO
+        WRITE(i);
+    END;
+END;

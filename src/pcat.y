@@ -226,7 +226,7 @@ statement_else_O:     ELSE statement_list { $$=$2; }
                      | {$$=mk_node(EmptyStatement,NULL);}
 ;
 statement_by_O:       BY expression { $$=$2; }
-                     | {$$=mk_int(1);}
+                     | {$$=mk_node(IntConst,cons(mk_int(1),NULL));}
 ;
 write_params:         LPAREN write_expr write_params_expr_S RPAREN { $$=mk_node(ExprList,cons($2,reverse($3))); }
                      |LPAREN RPAREN { $$=mk_node(EmptyExpression,NULL); }
