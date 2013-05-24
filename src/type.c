@@ -162,6 +162,8 @@ int scope_offset_top;
 int param_offset;
 #define TAKE_PARAM_OFFSET (param_offset+=4,param_offset)
 
+ast* current_return_type;
+
 ast* _check_type( ast* x ){
 #define GO_PICK(k)          _check_type( pick_ast(x,k) )
 #define GO_PICK_COMP(k)     _check_type( pick_ast_comp(x,k) )
@@ -198,7 +200,8 @@ ast* _check_type( ast* x ){
             switch (x->info.node.tag){
                 case Program:    
                     begin_scope();    
-                    SCOPE_PUSH;   
+                    SCOPE_PUSH;
+                    current_return_type = void_type;
                     GO_PICK_COMP("body");        
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     SCOPE_POP; 
@@ -264,11 +267,7 @@ ast* _check_type( ast* x ){
                     }else
                         error(x,"Name conflict");
                     break;
-                case ProcDec:  
-                    // append level
-                    append_ast(x,mk_int(curr_level()));
-
-                    // real works             
+                case ProcDec:           
                     id = ast_var(pick_ast_comp(x,"ID"));
                     decl = lookup(id,&level);
                     if ( !decl ){
@@ -276,9 +275,12 @@ ast* _check_type( ast* x ){
                     }else
                         error(x,"Name conflict");                       
                     
-                    GO_PICK_COMP("type");  //check return type
+                    t2 = GO_PICK_COMP("type");  //check return type
+                    current_return_type = t2;
                     begin_scope();
                     SCOPE_PUSH;
+                    // append level
+                    append_ast(x,mk_int(curr_level()));
                     GO_PICK_COMP("formal-param-list");  //check formal list, adding to scope
                     GO_PICK_COMP("body");  //check procedure body
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
@@ -441,7 +443,11 @@ ast* _check_type( ast* x ){
                 case ExitSt:
                     break;
                 case RetSt:
-                    break;  // TODO: check against procedure type
+                    t1 = GO_PICK_COMP("expression");
+                    t2 = current_return_type;
+                    if ( t1 != t2 )
+                        error(x,"This type (maybe EMPTY-TYPE) conflicts with PROCEDURE declaration");
+                    break;
                 case SeqSt:                    
                     FOREACH(x) GO(ELEML); 
                     break;
@@ -574,7 +580,7 @@ ast* _check_type( ast* x ){
                     }
                     
                     append_ast(x,result);
-                    append_ast(x,mk_int(curr_level()-pick_ast_comp(decl,"level")->info.integer));
+                    append_ast(x,mk_int(curr_level()-ast_int(pick_ast_comp(decl,"level"))));
                     append_ast(x,mk_int(TAKE_LOCAL_OFFSET));
                     break;
                 case RecordExp:
@@ -638,13 +644,9 @@ ast* _check_type( ast* x ){
                             result = GO( pick_ast_comp(decl,"type") );
                         }
                         append_ast(x,result);
-                        if (tag(decl)==Param){
-                            append_ast(x,mk_int(curr_level()-pick_ast(decl,2)->info.integer));
-                            append_ast(x,mk_int(pick_ast(decl,3)->info.integer));
-                        }else{
-                            append_ast(x,mk_int(curr_level()-pick_ast(decl,3)->info.integer));
-                            append_ast(x,mk_int(pick_ast(decl,4)->info.integer));
-                        }
+                        
+                        append_ast(x,mk_int(curr_level()-ast_int(pick_ast_comp(decl,"level"))));
+                        append_ast(x,mk_int(ast_int(pick_ast_comp(decl,"offset"))));                        
                     }
                     
                     break;
@@ -696,7 +698,7 @@ ast* _check_type( ast* x ){
                 case EmptyStatement:
                     break;
                 case EmptyExpression:
-                    printf("!!!!!!!!!!shouldn't be here!!!!\n");
+                    result = void_type;
                     break;
             }
             break;

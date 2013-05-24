@@ -44,9 +44,9 @@ void load_int( ast* x, char* reg ){
                 src = "$0";
                 level_diff = 0;
             }else{
-                offset = ast_int( pick_ast(x,3) );
+                offset = ast_int( pick_ast_comp(x,"offset") );
                 sprintf(src,"%d(%%ebp)",offset);                
-                level_diff = ast_int( pick_ast(x,2) ); 
+                level_diff = ast_int( pick_ast_comp(x,"level-diff") ); 
                 assert(level_diff>=0);
             }
             
@@ -56,15 +56,14 @@ void load_int( ast* x, char* reg ){
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
+                sprintf(src,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t movl %s, %s\n",src,reg);
             }
             break;
         case BinOpExp:
         case UnOpExp: 
         case CallExp:
-            if ( tag(x) == BinOpExp) offset = ast_int( pick_ast(x,4) );
-            if ( tag(x) == UnOpExp)  offset = ast_int( pick_ast(x,3) );
-            if ( tag(x) == CallExp)  offset = ast_int( pick_ast(x,3) );
+            offset = ast_int( pick_ast_comp(x,"offset") );
             sprintf(src,"%d(%%ebp)",offset);
             fprintf(code_out,"\t movl %s, %s\n",src,reg);
             break;
@@ -101,9 +100,9 @@ void store_int( char* reg, ast* x ){
             fprintf(code_out,"\t movl %s, %s\n",reg,dst);
             break;
         case Var:
-            offset = ast_int( pick_ast(x,3) );
+            offset = ast_int( pick_ast_comp(x,"offset") );
             sprintf(dst,"%d(%%ebp)",offset);            
-            level_diff = ast_int( pick_ast(x,2) ); 
+            level_diff = ast_int( pick_ast_comp(x,"level-diff") ); 
             assert(level_diff>=0);
             if ( level_diff == 0 )
                 fprintf(code_out,"\t movl %s, %s\n",reg,dst);
@@ -111,15 +110,14 @@ void store_int( char* reg, ast* x ){
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
+                sprintf(dst,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t movl %s, %s\n",reg,dst);
             }
             break;        
         case BinOpExp:
         case UnOpExp:
         case CallExp:
-            if ( tag(x) == BinOpExp) offset = ast_int( pick_ast(x,4) );
-            if ( tag(x) == UnOpExp)  offset = ast_int( pick_ast(x,3) );
-            if ( tag(x) == CallExp)  offset = ast_int( pick_ast(x,3) );
+            offset = ast_int( pick_ast_comp(x,"offset") );
             sprintf(dst,"%d(%%ebp)",offset);       
             fprintf(code_out,"\t movl %s, %s\n",reg,dst);
             break;
@@ -145,9 +143,9 @@ void load_float( ast* x ){
             fprintf(code_out,"\t %s %s\n",opr,src);
             break;
         case Var:
-            offset = ast_int( pick_ast(x,3) );
-            sprintf(src,"%d(%%ebp)",offset);                
-            level_diff = ast_int( pick_ast(x,2) ); 
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            sprintf(src,"%d(%%ebp)",offset);             
+            level_diff = ast_int( pick_ast_comp(x,"level-diff") ); 
             assert(level_diff>=0);
             
             if ( same_name(ast_str(pick_ast_comp(x,"type")),"basic_int") )
@@ -163,15 +161,16 @@ void load_float( ast* x ){
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
+                sprintf(src,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t %s %s\n",opr,src);
             }
             break;
         case BinOpExp:
-            offset = ast_int( pick_ast(x,4) );
-            t = pick_ast(x,4);
-            if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            t = pick_ast_comp(x,"type");
+            if ( same_name(ast_str(pick_ast_comp(t,"ID")),"basic_int") )
                 opr = opr_load_int;
-            else if ( same_name(ast_str(pick_ast(t,0)),"basic_real") )
+            else if ( same_name(ast_str(pick_ast_comp(t,"ID")),"basic_real") )
                 opr = opr_load_float;
             else
                 assert(0);
@@ -179,11 +178,11 @@ void load_float( ast* x ){
             fprintf(code_out,"\t %s %s\n",opr,src);
             break;
         case UnOpExp:
-            offset = ast_int( pick_ast(x,3) );            
-            t = pick_ast(x,4);
-            if ( same_name(ast_str(pick_ast(t,0)),"basic_int") )
+            offset = ast_int( pick_ast_comp(x,"offset") );
+            t = pick_ast_comp(x,"type");
+            if ( same_name(ast_str(pick_ast_comp(t,"ID")),"basic_int") )
                 opr = opr_load_int;
-            else if ( same_name(ast_str(pick_ast(t,0)),"basic_real") )
+            else if ( same_name(ast_str(pick_ast_comp(t,"ID")),"basic_real") )
                 opr = opr_load_float;
             else
                 assert(0);
@@ -191,7 +190,7 @@ void load_float( ast* x ){
             fprintf(code_out,"\t %s %s\n",opr,src);
             break;
         case CallExp:
-            offset = ast_int( pick_ast(x,3) );
+            offset = ast_int( pick_ast_comp(x,"offset") );
             opr = opr_load_float;
             sprintf(src,"%d(%%ebp)",offset); 
             fprintf(code_out,"\t %s %s\n",opr,src);
@@ -233,9 +232,9 @@ void store_float( ast* x ){
             fprintf(code_out,"\t %s %s\n",opr,dst);
             break;
         case Var:
-            level_diff = ast_int( pick_ast(x,2) );
+            level_diff = ast_int( pick_ast_comp(x,"level-diff") );
             assert(level_diff>=0);
-            offset = ast_int( pick_ast(x,3) );
+            offset = ast_int( pick_ast_comp(x,"offset") );
             sprintf(dst,"%d(%%ebp)",offset);   
             if ( level_diff == 0 )
                 fprintf(code_out,"\t %s %s\n",opr,dst);
@@ -243,6 +242,7 @@ void store_float( ast* x ){
                 fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                 for(i = 0; i < level_diff-1; i++ )
                     fprintf(code_out, "\t movl (%%edx), %%edx");
+                sprintf(dst,"%d(%%edx)",offset);   
                 fprintf(code_out,"\t %s %s\n",opr,dst);
             }
             break;
@@ -292,11 +292,12 @@ void _gen_code( ast* x ){
             char *l2,*l3,*l4;
             int i;
             int level_diff;
-            ast *var;
+            ast *var, *el;
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"\t .text\n");
                     fprintf(code_out,"\t .globl %s%s\n",routine_prefix,main_entry_name);
+                    
                     fprintf(code_out,"\n");
                     fprintf(code_out,"%s%s:\n",routine_prefix, main_entry_name);  // name for main
                     fprintf(code_out,"\t pushl %%ebp\n\t movl %%esp, %%ebp\n");// prologue
@@ -304,6 +305,10 @@ void _gen_code( ast* x ){
                     fprintf(code_out,"\t andl $-16, %%esp\n");
                     GO_PICK_COMP("body");   // body
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue
+                    
+                    // sub-routine
+                    FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
+                        if (tag(ELEML)==ProcDecs) GO(ELEML); 
                     break;
                 case BodyDef:
                     GO_PICK_COMP("declarations-list");
@@ -349,8 +354,12 @@ void _gen_code( ast* x ){
                     fprintf(code_out,"\t subl $%d, %%esp\n",-ast_int(pick_ast_comp(x,"local-offset"))); // local-offset is negative, so need a '-'
                     fprintf(code_out,"\t andl $-16, %%esp\n");
                     // name for sub-routine
-                    GO_PICK(3); // generate code for body   
+                    GO_PICK_COMP("body"); // generate code for body   
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
+                    
+                    // sub-routine
+                    FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
+                        if (tag(ELEML)==ProcDecs) GO(ELEML); 
                     break;
                 case NamedTyp: 
                     // Shouldn't reach here
@@ -400,11 +409,17 @@ void _gen_code( ast* x ){
                     store_int("%eax",pick_ast_comp(x,"lvalue"));
                     break;
                 case CallSt:
-                // synchronize with CallExpr
+                // synchronize with CallExp
                     FOREACH(pick_ast_comp(x,"expression-list"))
-                        _gen_code(ELEML);
+                        _gen_code(ELEML);                    
+                    // parameters
+                    el = pick_ast_comp(x,"expression-list");
+                    for( int i = length(args(el))-1; i >= 0; i-- ){
+                        load_int(pick_ast(el,i),"%eax");
+                        fprintf(code_out,"\t pushl %%eax\n");
+                    }
                     // static link
-                    level_diff = ast_int( pick_ast(x,4) );
+                    level_diff = ast_int( pick_ast_comp(x,"level-diff") );
                     if ( level_diff == -1 )
                         fprintf(code_out,"\t pushl %%ebp\n");
                     else{
@@ -413,14 +428,9 @@ void _gen_code( ast* x ){
                             fprintf(code_out, "\t movl (%%edx), %%edx\n");
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
-                    // parameters
-                    FOREACH(pick_ast_comp(x,"expression-list")){
-                        load_int(ELEML,"%eax");
-                        fprintf(code_out,"\t pushl %%eax\n");
-                    }
-                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast(x,0)));
-                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast(x,1))));
-
+                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));
+                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast_comp(x,"expression-list"))));
+                    
                     break;
                 case ReadSt:
                     FOREACH(pick_ast_comp(x,"lvalue-list")){                        
@@ -471,14 +481,14 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label(); l3 = make_label();
 
-                    GO_PICK(0);
-                    load_int(pick_ast(x,0),"%eax");
+                    GO_PICK_COMP("expression");
+                    load_int(pick_ast_comp(x,"expression"),"%eax");
                     fprintf(code_out,"\t cmpl $0, %%eax\n");
                     fprintf(code_out,"\t jne %s\n",l2);
-                    GO_PICK(2);
+                    GO_PICK_COMP("statement-else");
                     fprintf(code_out,"\t jmp %s\n",l3);
                     fprintf(code_out,"%s:\n",l2);
-                    GO_PICK(1);
+                    GO_PICK_COMP("statement");
                     fprintf(code_out,"%s:\n",l3);
                     break;
                 case WhileSt:
@@ -495,11 +505,11 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label(); l3 = make_label();
                     fprintf(code_out,"%s:\n",l2);
-                    GO_PICK(0);
+                    GO_PICK_COMP("expression");
                     load_int(pick_ast(x,0),"%eax");
                     fprintf(code_out,"\t cmpl $0, %%eax\n");
                     fprintf(code_out,"\t je %s\n",l3);
-                    GO_PICK(1);
+                    GO_PICK_COMP("statement");
                     fprintf(code_out,"\t jmp %s\n",l2);
                     fprintf(code_out,"%s:\n",l3);
                     break;
@@ -513,7 +523,7 @@ void _gen_code( ast* x ){
                 */
                     l2 = make_label();
                     fprintf(code_out,"%s:\n",l2);
-                    GO_PICK(0);
+                    GO_PICK_COMP("statement");
                     fprintf(code_out,"\t jmp %s\n",l2);
                     break;
                 case ForSt:
@@ -797,24 +807,25 @@ void _gen_code( ast* x ){
                 case CallExp:                
                 // synchronize with CallSt
                     FOREACH(pick_ast_comp(x,"expression-list"))
-                        _gen_code(ELEML);
+                        _gen_code(ELEML);                    
+                    // parameters
+                    el = pick_ast_comp(x,"expression-list");
+                    for( int i = length(args(el))-1; i >= 0; i-- ){
+                        load_int(pick_ast(el,i),"%eax");
+                        fprintf(code_out,"\t pushl %%eax\n");
+                    }
                     // static link
-                    level_diff = ast_int( pick_ast(x,4) );
+                    level_diff = ast_int( pick_ast_comp(x,"level-diff") );
                     if ( level_diff == -1 )
                         fprintf(code_out,"\t pushl %%ebp\n");
                     else{
                         fprintf(code_out,"\t movl (%%ebp), %%edx\n");
                         for(i = 0; i < level_diff; i++ )
-                            fprintf(code_out, "\t movl (%%edx), %%edx");
-                        fprintf(code_out,"\t pushl %%edx");
+                            fprintf(code_out, "\t movl (%%edx), %%edx\n");
+                        fprintf(code_out,"\t pushl %%edx\n");
                     }
-                    // parameters                    
-                    FOREACH(pick_ast_comp(x,"expression-list")){
-                        load_int(ELEML,"%eax");
-                        fprintf(code_out,"\t pushl %%eax\n");
-                    }
-                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast(x,0)));
-                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast(x,1))));
+                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));
+                    fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast_comp(x,"expression-list"))));
 
                     // store return
                     store_int("%eax",x);

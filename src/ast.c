@@ -130,7 +130,7 @@ int get_comp_id( ast* a, char * name ){
         case NoTyp: case CompList: die;
         case Comp:      r("ID");r("type"); die;
         case FormalParamList: die;
-        case Param:     r("ID");r("type"); die;
+        case Param:     r("ID");r("type");r("level");r("offset");die;
         case SeqSt:     die;
         case AssignSt:  r("lvalue");r("expression"); die;
         case CallSt:    r("ID");r("expression-list");r("type");r("level-diff"); die;
