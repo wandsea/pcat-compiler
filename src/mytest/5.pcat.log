@@ -3,12 +3,26 @@
   2 |   VAR i : INTEGER = 2;
   3 |   VAR j : INTEGER = 1;
   4 | BEGIN
-  5 |   FOR i := 1 TO 6 BY 1 DO
-  6 |     WRITE(i);
-  7 |   END;
-  8 |   FOR i := 1 TO 6 BY 2 DO
-  9 |     WRITE(i);
- 10 |   END;
- 11 | END;
+  5 |   IF (i < j) THEN 
+  6 |     WRITE("less");
+  7 |   ELSE
+  8 |     IF (i = j) THEN 
+  9 |       WRITE("equal");
+ 10 |     ELSE
+ 11 |       WRITE("larger");
+ 12 |     END;
+ 13 |   END;
+ 14 |   i := 0;
+ 15 |   WHILE (i < 5) DO
+ 16 |     WRITE(i);
+ 17 |     i := (i + 1);
+ 18 |   END;
+ 19 |   FOR i := 1 TO 6 BY 1 DO
+ 20 |     WRITE(i);
+ 21 |   END;
+ 22 |   FOR i := 1 TO 6 BY 2 DO
+ 23 |     WRITE(i);
+ 24 |   END;
+ 25 | END;
 ====+==============================================
 Type Checking finished *SUCCESSFULLY*
