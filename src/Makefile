@@ -43,4 +43,4 @@ global.o: global.c global.h
    
 
 clean:
-	/bin/rm -f *.o *~ *.exe *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core
+	/bin/rm -f *.o *~ *.exe *.stackdump pcat.yy.c pcat.c pcat.output y.tab.* ast.o lex.yy.c parser core data.s code.s pcat.s
