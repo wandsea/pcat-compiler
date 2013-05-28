@@ -1,0 +1,19 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   PROCEDURE ADDONE () : [Void Type]
+  4 |   BEGIN
+  5 |     I := (I + 1);
+  6 |   END;
+  7 |   PROCEDURE PASSTHEBUCK () : [Void Type]
+  8 |   BEGIN
+  9 |     ADDONE();
+ 10 |   END;
+ 11 | BEGIN
+ 12 |   WRITE("I = ", I, " (SHOULD BE 0)");
+ 13 |   PASSTHEBUCK();
+ 14 |   WRITE("I = ", I, " (SHOULD BE 1)");
+ 15 |   WRITE("ALL DONE!");
+ 16 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

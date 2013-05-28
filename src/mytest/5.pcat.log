@@ -1,0 +1,14 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR i : INTEGER = 2;
+  3 |   VAR j : INTEGER = 1;
+  4 | BEGIN
+  5 |   FOR i := 1 TO 6 BY 1 DO
+  6 |     WRITE(i);
+  7 |   END;
+  8 |   FOR i := 1 TO 6 BY 2 DO
+  9 |     WRITE(i);
+ 10 |   END;
+ 11 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

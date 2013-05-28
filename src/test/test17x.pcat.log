@@ -1,0 +1,38 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   VAR ANSWER : INTEGER = 0;
+  4 |   PROCEDURE FACTORIAL () : [Void Type]
+  5 |     VAR J : INTEGER = 0;
+  6 |     PROCEDURE MULT () : [Void Type]
+  7 |       VAR I : INTEGER = 0;
+  8 |     BEGIN
+  9 |       I := ANSWER;
+ 10 |       I := (I * J);
+ 11 |       ANSWER := I;
+ 12 |     END;
+ 13 |     PROCEDURE FACT () : [Void Type]
+ 14 |     BEGIN
+ 15 |       IF (J <= I) THEN 
+ 16 |         MULT();
+ 17 |         J := (J + 1);
+ 18 |         FACT();
+ 19 |       ELSE
+ 20 |         [Empty Statement];
+ 21 |       END;
+ 22 |     END;
+ 23 |   BEGIN
+ 24 |     ANSWER := 1;
+ 25 |     J := 1;
+ 26 |     FACT();
+ 27 |   END;
+ 28 | BEGIN
+ 29 |   WRITE("The first 5 factorials are (in ascending order):");
+ 30 |   FOR I := 1 TO 5 BY 1 DO
+ 31 |     FACTORIAL();
+ 32 |     WRITE("FACTORIAL(", I, ") = ", ANSWER);
+ 33 |     I := (I + 1);
+ 34 |   END;
+ 35 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*
