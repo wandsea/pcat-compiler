@@ -7,6 +7,6 @@ How to compile?
     $ make 
 
 How to run?
-    $ ./parser /path/to/file.pcat  # pcat -> asm
-    $ ./compile                    # asm  -> native code e.g. ./exe (linux) or ./exe.exe (cygwin)
-    $ ./exe                        # run
+    $ ./parser  /path/to/file.pcat # pcat -> asm
+    $ ./compile /path/to/file.pcat # pcat -> asm -> native code 
+    $ /path/to/file.pcat.o         # native code -> run
