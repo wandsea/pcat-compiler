@@ -1,0 +1,9 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 | BEGIN
+  3 |   WRITE([Empty Expression]);
+  4 |   WRITE("Complex Exprs");
+  5 |   WRITE(((1 + (2 * 3.000000)) / 5), " 1.4");
+  6 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

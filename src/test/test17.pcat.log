@@ -1,0 +1,38 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   VAR ANSWER : INTEGER = 0;
+  4 |   PROCEDURE FACTORIAL () : [Void Type]
+  5 |     VAR J : INTEGER = 0;
+  6 |     PROCEDURE FACT () : [Void Type]
+  7 |     BEGIN
+  8 |       IF (J <= I) THEN 
+  9 |         MULT();
+ 10 |         J := (J + 1);
+ 11 |         FACT();
+ 12 |       ELSE
+ 13 |         [Empty Statement];
+ 14 |       END;
+ 15 |     END;
+ 16 |     PROCEDURE MULT () : [Void Type]
+ 17 |       VAR I : INTEGER = 0;
+ 18 |     BEGIN
+ 19 |       I := ANSWER;
+ 20 |       I := (I * J);
+ 21 |       ANSWER := I;
+ 22 |     END;
+ 23 |   BEGIN
+ 24 |     ANSWER := 1;
+ 25 |     J := 1;
+ 26 |     FACT();
+ 27 |   END;
+ 28 | BEGIN
+ 29 |   WRITE("The first 5 factorials are (in ascending order):");
+ 30 |   FOR I := 1 TO 5 BY 1 DO
+ 31 |     FACTORIAL();
+ 32 |     WRITE("FACTORIAL(", I, ") = ", ANSWER);
+ 33 |     I := (I + 1);
+ 34 |   END;
+ 35 | END;
+====+==============================================
+ERROR: at line 9 near "(" (CallStatement): Cannot find the called procedure

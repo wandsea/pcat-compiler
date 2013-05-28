@@ -1,0 +1,8 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR i : INTEGER = 1;
+  3 |   VAR j : INTEGER = 1;
+  4 | BEGIN
+  5 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

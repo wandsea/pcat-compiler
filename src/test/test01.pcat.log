@@ -1,0 +1,12 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR i : INTEGER = 1;
+  3 |   VAR j : INTEGER = 1;
+  4 |   VAR x : INTEGER = 2;
+  5 |   VAR y : [Type Inference Needed] = 3;
+  6 | BEGIN
+  7 |   WRITE("i = ", i, ", j = ", j);
+  8 |   WRITE("x = ", x, ", y = ", y);
+  9 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

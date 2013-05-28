@@ -1,0 +1,21 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR n : INTEGER = 0;
+  3 |   PROCEDURE E (a : INTEGER) : INTEGER
+  4 |     VAR x : INTEGER = 0;
+  5 |   BEGIN
+  6 |     x := 1;
+  7 |     RETURN ((n + a) + x);
+  8 |   END;
+  9 |   PROCEDURE F () : INTEGER
+ 10 |   BEGIN
+ 11 |     n := (n * 10);
+ 12 |   END;
+ 13 | BEGIN
+ 14 |   n := 1;
+ 15 |   WRITE(n, " 1");
+ 16 |   F();
+ 17 |   WRITE(n, " 10");
+ 18 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

@@ -11,8 +11,8 @@
 #include <string.h>
 
 char * main_entry_name = "MainEntry";
-char * routine_prefix = "_";
-//char * routine_prefix = "";
+//char * routine_prefix = "_";
+char * routine_prefix = "";
 
 FILE *code_out, *data_out;
 
@@ -76,9 +76,9 @@ void load_int( ast* x, char* reg ){
         case StringConst:
             lc = make_label();
             fprintf(data_out,"\n"
-                             "\t .section .rdata,\"dr\"\n"
+                             "\t .section .rodata\n"
                              "%s:\n"
-                             "\t .ascii \"%s\\0\"\n"
+                             "\t .string \"%s\\0\"\n"
                              ,lc,ast_str(pick_ast_comp(x,"STRING")));
             fprintf(code_out,"\t movl $%s, %s\n",lc,reg);
             break;
@@ -198,7 +198,7 @@ void load_float( ast* x ){
         case IntConst:
             lc = make_label();
             fprintf(data_out,"\n"
-                             "\t .section .rdata,\"dr\"\n"
+                             "\t .section .rodata\n"
                              "\t .align 4 \n"
                              "%s:\n"
                              "\t .long %d\n",lc,ast_int(pick_ast(x,0)));
@@ -207,7 +207,7 @@ void load_float( ast* x ){
         case RealConst:            
             lc = make_label();
             fprintf(data_out,"\n"
-                             "\t .section .rdata,\"dr\"\n"
+                             "\t .section .rodata\n"
                              "\t .align 4 \n"
                              "%s:\n"
                              "\t .long %d\n",lc,ast_real_repr(pick_ast(x,0)));
@@ -428,7 +428,7 @@ void _gen_code( ast* x ){
                             fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
-                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));
+                    fprintf(code_out,"\t call %s%s\n",routine_prefix,ast_str(pick_ast_comp(x,"ID")));
                     fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast_comp(x,"expression-list"))));
                     
                     break;
@@ -824,7 +824,7 @@ void _gen_code( ast* x ){
                             fprintf(code_out, "\t movl 8(%%edx), %%edx\n");
                         fprintf(code_out,"\t pushl %%edx\n");
                     }
-                    fprintf(code_out,"\t call _%s\n",ast_str(pick_ast_comp(x,"ID")));
+                    fprintf(code_out,"\t call %s%s\n",routine_prefix,ast_str(pick_ast_comp(x,"ID")));
                     fprintf(code_out,"\t addl $%d, %%esp\n",4+4*length(args(pick_ast_comp(x,"expression-list"))));
 
                     // store return
