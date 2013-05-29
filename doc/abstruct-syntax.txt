@@ -1,0 +1,79 @@
+==========================
+Abstruct Syntax - Modified
+==========================
+
+program                  -> ( Program ( body ) )
+body                     -> ( BodyDef ( declarations-list statements-list ) )
+declarations-list        -> ( DeclareList ( {declarations} ) )
+declarations             -> ( VarDecs ( {var-dec} ) )
+                         -> ( TypeDecs ( {type-dec} ) )
+                         -> ( ProcDecs ( {proc-dec} ) )
+var-dec                  -> ( VarDec ( ID type expression ) )
+type-dec                 -> ( TypeDec ( ID type ) ) 
+proc-dec                 -> ( ProcDec ( ID formal-param-list type body ) ) 
+type                     -> ( NamedTyp ( ID ) )
+                         -> ( ArrayTyp ( type ) )
+                         -> ( RecordTyp ( component-list ) )
+                         -> ( NoTyp () )
+component-list           -> ( CompList ( { component } ) )
+component                -> ( Comp ( ID type ) )
+formal-param-list        -> ( FormalParamList ( {formal-param } ) )
+formal-param             -> ( Param ( ID type ) )
+statements-list          -> ( SeqSt ( { statements-list } )
+statement                -> ( AssignSt ( lvalue expression ) )
+                         -> ( CallSt ( ID expression-list ) )
+                         -> ( ReadSt ( lvalue-list ) )
+                         -> ( WriteSt  ( expression-list ) )
+                         -> ( IfSt ( expression statement statement-else ) )
+                         -> ( WhileSt ( expression statement ) )
+                         -> ( LoopSt ( statement ) )
+                         -> ( ForSt ( ID expression-from expression-to expression-by statement ) )
+                         -> ( ExitSt () )
+                         -> ( RetSt ( expression ) )
+                         -> ( RetSt () ) 
+                         -> ( SeqSt ( { statements-list } ) )
+expression-list          -> ( ExprList ( { expression } ) )
+expression               -> ( BinOpExp ( binop expression-left expression-right ) )
+                         -> ( UnOpExp  ( unop expression ) )
+                         -> ( LvalExp ( lvalue ) )
+                         -> ( CallExp ( ID expression-list ) )
+                         -> ( RecordExp ( ID record-init-list ) )        
+                         -> ( ArrayExp  ( ID array-init-list ) )
+                         -> ( IntConst ( INTEGER ) )
+                         -> ( RealConst ( REAL ) )
+                         -> ( StringConst ( STRING ) )
+record-init-list         -> ( RecordInitList ( { record-init } ) )
+record-init              -> ( RecordInit ( ID expression ) )
+array-init-list          -> ( ArrayInitList ( { array-init-list } ) )
+array-init               -> ( ArrayInit ( expression-count expression-instance ) )   
+lvalue-list              -> ( LvalList ( { lvalue } ) )   
+lvalue                   -> ( Var ( ID ) )
+                         -> ( ArrayDeref ( lvalue expression ) )
+                         -> ( RecordDeref ( lvalue ID ) )
+binop                    -> GT | LT | EQ | GE | LE | NE | PLUS | MINUS | TIMES | SLASH
+                         -> DIV | MOD | AND | OR 
+unop                     -> UPLUS | UMINUS | NOT 
+
+
+===========================
+Abstruct Syntax - Extension
+===========================
+
+in `get_comp_id`, # is ommited
+
+program                  -> ( Program ( body #local-offset) )
+proc-dec                 -> ( ProcDec ( ID formal-param-list type body #level #local-offset ) ) 
+var-dec                  -> ( VarDec ( ID type expression #level #offset ) )
+formal-param             -> ( Param ( ID type #level #offset ) )
+statement                -> 
+                         -> ( CallSt ( ID expression-list #type #level-diff ) )
+                         -> ( ForSt ( ID expression-from expression-to expression-by statement #offset ) )
+expression               -> ( BinOpExp ( binop expression-left expression-right #type #offset ) )
+                         -> ( UnOpExp  ( unop expression #type #offset) ) 
+                         -> ( LvalExp ( lvalue #type #offset ) )
+                         -> ( CallExp ( ID expression-list #type #level-diff #offset) )
+                         -> ( IntConst ( INTEGER #type ) )
+                         -> ( RealConst ( REAL #type ) )
+                         -> ( StringConst ( STRING #type ) )
+lvalue                   -> ( Var ( ID type #level-diff #offset ) )
+                         -> ( Var ( ID type) )   !! for TRUE/FALSE

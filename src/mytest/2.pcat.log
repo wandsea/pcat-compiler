@@ -1,0 +1,16 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR i : INTEGER = 1;
+  3 |   VAR j : REAL = 2.000000;
+  4 | BEGIN
+  5 |   WRITE(i);
+  6 |   WRITE(j);
+  7 |   WRITE("hello");
+  8 |   WRITE(i, j, "hello");
+  9 |   WRITE([Empty Expression]);
+ 10 |   READ(i, j);
+ 11 |   WRITE(i);
+ 12 |   WRITE(j);
+ 13 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

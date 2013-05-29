@@ -1,0 +1,55 @@
+(*   call  *)
+PROGRAM IS
+    
+    VAR n : INTEGER := 0;
+    (*
+    PROCEDURE A () : INTEGER IS
+    BEGIN
+        RETURN 1;
+    END;
+    
+    PROCEDURE B (a:INTEGER; b:INTEGER) : INTEGER IS
+    BEGIN
+        RETURN a+b+1;
+    END;
+    
+    PROCEDURE C (a:INTEGER; b:INTEGER; c:INTEGER) : INTEGER IS
+    BEGIN
+        RETURN b;
+    END;
+    
+    PROCEDURE D (a:INTEGER) : INTEGER IS
+        VAR x : INTEGER := 0;
+    BEGIN
+        x := 1;
+        RETURN a+x;
+    END;
+    *)
+    PROCEDURE E (a:INTEGER) : INTEGER IS
+        VAR x : INTEGER := 0;
+    BEGIN
+        x := 1;
+        RETURN n+a+x;
+    END;
+        
+    PROCEDURE F () : INTEGER IS
+    BEGIN
+        n := n * 10;
+    END;
+BEGIN
+    (*
+    WRITE( A() , " 1");    
+    WRITE( B(100,10), " 111" );
+    WRITE( C(1,2,3), " 2" );
+    WRITE( D(10), " 11" );
+    
+    n := 100;
+    WRITE( E(10), " 111" );
+    *)
+    
+    n := 1;
+    WRITE(n, " 1");
+    F();
+    WRITE(n, " 10");
+    
+END;

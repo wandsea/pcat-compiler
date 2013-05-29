@@ -1,4 +1,4 @@
-pcat-compiler
+﻿pcat-compiler
 =============
  
 PCAT compiler is a college course project assigned in the course ''Compiler''
@@ -18,63 +18,8 @@ Details
 ### Lexical Analysis (Tokenizer)
 
 #### Tokens
-
-There are four kinds of tokens, namely
-literals, keywords, operators and special ones.
-
-Literals can be one of following types
-* Identifiers
-* Integer
-* Real
-* String
-
-Keywords are reserved words. Operators
-(including delimiter) are used for
-operating or seperating.
-
-Tab and space (which is not in a string or comment)
-are special ones, so are new lines (which are not in a comment)
-and comments. They should be
-totally ingored.
-
-#### Dealing
-Tokens are handles in the following order.
-##### Identifiers and Keywords
-Using `[a-zA-Z_][a-zA-Z_0-9]*` to catch
-identifiers and keywords. Check if the token
-is a keyword, and if so, treat it properly.
-##### Reals
-A little extension to language specification:
-support `1.` or `.1` besided `1.1` using
-`[0-9]+\.[0-9]+|[0-9]+\.|\.[0-9]+`.
-##### Integers
-Catch by `[0-9][0-9]*`
-##### String
-Catch by `\".*?(?:\"|\n|\r)` in order
-to forced close an open string (one that
-isn't properly closed)
-##### Operators
-Catch exactly what they look like.
-##### New lines
-Catch and ingore
-##### Comments
-Catch normal comments by
-`\(\*(?:.|\n|\r)*?\*\)`, and then open comment
-by `\(\*(?:.|\n|\r)*`.
-##### Error Tokens
-Anything failed to fall into at least one type
-of tokens mentioned above is treated as error.
-We will try to ingore it by moving the pointer to the current charactor by one.
-
-#### Error Tolerance
-Several error auto correctings are performed, 
-including
-
-* Stripping overlong string literals and identifiers
-* Setting overflowed integer literals to `MAX_INT`
-* Ignore illegal charactors in string literals
-* Forcing closing open string literals and comments
-
+No more tweaks required. It is sufficient to follow the 
+specification.
 
 ### Syntax Analysis
 
@@ -113,6 +58,14 @@ with project on PCAT was offered by
 Although in Java without solution, its supplimentary materials
 as well as lectures closely linked to the PCAT compiler, still mean a lot
 to us.
+
+Another [course](http://lambda.uta.edu/cse5317/spring02/)
+offered by Prof Fegras also contains PCAT compiler implementation
+as it course project.
+The [lecture note](http://lambda.uta.edu/cse5317/spring02/notes/notes.html)
+provides good vision of knowledge required for this project, while 
+instructions from [projects](http://lambda.uta.edu/cse5317/spring02/project.html)
+explained some details on the implementation.
 
 Students are required to implement an compiler of PCAT language, including
 Lexical, syntax, semantic analysis and IR generation.

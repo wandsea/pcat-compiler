@@ -1,0 +1,47 @@
+(*  nested recursive procedures with  
+    parameters, local variables, and return values.    *)
+
+PROGRAM IS
+    VAR X : INTEGER := 0;
+    VAR Y : INTEGER := 0;
+
+    PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+        VAR T : INTEGER := 0;
+
+    	PROCEDURE ADD (A, B : INTEGER) : INTEGER IS BEGIN
+    	    RETURN A + B;
+    	END;
+
+    	PROCEDURE MULT (A, B : INTEGER) : INTEGER IS
+    	    VAR I, P : INTEGER := 0;
+    	BEGIN
+        (*
+    	    I := 1;
+    	    FOR I := 1 TO A BY 0 DO
+                P := ADD (P, B);
+                I := I + 1;
+    	    END;
+            RETURN P;
+        *)
+            RETURN A * B;
+    	END;
+
+    BEGIN
+        
+        WRITE ("IN FACTORIAL, ", "A=", A, ", B=", B, " Y=",Y);
+        
+        IF B > 0 THEN 
+            T := MULT (A, B);
+            Y := Y + A;
+            RETURN FACTORIAL (T, B - 1); 
+        ELSE
+            RETURN A;
+        END;
+    END;
+
+BEGIN 
+    X := FACTORIAL (1, 4);
+    WRITE ("FACTORIAL(4) = ", X, " (SHOULD BE 24)");
+    WRITE ("Y = ", Y, " (SHOULD BE 41)");
+
+END;

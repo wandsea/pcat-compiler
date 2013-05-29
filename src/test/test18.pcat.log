@@ -1,0 +1,35 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR A : INTEGER = 0;
+  3 |   PROCEDURE FACTORIAL (A : INTEGER, B : INTEGER) : INTEGER
+  4 |     VAR T : INTEGER = 0;
+  5 |     PROCEDURE ADD (A : INTEGER, B : INTEGER) : INTEGER
+  6 |     BEGIN
+  7 |       RETURN (A + B);
+  8 |     END;
+  9 |     PROCEDURE MULT (A : INTEGER, B : INTEGER) : INTEGER
+ 10 |       VAR I : INTEGER = 0;
+ 11 |       VAR P : INTEGER = 0;
+ 12 |     BEGIN
+ 13 |       I := 1;
+ 14 |       FOR P := 0 TO A BY 0 DO
+ 15 |         P := ADD(P, B);
+ 16 |         I := (I + 1);
+ 17 |       END;
+ 18 |       RETURN P;
+ 19 |     END;
+ 20 |   BEGIN
+ 21 |     WRITE("IN FACTORIAL", "A=", A, ", B=", B);
+ 22 |     IF (B > 0) THEN 
+ 23 |       T := MULT(A, B);
+ 24 |       RETURN FACTORIAL(T, (B - 1));
+ 25 |     ELSE
+ 26 |       [Empty Statement];
+ 27 |     END;
+ 28 |   END;
+ 29 | BEGIN
+ 30 |   A := FACTORIAL(1, 4);
+ 31 |   WRITE("FACTORIAL(4) = ", A, " (SHOULD BE 24)");
+ 32 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

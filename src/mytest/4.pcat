@@ -1,0 +1,9 @@
+(*   assignment     *)
+PROGRAM IS
+    VAR i : INTEGER := 10; 
+    VAR j : REAL := 2.0;
+BEGIN
+    WRITE(i);
+    j := i * j;
+    WRITE(i);
+END;
