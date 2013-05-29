@@ -1,0 +1,11 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR i : INTEGER = 10;
+  3 |   VAR j : REAL = 2.000000;
+  4 | BEGIN
+  5 |   WRITE(i);
+  6 |   j := (i * j);
+  7 |   WRITE(i);
+  8 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

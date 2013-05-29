@@ -1,0 +1,4 @@
+PROGRAM IS
+    VAR i, j : INTEGER := 1; 
+BEGIN 
+END;

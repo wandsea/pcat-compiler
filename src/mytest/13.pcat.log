@@ -1,0 +1,21 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   VAR POWER : INTEGER = 0;
+  4 |   PROCEDURE FINDPOWER () : [Void Type]
+  5 |     VAR J : INTEGER = 0;
+  6 |   BEGIN
+  7 |     POWER := 1;
+  8 |     FOR J := 1 TO I BY 1 DO
+  9 |       POWER := (POWER * 2);
+ 10 |     END;
+ 11 |   END;
+ 12 | BEGIN
+ 13 |   WRITE("Calculate the first 5 powers of 2:");
+ 14 |   FOR I := 1 TO 5 BY 1 DO
+ 15 |     FINDPOWER();
+ 16 |     WRITE("2**", I, " = ", POWER);
+ 17 |   END;
+ 18 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

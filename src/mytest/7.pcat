@@ -1,0 +1,10 @@
+(*   nested exprs  *)
+PROGRAM IS
+BEGIN
+  
+    WRITE();
+    WRITE("Complex Exprs");
+    WRITE((1+2*3.0)/5, " 1.4");
+    
+    
+END;

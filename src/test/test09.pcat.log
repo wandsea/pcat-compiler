@@ -1,0 +1,19 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR C : [Type Inference Needed] = 0;
+  3 |   PROCEDURE FOO (X : INT, Y : INT) : [Void Type]
+  4 |     PROCEDURE BAR () : [Void Type]
+  5 |     BEGIN
+  6 |       Y := (X + 1);
+  7 |     END;
+  8 |   BEGIN
+  9 |     BAR();
+ 10 |     C := Y;
+ 11 |     RETURN [Empty Expression];
+ 12 |   END;
+ 13 | BEGIN
+ 14 |   C := FOO(3, 2);
+ 15 |   WRITE("C = ", C, " (should be 4)");
+ 16 | END;
+====+==============================================
+ERROR: at line 14 near " := " (AssignStatement): Assgining between diffrent types is not allowed

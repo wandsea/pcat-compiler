@@ -1,0 +1,27 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   PROCEDURE ADDONE () : [Void Type]
+  4 |     VAR J : INTEGER = 0;
+  5 |     PROCEDURE OKAY () : [Void Type]
+  6 |       VAR CONSTANT : INTEGER = 0;
+  7 |     BEGIN
+  8 |       CONSTANT := 1;
+  9 |       J := (J + CONSTANT);
+ 10 |     END;
+ 11 |   BEGIN
+ 12 |     J := I;
+ 13 |     OKAY();
+ 14 |     I := J;
+ 15 |   END;
+ 16 | BEGIN
+ 17 |   I := 0;
+ 18 |   WRITE("I = ", I, " (SHOULD BE 0)");
+ 19 |   ADDONE();
+ 20 |   WRITE("I = ", I, " (SHOULD BE 1)");
+ 21 |   ADDONE();
+ 22 |   WRITE("I = ", I, " (SHOULD BE 2)");
+ 23 |   WRITE("ALL DONE!");
+ 24 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

@@ -1,0 +1,24 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 |   PROCEDURE ADDONE () : [Void Type]
+  4 |     PROCEDURE OKAY () : [Void Type]
+  5 |     BEGIN
+  6 |       I := (I + 1);
+  7 |     END;
+  8 |   BEGIN
+  9 |     OKAY();
+ 10 |   END;
+ 11 | BEGIN
+ 12 |   I := 0;
+ 13 |   WRITE("I = ", I, " (SHOULD BE 0)");
+ 14 |   ADDONE();
+ 15 |   WRITE("I = ", I, " (SHOULD BE 1)");
+ 16 |   ADDONE();
+ 17 |   WRITE("I = ", I, " (SHOULD BE 2)");
+ 18 |   ADDONE();
+ 19 |   WRITE("I = ", I, " (SHOULD BE 3)");
+ 20 |   WRITE("ALL DONE!");
+ 21 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

@@ -12,9 +12,11 @@
   //extern int yylloc;
   void yyerror(char *);
   int yycolumn = 1;
+  /*
   #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = lineno; \
   yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng - 1; \
   yycolumn += yyleng;
+  */
 %}
 %option noyywrap
 %x COMMENT

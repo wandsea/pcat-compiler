@@ -1,0 +1,14 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR A : [Type Inference Needed] = 0;
+  3 |   VAR B : [Type Inference Needed] = 0;
+  4 |   VAR C : [Type Inference Needed] = 0;
+  5 | BEGIN
+  6 |   A := ((- A) - A);
+  7 |   A := ((- A) - (- A));
+  8 |   A := ((+ A) - (+ A));
+  9 |   A := ((+ A) + (+ A));
+ 10 |   A := ((- A) * (- A));
+ 11 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

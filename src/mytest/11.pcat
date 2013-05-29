@@ -1,0 +1,25 @@
+(* nested recursive parameterless procedure calls without local variables. *)
+
+PROGRAM IS
+    VAR I, J, ANSWER : INTEGER := 0;
+    PROCEDURE FACTORIAL() IS
+	PROCEDURE 
+	  MULT() IS BEGIN 
+            ANSWER := ANSWER * J; 
+          END;
+          FACT() IS BEGIN
+	    MULT();
+	    IF J <> I THEN J := J + 1; FACT(); END;
+	  END;
+    BEGIN
+	ANSWER := 1;
+	J := 1;
+	FACT();
+    END;
+BEGIN 
+    WRITE ("The first 5 factorials are (in descending order):");
+    FOR I := 1 TO 5 DO
+        FACTORIAL();
+        WRITE("FACTORIAL(", I, ") = ", ANSWER);
+    END;
+END;

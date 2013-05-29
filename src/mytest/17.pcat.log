@@ -1,0 +1,22 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 |   VAR I : INTEGER = 0;
+  3 | BEGIN
+  4 |   WRITE("Input an integer: ");
+  5 |   READ(I);
+  6 |   IF (I = 0) THEN 
+  7 |     WRITE("I = 0");
+  8 |   ELSE
+  9 |     IF (I = 1) THEN 
+ 10 |       WRITE("I = 1");
+ 11 |     ELSE
+ 12 |       IF (I = 2) THEN 
+ 13 |         WRITE("I = 2");
+ 14 |       ELSE
+ 15 |         WRITE("I = ", I);
+ 16 |       END;
+ 17 |     END;
+ 18 |   END;
+ 19 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*

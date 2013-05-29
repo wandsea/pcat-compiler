@@ -1,0 +1,7 @@
+====+==============================================
+  1 | PROGRAM IS
+  2 | BEGIN
+  3 |   WRITE([Empty Expression]);
+  4 | END;
+====+==============================================
+Type Checking finished *SUCCESSFULLY*
