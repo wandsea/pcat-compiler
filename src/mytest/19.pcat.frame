@@ -1,0 +1,26 @@
+Frame for routine "BAR"
+	formal parameters:
+		[static link]        @ (%esp+8)
+	local variables:
+		(No local variables)
+	frame size:
+		stack allocated = 12 bytes
+
+Frame for routine "FOO"
+	formal parameters:
+		[static link]        @ (%esp+8)
+		X                    @ (%esp+12)
+		Y                    @ (%esp+16)
+	local variables:
+		(No local variables)
+	frame size:
+		stack allocated = 8 bytes
+
+Frame for routine "Main Routine"
+	formal parameters:
+		(not applicable for Main Routine)
+	local variables:
+		C                    @ (%esp-4)
+	frame size:
+		stack allocated = 16 bytes
+

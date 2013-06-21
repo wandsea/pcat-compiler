@@ -1,0 +1,25 @@
+Frame for routine "E"
+	formal parameters:
+		[static link]        @ (%esp+8)
+		a                    @ (%esp+12)
+	local variables:
+		x                    @ (%esp-4)
+	frame size:
+		stack allocated = 28 bytes
+
+Frame for routine "F"
+	formal parameters:
+		[static link]        @ (%esp+8)
+	local variables:
+		(No local variables)
+	frame size:
+		stack allocated = 12 bytes
+
+Frame for routine "Main Routine"
+	formal parameters:
+		(not applicable for Main Routine)
+	local variables:
+		n                    @ (%esp-4)
+	frame size:
+		stack allocated = 16 bytes
+

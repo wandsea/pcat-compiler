@@ -1,0 +1,107 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $36, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 call read_int
+	 movl %eax, -4(%ebp)
+	 movl -4(%ebp), %eax
+	 movl %eax, -8(%ebp)
+	 movl -8(%ebp), %eax
+	 movl $0, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_2
+	 movl -4(%ebp), %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_4
+	 movl -4(%ebp), %eax
+	 movl %eax, -24(%ebp)
+	 movl -24(%ebp), %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -28(%ebp)
+	 movl -28(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_6
+	 movl $label_8, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -32(%ebp)
+	 movl -32(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 jmp label_7
+label_6:
+	 movl $label_9, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+label_7:
+	 jmp label_5
+label_4:
+	 movl $label_10, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+label_5:
+	 jmp label_3
+label_2:
+	 movl $label_11, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+label_3:
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "Input an integer: \0"
+
+	 .section .rodata
+label_8:
+	 .string "I = \0"
+
+	 .section .rodata
+label_9:
+	 .string "I = 2\0"
+
+	 .section .rodata
+label_10:
+	 .string "I = 1\0"
+
+	 .section .rodata
+label_11:
+	 .string "I = 0\0"

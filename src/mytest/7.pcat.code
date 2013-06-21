@@ -1,0 +1,65 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $16, %esp
+	 andl $-16, %esp
+	 call print_line
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 fildl label_2
+	 flds label_3
+	 fmulp %st, %st(1)
+	 fstps -4(%ebp)
+	 fildl label_4
+	 flds -4(%ebp)
+	 faddp %st, %st(1)
+	 fstps -8(%ebp)
+	 flds -8(%ebp)
+	 fildl label_5
+	 fdivrp %st, %st(1)
+	 fstps -12(%ebp)
+	 movl -12(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_6, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "Complex Exprs\0"
+
+	 .section .rodata
+	 .align 4 
+label_2:
+	 .long 2
+
+	 .section .rodata
+	 .align 4 
+label_3:
+	 .long 1077936128
+
+	 .section .rodata
+	 .align 4 
+label_4:
+	 .long 1
+
+	 .section .rodata
+	 .align 4 
+label_5:
+	 .long 5
+
+	 .section .rodata
+label_6:
+	 .string " 1.4\0"
