@@ -1,0 +1,182 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   │   ├───VaribleDeclareList
+    │   │   │   └───VaribleDeclare
+    │   │   │       ├───n
+    │   │   │       ├───NamedTyp
+    │   │   │       │   └───INTEGER
+    │   │   │       ├───IntConst
+    │   │   │       │   ├───0
+    │   │   │       │   └───NamedTyp
+    │   │   │       │       └───basic_int
+    │   │   │       ├───1
+    │   │   │       └───-4
+    │   │   ├───ProcedureDeclareList
+    │   │   │   └───ProcDeclare
+    │   │   │       ├───E
+    │   │   │       ├───FormalParameterList
+    │   │   │       │   └───Parameter
+    │   │   │       │       ├───a
+    │   │   │       │       ├───NamedTyp
+    │   │   │       │       │   └───INTEGER
+    │   │   │       │       ├───2
+    │   │   │       │       └───12
+    │   │   │       ├───NamedTyp
+    │   │   │       │   └───INTEGER
+    │   │   │       ├───BodyDefine
+    │   │   │       │   ├───DeclareList
+    │   │   │       │   │   └───VaribleDeclareList
+    │   │   │       │   │       └───VaribleDeclare
+    │   │   │       │   │           ├───x
+    │   │   │       │   │           ├───NamedTyp
+    │   │   │       │   │           │   └───INTEGER
+    │   │   │       │   │           ├───IntConst
+    │   │   │       │   │           │   ├───0
+    │   │   │       │   │           │   └───NamedTyp
+    │   │   │       │   │           │       └───basic_int
+    │   │   │       │   │           ├───2
+    │   │   │       │   │           └───-4
+    │   │   │       │   └───StatementList
+    │   │   │       │       ├───AssignStatement
+    │   │   │       │       │   ├───Var
+    │   │   │       │       │   │   ├───x
+    │   │   │       │       │   │   ├───NamedTyp
+    │   │   │       │       │   │   │   └───basic_int
+    │   │   │       │       │   │   ├───0
+    │   │   │       │       │   │   └───-4
+    │   │   │       │       │   └───IntConst
+    │   │   │       │       │       ├───1
+    │   │   │       │       │       └───NamedTyp
+    │   │   │       │       │           └───basic_int
+    │   │   │       │       └───ReturnStatement
+    │   │   │       │           └───BinOpExpr
+    │   │   │       │               ├───Plus
+    │   │   │       │               ├───BinOpExpr
+    │   │   │       │               │   ├───Plus
+    │   │   │       │               │   ├───LvalExpr
+    │   │   │       │               │   │   ├───Var
+    │   │   │       │               │   │   │   ├───n
+    │   │   │       │               │   │   │   ├───NamedTyp
+    │   │   │       │               │   │   │   │   └───basic_int
+    │   │   │       │               │   │   │   ├───1
+    │   │   │       │               │   │   │   └───-4
+    │   │   │       │               │   │   ├───NamedTyp
+    │   │   │       │               │   │   │   └───basic_int
+    │   │   │       │               │   │   └───-8
+    │   │   │       │               │   ├───LvalExpr
+    │   │   │       │               │   │   ├───Var
+    │   │   │       │               │   │   │   ├───a
+    │   │   │       │               │   │   │   ├───NamedTyp
+    │   │   │       │               │   │   │   │   └───basic_int
+    │   │   │       │               │   │   │   ├───0
+    │   │   │       │               │   │   │   └───12
+    │   │   │       │               │   │   ├───NamedTyp
+    │   │   │       │               │   │   │   └───basic_int
+    │   │   │       │               │   │   └───-12
+    │   │   │       │               │   ├───NamedTyp
+    │   │   │       │               │   │   └───basic_int
+    │   │   │       │               │   └───-16
+    │   │   │       │               ├───LvalExpr
+    │   │   │       │               │   ├───Var
+    │   │   │       │               │   │   ├───x
+    │   │   │       │               │   │   ├───NamedTyp
+    │   │   │       │               │   │   │   └───basic_int
+    │   │   │       │               │   │   ├───0
+    │   │   │       │               │   │   └───-4
+    │   │   │       │               │   ├───NamedTyp
+    │   │   │       │               │   │   └───basic_int
+    │   │   │       │               │   └───-20
+    │   │   │       │               ├───NamedTyp
+    │   │   │       │               │   └───basic_int
+    │   │   │       │               └───-24
+    │   │   │       ├───2
+    │   │   │       └───-28
+    │   │   └───ProcedureDeclareList
+    │   │       └───ProcDeclare
+    │   │           ├───F
+    │   │           ├───FormalParameterList
+    │   │           ├───NamedTyp
+    │   │           │   └───INTEGER
+    │   │           ├───BodyDefine
+    │   │           │   ├───DeclareList
+    │   │           │   └───StatementList
+    │   │           │       └───AssignStatement
+    │   │           │           ├───Var
+    │   │           │           │   ├───n
+    │   │           │           │   ├───NamedTyp
+    │   │           │           │   │   └───basic_int
+    │   │           │           │   ├───1
+    │   │           │           │   └───-4
+    │   │           │           └───BinOpExpr
+    │   │           │               ├───Time
+    │   │           │               ├───LvalExpr
+    │   │           │               │   ├───Var
+    │   │           │               │   │   ├───n
+    │   │           │               │   │   ├───NamedTyp
+    │   │           │               │   │   │   └───basic_int
+    │   │           │               │   │   ├───1
+    │   │           │               │   │   └───-4
+    │   │           │               │   ├───NamedTyp
+    │   │           │               │   │   └───basic_int
+    │   │           │               │   └───-4
+    │   │           │               ├───IntConst
+    │   │           │               │   ├───10
+    │   │           │               │   └───NamedTyp
+    │   │           │               │       └───basic_int
+    │   │           │               ├───NamedTyp
+    │   │           │               │   └───basic_int
+    │   │           │               └───-8
+    │   │           ├───2
+    │   │           └───-12
+    │   └───StatementList
+    │       ├───AssignStatement
+    │       │   ├───Var
+    │       │   │   ├───n
+    │       │   │   ├───NamedTyp
+    │       │   │   │   └───basic_int
+    │       │   │   ├───0
+    │       │   │   └───-4
+    │       │   └───IntConst
+    │       │       ├───1
+    │       │       └───NamedTyp
+    │       │           └───basic_int
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───LvalExpr
+    │       │       │   ├───Var
+    │       │       │   │   ├───n
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_int
+    │       │       │   │   ├───0
+    │       │       │   │   └───-4
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-8
+    │       │       └───StringConst
+    │       │           ├─── 1
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───CallStatement
+    │       │   ├───F
+    │       │   ├───ExprList
+    │       │   ├───NamedTyp
+    │       │   │   └───no_type
+    │       │   └───-1
+    │       └───WriteStatement
+    │           └───ExprList
+    │               ├───LvalExpr
+    │               │   ├───Var
+    │               │   │   ├───n
+    │               │   │   ├───NamedTyp
+    │               │   │   │   └───basic_int
+    │               │   │   ├───0
+    │               │   │   └───-4
+    │               │   ├───NamedTyp
+    │               │   │   └───basic_int
+    │               │   └───-12
+    │               └───StringConst
+    │                   ├─── 10
+    │                   └───NamedTyp
+    │                       └───basic_str
+    └───-16
