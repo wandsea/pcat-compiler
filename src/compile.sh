@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 echo "compiling $1"
 
@@ -20,6 +20,7 @@ if [ "$?" -eq "0" ]; then
 
     rm pcat.s
     rm frame.info
+    rm tree.info
     
     echo "compiling success!"
 else
