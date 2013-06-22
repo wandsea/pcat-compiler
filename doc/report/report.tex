@@ -1,0 +1,106 @@
+﻿\documentclass{article}
+\usepackage{xeCJK}
+\setmainfont{FreeSerif}
+\setmonofont{FreeMono}
+\setsansfont{FreeSans}
+\setCJKmainfont{WenQuanYi Micro Hei}
+\setCJKfamilyfont{song}{WenQuanYi Micro Hei}
+
+% DIRTY FIX for CJK support with TexLive2012 Under my Gentoo.....
+\xeCJKsetup{CJKglue=\hspace{0pt plus .08 \baselineskip}}
+
+\usepackage{listings}
+\lstset{
+        breaklines=true,
+        basicstyle=\ttfamily\footnotesize
+}
+
+\usepackage{url}
+
+
+\title {编译实验三实验报告 —— Parser of PCAT}
+\author {田应涛 10302010029 \quad 王曦 \quad 10300240014\\ 陈济凡 10300240076 \quad 承沐南 10300240003}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{概述}
+
+本次 Project 包含五个部分
+\begin{enumerate}
+\item 抽象语法树 (Abstract Syntax Tree)
+\item 类型检查 (Type Checking)
+\item 栈帧 (Frames)
+\item 中间表示 (Intermediate Representation)
+\item 机器代码
+\end{enumerate}
+
+本报告分为两大部分。前一大部分分别讲述 Project 所做的
+五个部分，后一大部分为实验结果。
+
+
+\section{抽象语法树 (Abstract Syntax Tree)}
+
+% 截自 http://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E8%AA%9E%E6%B3%95%E6%A8%B9
+抽象语法树即使源代码的抽象语法结构的树状表现形式。树上的每个节点都表示源代码中的一种结构。
+之所以说语法是“抽象”的，是因为这里的语法并不会表示出真实语法中出现的每个细节。
+比如，嵌套括号被隐含在树的结构中，并没有以节点的形式呈现；
+而类似于if-condition-then这样的条件跳转语句，可以使用带有两个分支的节点来表示。
+
+我们实现的语法规则参照了 
+\url{http://web.cecs.pdx.edu/apt/cs302_1999/pcat99/pcat99.html}
+中给出的 PCAT 标准,并根据该标准写出了 EBNF 语法,之后我们
+将该 EBNF 语法转换至 BNF 语法，即具体语法树。
+最后依据具体语法树制定了抽象语法树生成规则。
+
+\lstinputlisting{../abstruct-syntax.txt}
+
+\section{类型检查 (Type Checking)}
+
+% 翻译自 from http://c2.com/cgi/wiki?TypeChecking
+类型检查指的是对程序中的类型以及相关信息进行检查的一种程序分析过程。
+严格意义上的类型检查将会确保被检查的程序在执行时候不会有任何类型错误（即程序是类型安全的），
+但是更为通常意义上的类型检查提供了一定程度的类型安全性，但是不一定保证执行时候没有任何类型错误。
+
+\subsection{定义的类型检查}
+
+对于每个新的定义，我们将其加入当前空间之中，并检查是否有冲突。如果有的话，则需要报告错误。
+\begin{lstlisting}
+VAR i : INTEGER := 10; (* OK )
+VAR i : INTEGER := 20; (* Error: Name Conflict *)
+\end{lstlisting}
+
+鉴于PCAT要求在定义变量的时候赋上初始值，我们同样对此进行检查，要求初始值的类型必须不矛盾。
+\begin{lstlisting}
+VAR i : INTEGER := 10;   (* OK *)
+VAR j : INTEGER := 20.0; (* Error: Type Conflict *)
+\end{lstlisting}
+
+由于在有初始值的时候可以省略类型名，因此需要进行类型推断
+\begin{lstlisting}
+VAR i := 10;   (* i is INTEGER *)
+VAR j := 20.0; (* j is REAL *)
+\end{lstlisting}
+
+
+\subsection{算数运算的类型检查}
+对于算数运算，我们
+
+
+\subsection{逻辑运算的类型检查}
+\subsection{赋值的类型检查}
+\subsection{函数调用的类型检查}
+
+
+\section{栈帧 (Frames)}
+
+\section{中间表示 (Intermediate Representation}
+
+\section{机器代码 (Machine Code)}
+
+\section{实验结果}
+
+\end{document}
