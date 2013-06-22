@@ -12,7 +12,7 @@
 \usepackage{listings}
 \lstset{
         breaklines=true,
-        basicstyle=\ttfamily\footnotesize
+        basicstyle=\ttfamily \normalsize
 }
 
 \usepackage{url}
@@ -79,28 +79,416 @@ VAR i : INTEGER := 10;   (* OK *)
 VAR j : INTEGER := 20.0; (* Error: Type Conflict *)
 \end{lstlisting}
 
-由于在有初始值的时候可以省略类型名，因此需要进行类型推断
+由于在有初始值的时候可以省略类型名，因此需要进行类型推断。
 \begin{lstlisting}
 VAR i := 10;   (* i is INTEGER *)
 VAR j := 20.0; (* j is REAL *)
 \end{lstlisting}
 
-
 \subsection{算数运算的类型检查}
-对于算数运算，我们
 
+算数运算符号包括如下
+\begin{lstlisting}
+a + b    (* PLUS *)
+a - b    (* MINUS *)
+a * b    (* MULTIPLICATION *)
+a / b    (* DIVISION *)
+a DIV b  (* INTEGER DEVISION *)
+a MOD b  (* INTEGER MOD *)
+a < b    (* LESS THAN *)
+a <= b   (* LESS THAN OR EQUAL *)
+a <> b   (* NOT EQUAL *)
+a > b    (* LARGER THAN *)
+a >= b   (* LARGER THAN OR EQUAL *)
+\end{lstlisting}
+
+
+对于算数运算表达式，我们将会对其检查。如果类型不符合，则会报错。
+\begin{lstlisting}
+VAR i : INTEGER := 10;
+VAR b : BOOLEAN := TRUE;
+...
+i + b; (* Error: Invalid Arithmetic Operation *)
+\end{lstlisting}
+
+对于二元或者一元算数运算，我们会根据两个操作数判断表达式的类型
+\begin{lstlisting}
+VAR i : INTEGER := 10;
+VAR j : REAL := 1.0;
+...
+(* INTEGER *)
+i + i ; 
+i - i ; 
+i * i ; 
+i DIV i; 
+i MOD i;
++ i;
+- i;
+
+(* REAL *)
+j + j ; 
+j - j ; 
+j * j ; 
+j / j ; 
++ j ; 
+- j ; 
+
+(* REAL *)
+i + j ; 
+i - j ; 
+i * j ; 
+i / j ; 
+\end{lstlisting}
 
 \subsection{逻辑运算的类型检查}
+对于算数运算表达式，同样会对其检查。如果类型不符合，则会报错。
+对于二元或者一元逻辑运算，可以判断表达式的类型。
+
+
 \subsection{赋值的类型检查}
+
+赋值的时候，要求被赋值的必须为左值
+\begin{lstlisting}
+VAR x : INTEGER := 10;
+...
+x := 10; (* OK *)
+x + x := 10; (* Error: LVALUE required *)
+\end{lstlisting}
+
+且类型必须相同
+\begin{lstlisting}
+VAR x : INTEGER := 10;
+...
+x := 10; (* OK *)
+x := TRUE; (* Error: Type Conflict *)
+\end{lstlisting}
+
 \subsection{函数调用的类型检查}
+函数的调用必须满足形式参数和实际参数的数量相同
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+y := FACTORIAL(1,2);   (* OK *)
+y := FACTORIAL(1,2,3); (* Error: Wrong number of parameters *)
+\end{lstlisting}
+
+函数的调用同时要求形式参数和实际参数的类型匹配
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+y := FACTORIAL(1,2);     
+    (* OK *)
+    
+    
+y := FACTORIAL(1.0,2.0); 
+    (* Error: Wrong type of actual/formal parameters *)
+\end{lstlisting}
+
+返回值类型也需要匹配
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+VAR y : INTEGER := 1;
+VAR z : BOOLEAN := FALSE;
+
+y := FACTORIAL(1,2);     
+    (* OK *)
+    
+    
+z := FACTORIAL(1.0,2.0); 
+    (* Error: Wrong type of returned value *)
+\end{lstlisting}
 
 
 \section{栈帧 (Frames)}
+% 参考 
+% http://www.cs.uaf.edu/~cs301/notes/Chapter9/node11.html
+% http://en.wikibooks.org/wiki/X86_Assembly
+系统栈对动态分配存储空间提供了方便的机制，使得在函数调用之中存储以下数据非常方便：
+\begin{enumerate}
+\item 参数
+\item 保存的寄存器值
+\item 本地变量
+\item 返回值
+\end{enumerate}
+严格来说，只要调用和被调用的程序在栈帧的使用上一致即可。但是，考虑到现有系统库的存在，一般使用的调用规范都和系统库一致。
+
+当调用一个过程时候，系统在栈上分配空间；当此过程结束时候，栈上的空间将会被释放。
+在栈上存储的，用于实现过程调用和返回的数据，就是栈帧，也成为活动记录。
+通常而言，一个过程的栈帧包括了保存和回复该过程所有数据的信息
+每一个栈帧对应了一个还没有返回的过程的调用。
+
+栈帧对应了两个最为重要的指针，ESP和EBP。ESP表示当前栈帧的顶部，EBP表示当前栈帧的界限，用以区分这当前栈帧和上一个栈帧。
+具体数据如下
+\begin{itemize}
+\item ...
+\item{EBP-8} 第二个本地变量
+\item{EBP-4} 第一个本地变量
+\item{EBP} 指向上一个栈帧的EBP
+\item{EBP+4} 指向返回地址
+\item{EBP+8} 静态链接
+\item{EBP+12} 第一个参数
+\item{EBP+16} 第二个参数
+\item ...
+\end{itemize}
+
+由此可知，调用函数时候应该按照从后向左的顺序，把参数压入栈中。
+
+\subsection{样例}
+对于过程
+\begin{lstlisting}
+PROCEDURE MULT (A, B : INTEGER) : INTEGER IS
+    VAR I, P : INTEGER := 0;
+BEGIN
+    I := 1;
+    FOR P:= 0 TO A BY 0 DO
+    P := ADD (P, B);
+            I := I + 1;
+    END;
+        RETURN P;
+END;
+\end{lstlisting}
+
+其栈帧是
+\begin{lstlisting}
+Frame for routine "MULT"
+    formal parameters:
+        [static link]        @ (%esp+8)
+        A                    @ (%esp+12)
+        B                    @ (%esp+16)
+    local variables:
+        I                    @ (%esp-4)
+        P                    @ (%esp-8)
+    frame size:
+        stack allocated = 40 bytes
+\end{lstlisting}
+
+
 
 \section{中间表示 (Intermediate Representation}
+% 见 http://zh.wikipedia.org/wiki/%E4%B8%AD%E9%96%93%E8%AA%9E%E8%A8%80
+中间表示，是指一种应用于抽象机器的编程语言，
+设计用于，是用来帮助分析计算机程序。
+在编译器将源代码编译为目的码的过程中，
+会先将源代码转换为一个或多个的中间表示，
+以方便编译器进行最佳化，并产生出目的机器的机器语言。
+通常，中间表示之中每个指令代表仅有一个基本的操作，
+指令集内可能不会包含控制流程的资讯，
+暂存器可用的数量可能会很大，甚至没有限制。
+
+最常见的中间表示形式，是三元码或者四元码。
+作为语言，有暂存器传递语言，静态单赋值形式，或者直接使用汇编语言。
+
+\subsection{暂存器传递语言}
+% 见中文维基
+暂存器传递是一种中间语言，和汇编语言很接近，
+曾是GCC的中间语言，也被称为暂存器传递语言，风格类似于LISP。
+GCC的前端会先将编程语言转译成暂存器传递语言，之后再利用后端转化成机器码。
+
+\subsection{静态单赋值}
+% 见中文维基
+静态单赋值形式是中间表示的特性，即每个变量仅被赋值一次。
+这个特性可是实现很多编译器最佳化的算法。
+
+\subsection{注意要点}
+逻辑运算符具有短路的特性，因此对于
+\begin{lstlisting}
+IF a > 0 OR f(x) > 0 THEN 
+\end{lstlisting}
+在a>0的时候，不应该调用f(x)，以免语义出错。
+
 
 \section{机器代码 (Machine Code)}
+% 参见 http://en.wikibooks.org/wiki/X86_Assembly
+%加以补充。。。
+
+我们使用了x86汇编作为机器代码的生成。
+x86汇编指令范围非常之大，我们使用了其一个子集。
+
+\subsection{数据传送}
+将数据从内存之中取出，放入寄存器。例如取得第一个参数就是
+\begin{lstlisting}
+movl 12(%ebp), %ecx
+\end{lstlisting}
+
+或者将数据从寄存器中放回内存。例如存倒第一个本地变量就是
+\begin{lstlisting}
+movl %ecx,-4(%ebp)
+\end{lstlisting}
+
+\subsection{算术运算}
+
+加法使用
+\begin{lstlisting}
+add src,dest
+\end{lstlisting}
+
+减法使用
+\begin{lstlisting}
+sub src,dest
+\end{lstlisting}
+
+乘法使用
+\begin{lstlisting}
+imul src,dest
+\end{lstlisting}
+
+除法使用
+\begin{lstlisting}
+idev arg
+\end{lstlisting}
+
+
+\subsection{逻辑运算}
+
+若要比较两个参数，应该使用
+\begin{lstlisting}
+test arg1, arg2
+cmp arg1, arg2
+\end{lstlisting}
+
+根据不同的结果，可以有条件或者无条件地转跳
+\begin{lstlisting}
+jmp loc  ; unconditional jumps
+je loc   ; jump on Equality
+jne loc  ; jump on Inequality
+\end{lstlisting}
+
+更大时候转跳，应该使用
+\begin{lstlisting}
+jg loc
+jge loc
+ja loc
+jae loc
+\end{lstlisting}
+
+
+更小时候转跳，应该使用
+\begin{lstlisting}
+jl loc
+jle loc
+jb loc
+jbe loc
+\end{lstlisting}
+
+参数为0时候转跳，应该使用
+\begin{lstlisting}
+jz loc
+jnz loc
+\end{lstlisting}
+
+\subsection{过程调用}
+
+调用应该按照从左到右压栈。例如
+\begin{lstlisting}
+A := FACTORIAL (1, 4);
+\end{lstlisting}
+其调用形式应该是
+\begin{lstlisting}
+movl $4, %eax
+pushl %eax
+movl $1, %eax
+pushl %eax
+pushl %ebp
+call FACTORIAL
+addl $12, %esp
+\end{lstlisting}
+注意到存入EBP是为了保存静态链接
+
+\subsection{函数进入/退出}
+进入函数时候，应该在栈上做好准备，代码如下
+\begin{lstlisting}
+pushl %ebp
+movl %esp, %ebp
+subl $32, %esp
+andl $-16, %esp
+\end{lstlisting}
+注意到其中的32是分配的空间，最后一句是为了栈上对其16B的界限。
+
+退出函数时候，应该做好整理，代码如下
+\begin{lstlisting}
+leave
+ret
+\end{lstlisting}
+
 
 \section{实验结果}
+
+我们采取若干程序作为样例，用来演示Project的效果。
+
+
+\subsection{IF语句实验}
+本样例的目的在于测验IF语句
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/6.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/6.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/6.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/6.pcat.code}
+
+\subsection{循环语句实验}
+本样例的目的在于测验循环语句
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/8.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/8.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/8.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/8.pcat.code}
+
+\subsection{命名空间实验}
+本样例的目的在于测验命名空间
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/8.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/8.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/8.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/8.pcat.code}
+
+
+
+\subsection{简单嵌套实验}
+本样例
+同样目的在于
+检测嵌套过程中的静态链接和动态链接的正确使用，
+这一点对于正确地实现嵌套的过程，包括其调用以及变量引用
+至关重要。
+
+
+PCAT代码为
+\lstinputlisting{../../src/test/test16x.pcat}
+其编译记录为
+\lstinputlisting{../../src/test/test16x.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/test/test16x.pcat.frame}
+其代码为
+\lstinputlisting{../../src/test/test16x.pcat.code}
+
+
+\subsection{复杂嵌套实验}
+本样例的目的在于检测嵌套过程中的静态链接和动态链接的正确使用，
+以便能够正确地实现嵌套的过程，包括其调用以及变量引用。
+
+PCAT代码为
+\lstinputlisting{../../src/test/test18.pcat}
+其编译记录为
+\lstinputlisting{../../src/test/test18.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/test/test18.pcat.frame}
+
 
 \end{document}
