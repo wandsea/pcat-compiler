@@ -14,7 +14,7 @@ char * main_entry_name = "MainEntry";
 //char * routine_prefix = "_";
 char * routine_prefix = "";
 
-FILE *code_out, *data_out;
+FILE *code_out, *data_out, *frame_out, *tree_out;
 
 int label_count;
 char * make_label(){
@@ -266,6 +266,53 @@ void store_float( ast* x ){
     }
 }
 
+
+
+int EXTEN[1000] = {0};
+void print_ast_as_tree(ast* x,int Level,int flag)
+{
+    int i;
+    ast_list* l;
+    if(x == NULL) return;
+    for(i=0;i<Level;i++) 
+        if(EXTEN[i]&&i!=0)  
+        fprintf(tree_out,"│   ");
+        else
+        fprintf(tree_out,"    ");
+    if(flag){
+         fprintf(tree_out,"└");
+         EXTEN[Level] = 0;  
+    }
+    else{
+         fprintf(tree_out,"├");
+         EXTEN[Level] = 1;
+    }
+    fprintf(tree_out,"───");
+
+
+    if(x->tag == int_ast)
+        fprintf(tree_out,"%d\n",x->info.integer);
+    else if(x->tag == real_ast)
+        fprintf(tree_out,"%lf\n",x->info.real);
+    else if(x->tag == var_ast)
+        fprintf(tree_out,"%s\n",x->info.variable);
+    else if(x->tag == str_ast)
+        fprintf(tree_out,"%s\n",x->info.string);
+    else if(x->tag == node_ast)
+    {
+        fprintf(tree_out,"%s",ast_names[x->info.node.tag]);
+        
+    fprintf(tree_out,"\n");
+    if(args(x)!=NULL)
+    for(l=args(x);l;l=l->next)
+       if(l->next)
+        print_ast_as_tree(l->elem,Level+1,0);
+       else
+        print_ast_as_tree(l->elem,Level+1,1);
+    }
+}
+
+
 // change: to generate intermediate code
 void _gen_code( ast* x ){
     #define GO_PICK(k)          _gen_code( pick_ast(x,k) )
@@ -287,12 +334,15 @@ void _gen_code( ast* x ){
         case str_ast:      
             break;
         case node_ast : {
-            ast_list * l;
+            ast_list *l, *le;
             ast *t,*t1,*t2;
             char *l2,*l3,*l4;
             int i;
             int level_diff;
             ast *var, *el;
+            ast *fp;
+            ast_list *lfp;
+            int counter;
             switch (x->info.node.tag){
                 case Program: 
                     fprintf(code_out,"\t .text\n");
@@ -309,6 +359,29 @@ void _gen_code( ast* x ){
                     // sub-routine
                     FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
                         if (tag(ELEML)==ProcDecs) GO(ELEML); 
+
+
+                    fprintf(frame_out,"Frame for routine \"%s\"\n","Main Routine");
+                    fprintf(frame_out,"\tformal parameters:\n");
+                    fprintf(frame_out,"\t\t(not applicable for Main Routine)\n");
+                    fprintf(frame_out,"\tlocal variables:\n");
+                    counter = 0;
+                    FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
+                        if (tag(ELEML)==VarDecs)
+                            for(le=args(ELEML);le;le=le->next){
+                                fprintf(frame_out,"\t\t%-20s @ (%%esp%d)\n",
+                                    ast_str(pick_ast_comp(ELEM(le),"ID")),
+                                    ast_int(pick_ast_comp(ELEM(le),"offset"))
+                                    );           
+                                counter ++;
+                            }
+                    if ( counter == 0 )
+                        fprintf(frame_out,"\t\t(No local variables)\n");
+                    fprintf(frame_out,"\tframe size:\n");
+                    fprintf(frame_out,"\t\tstack allocated = %d bytes\n",-ast_int(pick_ast_comp(x,"local-offset")));
+                    fprintf(frame_out,"\n");
+
+
                     break;
                 case BodyDef:
                     GO_PICK_COMP("declarations-list");
@@ -356,10 +429,39 @@ void _gen_code( ast* x ){
                     // name for sub-routine
                     GO_PICK_COMP("body"); // generate code for body   
                     fprintf(code_out,"\t leave\n\t ret\n");// epilogue 
-                    
+
                     // sub-routine
                     FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
                         if (tag(ELEML)==ProcDecs) GO(ELEML); 
+
+
+                    fprintf(frame_out,"Frame for routine \"%s\"\n",ast_str(pick_ast_comp(x,"ID")));
+                    fprintf(frame_out,"\tformal parameters:\n");
+                    fprintf(frame_out,"\t\t%-20s @ (%%esp+8)\n","[static link]");
+                    fp = pick_ast_comp(x,"formal-param-list");
+                    lfp = args(fp);
+                    for(;lfp; lfp=lfp->next )
+                        fprintf(frame_out,"\t\t%-20s @ (%%esp+%d)\n",
+                            ast_str(pick_ast_comp(ELEM(lfp),"ID")),
+                            ast_int(pick_ast_comp(ELEM(lfp),"offset"))
+                            );
+                    fprintf(frame_out,"\tlocal variables:\n");
+                    counter = 0;
+                    FOREACH(pick_ast_comp(pick_ast_comp(x,"body"),"declarations-list"))
+                        if (tag(ELEML)==VarDecs)
+                            for(le=args(ELEML);le;le=le->next){
+                                fprintf(frame_out,"\t\t%-20s @ (%%esp%d)\n",
+                                    ast_str(pick_ast_comp(ELEM(le),"ID")),
+                                    ast_int(pick_ast_comp(ELEM(le),"offset"))
+                                    );           
+                                counter ++;
+                            }
+                    if ( counter == 0 )
+                        fprintf(frame_out,"\t\t(No local variables)\n");
+                    fprintf(frame_out,"\tframe size:\n");
+                    fprintf(frame_out,"\t\tstack allocated = %d bytes\n",-ast_int(pick_ast_comp(x,"local-offset")));
+                    fprintf(frame_out,"\n");
+
                     break;
                 case NamedTyp: 
                     // Shouldn't reach here
@@ -928,14 +1030,19 @@ void gen_code( ast* x ){
     
     code_out = fopen("code.s","w");
     data_out = fopen("data.s","w");
+    tree_out = fopen("tree.info","w");
+    frame_out = fopen("frame.info","w");
     
     label_count = 0;
     scope_init();    
-        
+    
+    print_ast_as_tree(x,0,0);
     _gen_code(x);
     
     fclose(code_out);
     fclose(data_out);
+    fclose(tree_out);
+    fclose(frame_out);
     
     combine("code.s","data.s","pcat.s");
 }

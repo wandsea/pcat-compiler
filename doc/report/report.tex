@@ -1,0 +1,537 @@
+﻿\documentclass{article}
+\usepackage{xeCJK}
+\setmainfont{WenQuanYi Micro Hei}
+\setmonofont{WenQuanYi Micro Hei Mono}
+\setsansfont{WenQuanYi Micro Hei}
+\setCJKmainfont{WenQuanYi Micro Hei}
+\setCJKfamilyfont{song}{WenQuanYi Micro Hei}
+% DIRTY FIX for CJK support with TexLive2012 Under my Gentoo.....
+%\xeCJKsetup{CJKglue=\hspace{0pt plus .08 \baselineskip}}
+
+\usepackage{listings}
+\lstset{
+        breaklines=true,
+        basicstyle=\ttfamily \scriptsize
+}
+
+\usepackage{hyperref}
+
+
+\title {编译实验实验报告 —— Compiler of PCAT}
+\author {田应涛 10302010029 \quad 王曦 \quad 10300240014\\ 陈济凡 10300240076 \quad 承沐南 10300240003}
+ 
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{概述}  
+
+本次 Project 包含五个部分
+\begin{itemize}
+\item 抽象语法树 (Abstract Syntax Tree)
+\item 类型检查 (Type Checking)
+\item 栈帧 (Frames)
+\item 中间表示 (Intermediate Representation)
+\item 目标代码（Object Code）
+\end{itemize}
+
+本报告分为两大部分。前一部分分别讲述 Project 所做的五个部分，后一部分为实验结果。
+
+我们在GitHub上建立了repository以便于团队代码管理（\url{https://github.com/alantian/pcat-compiler}）。
+
+\section{抽象语法树 (Abstract Syntax Tree)}
+
+% 截自 http://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E8%AA%9E%E6%B3%95%E6%A8%B9
+抽象语法树即使源代码的抽象语法结构的树状表现形式。树上的每个节点都表示源代码中的一种结构。
+之所以说语法是“抽象”的，是因为这里的语法并不会表示出真实语法中出现的每个细节。
+比如，嵌套括号被隐含在树的结构中，并没有以节点的形式呈现；
+而类似于if-condition-then这样的条件跳转语句，可以使用带有两个分支的节点来表示。
+
+% http://blog.chinaunix.net/uid-26750235-id-3139100.html
+当在源程序语法分析工作时，是在相应程序设计语言的语法规则指导下进行的。语法规则描述了该语言的各种语法成分的组成结构，通常可以用所谓的前后文无关文法或与之等价的Backus-Naur范式(BNF)将一个程序设计语言的语法规则确切的描述出来。前后文无关文法有分为这么几类：LL(1)，LR(0)，LR(1)， LR(k) ,LALR(1)等。每一种文法都有不同的要求，如LL(1)要求文法无二义性和不存在左递归。当把一个文法改为LL(1)文法时，需要引入一些隔外的文法符号与产生式。
+
+% 还有没节操的 http://baike.baidu.com/view/1874022.htm (果然包含第一篇233)
+抽象语法树的结构不依赖于源语言的文法，也就是语法分析阶段所采用的上下文无关文法。因为在Parser工程中，经常会对文法进行等价的转换（消除左递归、回溯、二义性等），这样会给文法引入一些多余的成分，对后续阶段造成不利影响，甚至会使各阶段变得混乱。因此，很多编译器经常要独立地构造语法分析树，为前、后端建立一个清晰的接口。
+
+%软院...http://www.se.fudan.sh.cn/paper/ourpapers/170.pdf
+抽象语法树全面反映了源代码的语法结构，它的叶子节
+点是标识符，字面常量等。而我们的方法则主要关注于抽象
+语法树中的流程控制语句。如果得到了源程序的抽象语法
+树，我们就能很容易地对于源程序的语法结构进行深入地分
+析，就能很容易地识别出每一个诸如 if 语句，while 语句，
+for 语句等流程控制语句的内部语法结构，从而为我们方法
+的后续步骤带来很大方便。 
+
+我们实现的语法规则参照了 
+\url{http://web.cecs.pdx.edu/apt/cs302_1999/pcat99/pcat99.html}
+中给出的 PCAT 标准,并根据该标准写出了 EBNF 语法,之后我们
+将该 EBNF 语法转换至 BNF 语法，即具体语法树。
+最后依据具体语法树制定了抽象语法树生成规则。
+
+\subsection{EBNF语法}  
+\lstinputlisting{../concrete-syntax-ebnf.txt}
+\subsection{BNF语法}  
+\lstinputlisting{../concrete-syntax-bnf.txt}
+\subsection{抽象语法树生成规则}
+\lstinputlisting{../abstruct-syntax.txt}
+
+\section{类型检查 (Type Checking)}
+
+% 翻译自 from http://c2.com/cgi/wiki?TypeChecking
+类型检查指的是对程序中的类型以及相关信息进行检查的一种程序分析过程。类型检查可以检查函数参数是否正确使用，以防止许多程序设计错误。
+严格意义上的类型检查将会确保被检查的程序在执行时候不会有任何类型错误（即程序是类型安全的），
+但是更为通常意义上的类型检查提供了一定程度的类型安全性，但是不一定保证执行时候没有任何类型错误。
+
+% 抄袭自 http://book.51cto.com/art/201107/274499.htm
+由于我们实现的类型检查是在编译阶段而不是程序运行阶段进行的，所以一般称之为静态类型检查。某些面向对象的语言（如Java）也可在程序运行时作部分类型检查[动态类型检查（dynamic type checking）]。动态类型检查和静态类型检查结合使用，比仅仅使用静态类型检查更有效。但它也增加了程序执行的开销。静态类型检查在编译时就告知程序员类型被误用，从而加快了执行时的速度。
+
+\subsection{定义的类型检查}
+
+对于每个新的定义，我们将其加入当前空间之中，并检查是否有冲突。如果有的话，则需要报告错误。
+\begin{lstlisting}
+VAR i : INTEGER := 10; (* OK )
+VAR i : INTEGER := 20; (* Error: Name Conflict *)
+\end{lstlisting}
+
+鉴于PCAT要求在定义变量的时候赋上初始值，我们同样对此进行检查，要求初始值的类型必须不矛盾。
+\begin{lstlisting}
+VAR i : INTEGER := 10;   (* OK *)
+VAR j : INTEGER := 20.0; (* Error: Type Conflict *)
+\end{lstlisting}
+
+由于在有初始值的时候可以省略类型名，因此需要进行类型推断。
+\begin{lstlisting}
+VAR i := 10;   (* i is INTEGER *)
+VAR j := 20.0; (* j is REAL *)
+\end{lstlisting}
+
+\subsection{算数运算的类型检查}
+
+算数运算符号包括如下
+\begin{lstlisting}
+a + b    (* PLUS *)
+a - b    (* MINUS *)
+a * b    (* MULTIPLICATION *)
+a / b    (* DIVISION *)
+a DIV b  (* INTEGER DEVISION *)
+a MOD b  (* INTEGER MOD *)
+a < b    (* LESS THAN *)
+a <= b   (* LESS THAN OR EQUAL *)
+a <> b   (* NOT EQUAL *)
+a > b    (* LARGER THAN *)
+a >= b   (* LARGER THAN OR EQUAL *)
+\end{lstlisting}
+
+
+对于算数运算表达式，我们将会对其检查。如果类型不符合，则会报错。
+\begin{lstlisting}
+VAR i : INTEGER := 10;
+VAR b : BOOLEAN := TRUE;
+...
+i + b; (* Error: Invalid Arithmetic Operation *)
+\end{lstlisting}
+
+对于二元或者一元算数运算，我们会根据两个操作数判断表达式的类型
+\begin{lstlisting}
+VAR i : INTEGER := 10;
+VAR j : REAL := 1.0;
+...
+(* INTEGER *)
+i + i ; 
+i - i ; 
+i * i ; 
+i DIV i; 
+i MOD i;
++ i;
+- i;
+
+(* REAL *)
+j + j ; 
+j - j ; 
+j * j ; 
+j / j ; 
++ j ; 
+- j ; 
+
+(* REAL *)
+i + j ; 
+i - j ; 
+i * j ; 
+i / j ; 
+\end{lstlisting}
+
+\subsection{逻辑运算的类型检查}
+对于算数运算表达式，同样会对其检查。如果类型不符合，则会报错。
+对于二元或者一元逻辑运算，可以判断表达式的类型。
+
+
+\subsection{赋值的类型检查}
+
+赋值的时候，要求被赋值的必须为左值
+\begin{lstlisting}
+VAR x : INTEGER := 10;
+...
+x := 10; (* OK *)
+x + x := 10; (* Error: LVALUE required *)
+\end{lstlisting}
+
+且类型必须相同
+\begin{lstlisting}
+VAR x : INTEGER := 10;
+...
+x := 10; (* OK *)
+x := TRUE; (* Error: Type Conflict *)
+\end{lstlisting}
+
+\subsection{函数调用的类型检查}
+函数的调用必须满足形式参数和实际参数的数量相同
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+y := FACTORIAL(1,2);   (* OK *)
+y := FACTORIAL(1,2,3); (* Error: Wrong number of parameters *)
+\end{lstlisting}
+
+函数的调用同时要求形式参数和实际参数的类型匹配
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+y := FACTORIAL(1,2);     
+    (* OK *)
+    
+    
+y := FACTORIAL(1.0,2.0); 
+    (* Error: Wrong type of actual/formal parameters *)
+\end{lstlisting}
+
+返回值类型也需要匹配
+\begin{lstlisting}
+PROCEDURE FACTORIAL (A : INTEGER; B : INTEGER) : INTEGER IS 
+...
+END
+...
+VAR y : INTEGER := 1;
+VAR z : BOOLEAN := FALSE;
+
+y := FACTORIAL(1,2);     
+    (* OK *)
+    
+    
+z := FACTORIAL(1.0,2.0); 
+    (* Error: Wrong type of returned value *)
+\end{lstlisting}
+
+
+\section{栈帧 (Frames)}
+% 参考 
+% http://www.cs.uaf.edu/~cs301/notes/Chapter9/node11.html
+% http://en.wikibooks.org/wiki/X86_Assembly
+系统栈对动态分配存储空间提供了方便的机制，使得在函数调用之中存储以下数据非常方便：
+\begin{itemize}
+\item 参数
+\item 保存的寄存器值
+\item 本地变量
+\item 返回值
+\end{itemize}
+严格来说，只要调用和被调用的程序在栈帧的使用上一致即可。但是，考虑到现有系统库的存在，一般使用的调用规范都和系统库一致。
+
+当调用一个过程时候，系统在栈上分配空间；当此过程结束时候，栈上的空间将会被释放。
+在栈上存储的，用于实现过程调用和返回的数据，就是栈帧，也成为活动记录。
+通常而言，一个过程的栈帧包括了保存和回复该过程所有数据的信息
+每一个栈帧对应了一个还没有返回的过程的调用。
+
+栈帧对应了两个最为重要的指针，ESP和EBP。ESP表示当前栈帧的顶部，EBP表示当前栈帧的界限，用以区分这当前栈帧和上一个栈帧。
+具体数据如下
+\begin{itemize}
+\item ...
+\item{EBP-8} 第二个本地变量
+\item{EBP-4} 第一个本地变量
+\item{EBP} 指向上一个栈帧的EBP
+\item{EBP+4} 指向返回地址
+\item{EBP+8} 静态链接
+\item{EBP+12} 第一个参数
+\item{EBP+16} 第二个参数
+\item ...
+\end{itemize}
+
+由此可知，调用函数时候应该按照从后向左的顺序，把参数压入栈中。
+
+\subsection{样例}
+对于过程
+\begin{lstlisting}
+PROCEDURE MULT (A, B : INTEGER) : INTEGER IS
+    VAR I, P : INTEGER := 0;
+BEGIN
+    I := 1;
+    FOR P:= 0 TO A BY 0 DO
+    P := ADD (P, B);
+            I := I + 1;
+    END;
+        RETURN P;
+END;
+\end{lstlisting}
+
+其栈帧是
+\begin{lstlisting}
+Frame for routine "MULT"
+    formal parameters:
+        [static link]        @ (%esp+8)
+        A                    @ (%esp+12)
+        B                    @ (%esp+16)
+    local variables:
+        I                    @ (%esp-4)
+        P                    @ (%esp-8)
+    frame size:
+        stack allocated = 40 bytes
+\end{lstlisting}
+
+
+
+\section{中间表示 (Intermediate Representation)}
+% 见 http://zh.wikipedia.org/wiki/%E4%B8%AD%E9%96%93%E8%AA%9E%E8%A8%80
+中间表示，是指一种应用于抽象机器的编程语言，
+设计用于，是用来帮助分析计算机程序。
+在编译器将源代码编译为目的码的过程中，
+会先将源代码转换为一个或多个的中间表示，
+以方便编译器进行最佳化，并产生出目的机器的机器语言。
+通常，中间表示之中每个指令代表仅有一个基本的操作，
+指令集内可能不会包含控制流程的资讯，
+暂存器可用的数量可能会很大，甚至没有限制。
+
+%http://eduunix.ccut.edu.cn/index2/edu/%C7%E5%BB%AA%B4%F3%D1%A7%BC%C6%CB%E3%BB%FA%BF%CE%B3%CC/%B1%E0%D2%EB%D4%AD%C0%ED/text/chapter08/section5/index1.htm
+
+编译程序所使用的中间代码有多种形式。常见的有逆波兰记号、三元式、四元式和树形表示。
+
+逆波兰记号是最简单的一种中间代码表示形式，早在编译程序出现之前，它就用于表示算术表达式，是波兰逻辑学家卢卡西维奇发明的。这种表示法将运算对象写在前面，把运算符号写在后面，比如把a+b写成ab+，把a*b写成ab*，用这种表示法表示的表达式也称做后缀式。
+
+另一类中间代码形式是三元式。把表达式及各种语句表示成一组三元式。每个三元式由三个部分组成，分别是：算符op，第一运算对象ARG1和第二运算对象ARG2。运算对象可能是源程序中的变量，也可能是某个三元式的结果，用三元式的编号表示。
+
+四元式是一种比较普遍采用的中间代码形式。四元式的四个组成成分是：算符op，第一和第二运算对象ARG1和ARG@及运算结果RESULT。运算对象和运算结果有时指用户自己定义的变量，有时指编译程序引进的临时变量。
+
+作为语言，有暂存器传递语言，静态单赋值形式，或者直接使用汇编语言。
+
+%\subsection{暂存器传递语言}
+% 见中文维基
+暂存器传递是一种中间语言，和汇编语言很接近，
+曾是GCC的中间语言，也被称为暂存器传递语言，风格类似于LISP。
+GCC的前端会先将编程语言转译成暂存器传递语言，之后再利用后端转化成机器码。
+
+%\subsection{静态单赋值}
+% 见中文维基
+静态单赋值形式是中间表示的特性，即每个变量仅被赋值一次。
+这个特性可是实现很多编译器最佳化的算法。
+
+%\subsection{注意要点}
+逻辑运算符具有短路的特性，因此对于
+\begin{lstlisting}
+IF a > 0 OR f(x) > 0 THEN 
+\end{lstlisting}
+在a>0的时候，不应该调用f(x)，以免语义出错。
+
+   
+\section{目标代码 (object code)}
+% 参见 http://en.wikibooks.org/wiki/X86_Assembly
+% http://baike.baidu.com/view/8477718.htm
+% http://zh.wikipedia.org/wiki/%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81
+% 我也不想用百度百科的, 您把wiki都用过了= - =
+
+目标代码（object code）指计算机科学中编译器或汇编器处理源代码后所生成的代码，它一般由机器代码或接近于机器语言的代码组成。目标代码生成是编译的最后一个阶段。目标代码生成器把语法分析后或优化后的中间代码变换成目标代码。目标代码有三种形式：
+
+\begin{itemize}
+\item 可以立即执行的机器语言代码，所有地址都重定位（不包含没有定位的）；
+\item 待装配的机器语言模块，当需要执行时，由连接装入程序把它们和某些运行程序连接起来，转换成能执行的机器语言代码；
+\item 汇编语言代码，须经过汇编程序汇编后，变成为可执行的机器语言代码。
+\end{itemize}
+
+我们使用了x86汇编(AT\&T格式)作为机器代码的生成方式。x86汇编指令范围非常之大，我们使用了其一个子集。
+
+目标文件包含着机器代码（可直接被计算机中央处理器执行）以及代码在运行时使用的数据，如重定位信息，如用于链接或调试的程序符号（变量和函数的名字），此外还包括其他调试信息。目标文件是从源代码文件产生程序文件这一过程的中间产物，链接器正是通过把目标文件链接在一起来生成可执行文件或库文件。
+
+目标代码生成阶段应考虑直接影响到目标代码速度的三个问题：一是如何生成较短的目标代码；二是如何充分利用计算机中的寄存器，减少目标代码访问存储单元的次数；三是如何充分利用计算机指令系统的特点，以提高目标代码的质量。
+
+\subsection{数据传送}
+将数据从内存之中取出，放入寄存器。例如取得第一个参数就是
+\begin{lstlisting}
+movl 12(%ebp), %ecx
+\end{lstlisting}
+
+或者将数据从寄存器中放回内存。例如存倒第一个本地变量就是
+\begin{lstlisting}
+movl %ecx,-4(%ebp)
+\end{lstlisting}
+
+\subsection{算术运算}
+
+加法使用
+\begin{lstlisting}
+add src,dest
+\end{lstlisting}
+
+减法使用
+\begin{lstlisting}
+sub src,dest
+\end{lstlisting}
+
+乘法使用
+\begin{lstlisting}
+imul src,dest
+\end{lstlisting}
+
+除法使用
+\begin{lstlisting}
+idev arg
+\end{lstlisting}
+
+
+\subsection{逻辑运算}
+
+若要比较两个参数，应该使用
+\begin{lstlisting}
+test arg1, arg2
+cmp arg1, arg2
+\end{lstlisting}
+
+根据不同的结果，可以有条件或者无条件地转跳
+\begin{lstlisting}
+jmp loc  ; unconditional jumps
+je loc   ; jump on Equality
+jne loc  ; jump on Inequality
+\end{lstlisting}
+
+更大时候转跳，应该使用
+\begin{lstlisting}
+jg loc
+jge loc
+ja loc
+jae loc
+\end{lstlisting}
+
+
+更小时候转跳，应该使用
+\begin{lstlisting}
+jl loc
+jle loc
+jb loc
+jbe loc
+\end{lstlisting}
+
+参数为0时候转跳，应该使用
+\begin{lstlisting}
+jz loc
+jnz loc
+\end{lstlisting}
+
+\subsection{过程调用}
+
+调用应该按照从左到右压栈。例如
+\begin{lstlisting}
+A := FACTORIAL (1, 4);
+\end{lstlisting}
+
+其调用形式应该是
+\begin{lstlisting}
+movl $4, %eax
+pushl %eax
+movl $1, %eax
+pushl %eax
+pushl %ebp
+call FACTORIAL
+addl $12, %esp
+\end{lstlisting}
+注意到存入EBP是为了保存静态链接
+
+\subsection{函数进入/退出}
+进入函数时候，应该在栈上做好准备，代码如下
+\begin{lstlisting}
+pushl %ebp
+movl %esp, %ebp
+subl $32, %esp
+andl $-16, %esp
+\end{lstlisting}
+注意到其中的32是分配的空间，最后一句是为了栈上对其16B的界限。
+
+退出函数时候，应该做好整理，代码如下
+\begin{lstlisting}
+leave
+ret
+\end{lstlisting}
+
+
+\section{实验结果}
+
+我们采取若干程序作为样例，用来演示Project的效果。
+
+\subsection{IF语句实验}
+本样例的目的在于测验IF语句
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/6.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/6.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/6.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/6.pcat.code}
+
+\subsection{循环语句实验}
+本样例的目的在于测验循环语句
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/8.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/8.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/8.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/8.pcat.code}
+
+\subsection{命名空间实验}
+本样例的目的在于测验命名空间
+
+PCAT代码为
+\lstinputlisting{../../src/mytest/8.pcat}
+其编译记录为
+\lstinputlisting{../../src/mytest/8.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/mytest/8.pcat.frame}
+其代码为
+\lstinputlisting{../../src/mytest/8.pcat.code}
+
+
+
+\subsection{简单嵌套实验}
+本样例
+同样目的在于
+检测嵌套过程中的静态链接和动态链接的正确使用，
+这一点对于正确地实现嵌套的过程，包括其调用以及变量引用至关重要。
+
+
+PCAT代码为
+\lstinputlisting{../../src/test/test16x.pcat}
+其编译记录为
+\lstinputlisting{../../src/test/test16x.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/test/test16x.pcat.frame}
+其代码为
+\lstinputlisting{../../src/test/test16x.pcat.code}
+
+
+\subsection{复杂嵌套实验}
+本样例的目的在于检测嵌套过程中的静态链接和动态链接的正确使用，
+以便能够正确地实现嵌套的过程，包括其调用以及变量引用。
+
+PCAT代码为
+\lstinputlisting{../../src/test/test18.pcat}
+其编译记录为
+\lstinputlisting{../../src/test/test18.pcat.log}
+其Frame记录为
+\lstinputlisting{../../src/test/test18.pcat.frame}
+
+
+\end{document}

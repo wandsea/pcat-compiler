@@ -1,0 +1,24 @@
+Frame for routine "OKAY"
+	formal parameters:
+		[static link]        @ (%esp+8)
+	local variables:
+		CONSTANT             @ (%esp-4)
+	frame size:
+		stack allocated = 20 bytes
+
+Frame for routine "ADDONE"
+	formal parameters:
+		[static link]        @ (%esp+8)
+	local variables:
+		J                    @ (%esp-4)
+	frame size:
+		stack allocated = 16 bytes
+
+Frame for routine "Main Routine"
+	formal parameters:
+		(not applicable for Main Routine)
+	local variables:
+		I                    @ (%esp-4)
+	frame size:
+		stack allocated = 20 bytes
+

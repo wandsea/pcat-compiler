@@ -1,0 +1,9 @@
+Frame for routine "Main Routine"
+	formal parameters:
+		(not applicable for Main Routine)
+	local variables:
+		I                    @ (%esp-4)
+		J                    @ (%esp-8)
+	frame size:
+		stack allocated = 44 bytes
+

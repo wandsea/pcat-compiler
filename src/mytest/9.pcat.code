@@ -1,0 +1,239 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $24, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $0, %eax
+	 movl %eax, -8(%ebp)
+	 movl $4, %eax
+	 pushl %eax
+	 movl $1, %eax
+	 pushl %eax
+	 pushl %ebp
+	 call FACTORIAL
+	 addl $12, %esp
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 movl %eax, -4(%ebp)
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_2, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $label_3, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -8(%ebp), %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_4, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 leave
+	 ret
+
+FACTORIAL:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $72, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $label_5, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl $label_6, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl 12(%ebp), %eax
+	 movl %eax, -8(%ebp)
+	 movl -8(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_7, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl 16(%ebp), %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_8, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl 8(%ebp), %edx
+	 movl -8(%edx), %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 movl 16(%ebp), %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 movl $0, %ecx
+	 cmpl %ecx, %eax
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -24(%ebp)
+	 movl -24(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_9
+	 movl 12(%ebp), %eax
+	 movl %eax, -68(%ebp)
+	 movl -68(%ebp), %eax
+	 leave
+	 ret
+	 jmp label_10
+label_9:
+	 movl 12(%ebp), %eax
+	 movl %eax, -28(%ebp)
+	 movl 16(%ebp), %eax
+	 movl %eax, -32(%ebp)
+	 movl -32(%ebp), %eax
+	 pushl %eax
+	 movl -28(%ebp), %eax
+	 pushl %eax
+	 pushl %ebp
+	 call MULT
+	 addl $12, %esp
+	 movl %eax, -36(%ebp)
+	 movl -36(%ebp), %eax
+	 movl %eax, -4(%ebp)
+	 movl 8(%ebp), %edx
+	 movl -8(%edx), %eax
+	 movl %eax, -40(%ebp)
+	 movl 12(%ebp), %eax
+	 movl %eax, -44(%ebp)
+	 movl -40(%ebp), %eax
+	 movl -44(%ebp), %ecx
+	 addl %ecx, %eax
+	 movl %eax, -48(%ebp)
+	 movl -48(%ebp), %eax
+	 movl 8(%ebp), %edx
+	 movl %eax, -8(%edx)
+	 movl -4(%ebp), %eax
+	 movl %eax, -52(%ebp)
+	 movl 16(%ebp), %eax
+	 movl %eax, -56(%ebp)
+	 movl -56(%ebp), %eax
+	 movl $1, %ecx
+	 subl %ecx, %eax
+	 movl %eax, -60(%ebp)
+	 movl -60(%ebp), %eax
+	 pushl %eax
+	 movl -52(%ebp), %eax
+	 pushl %eax
+	 movl 8(%ebp), %edx
+	 pushl %edx
+	 call FACTORIAL
+	 addl $12, %esp
+	 movl %eax, -64(%ebp)
+	 movl -64(%ebp), %eax
+	 leave
+	 ret
+label_10:
+	 leave
+	 ret
+
+ADD:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $16, %esp
+	 andl $-16, %esp
+	 movl 12(%ebp), %eax
+	 movl %eax, -4(%ebp)
+	 movl 16(%ebp), %eax
+	 movl %eax, -8(%ebp)
+	 movl -4(%ebp), %eax
+	 movl -8(%ebp), %ecx
+	 addl %ecx, %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 leave
+	 ret
+	 leave
+	 ret
+
+MULT:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $24, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $0, %eax
+	 movl %eax, -8(%ebp)
+	 movl 12(%ebp), %eax
+	 movl %eax, -12(%ebp)
+	 movl 16(%ebp), %eax
+	 movl %eax, -16(%ebp)
+	 movl -12(%ebp), %eax
+	 movl -16(%ebp), %ecx
+	 imull %ecx, %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 leave
+	 ret
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "FACTORIAL(4) = \0"
+
+	 .section .rodata
+label_2:
+	 .string " (SHOULD BE 24)\0"
+
+	 .section .rodata
+label_3:
+	 .string "Y = \0"
+
+	 .section .rodata
+label_4:
+	 .string " (SHOULD BE 41)\0"
+
+	 .section .rodata
+label_5:
+	 .string "IN FACTORIAL, \0"
+
+	 .section .rodata
+label_6:
+	 .string "A=\0"
+
+	 .section .rodata
+label_7:
+	 .string ", B=\0"
+
+	 .section .rodata
+label_8:
+	 .string " Y=\0"

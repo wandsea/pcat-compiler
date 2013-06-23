@@ -1,0 +1,7 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   └───StatementList
+    │       └───WriteStatement
+    │           └───EmptyExpression
+    └───-4

@@ -1,0 +1,128 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   │   └───VaribleDeclareList
+    │   │       └───VaribleDeclare
+    │   │           ├───I
+    │   │           ├───NamedTyp
+    │   │           │   └───INTEGER
+    │   │           ├───IntConst
+    │   │           │   ├───0
+    │   │           │   └───NamedTyp
+    │   │           │       └───basic_int
+    │   │           ├───1
+    │   │           └───-4
+    │   └───StatementList
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───Input an integer: 
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───ReadStatement
+    │       │   └───LvalList
+    │       │       └───Var
+    │       │           ├───I
+    │       │           ├───NamedTyp
+    │       │           │   └───basic_int
+    │       │           ├───0
+    │       │           └───-4
+    │       └───IfStatement
+    │           ├───BinOpExpr
+    │           │   ├───Eq
+    │           │   ├───LvalExpr
+    │           │   │   ├───Var
+    │           │   │   │   ├───I
+    │           │   │   │   ├───NamedTyp
+    │           │   │   │   │   └───basic_int
+    │           │   │   │   ├───0
+    │           │   │   │   └───-4
+    │           │   │   ├───NamedTyp
+    │           │   │   │   └───basic_int
+    │           │   │   └───-8
+    │           │   ├───IntConst
+    │           │   │   ├───0
+    │           │   │   └───NamedTyp
+    │           │   │       └───basic_int
+    │           │   ├───NamedTyp
+    │           │   │   └───basic_bool
+    │           │   └───-12
+    │           ├───StatementList
+    │           │   └───WriteStatement
+    │           │       └───ExprList
+    │           │           └───StringConst
+    │           │               ├───I = 0
+    │           │               └───NamedTyp
+    │           │                   └───basic_str
+    │           └───IfStatement
+    │               ├───BinOpExpr
+    │               │   ├───Eq
+    │               │   ├───LvalExpr
+    │               │   │   ├───Var
+    │               │   │   │   ├───I
+    │               │   │   │   ├───NamedTyp
+    │               │   │   │   │   └───basic_int
+    │               │   │   │   ├───0
+    │               │   │   │   └───-4
+    │               │   │   ├───NamedTyp
+    │               │   │   │   └───basic_int
+    │               │   │   └───-16
+    │               │   ├───IntConst
+    │               │   │   ├───1
+    │               │   │   └───NamedTyp
+    │               │   │       └───basic_int
+    │               │   ├───NamedTyp
+    │               │   │   └───basic_bool
+    │               │   └───-20
+    │               ├───StatementList
+    │               │   └───WriteStatement
+    │               │       └───ExprList
+    │               │           └───StringConst
+    │               │               ├───I = 1
+    │               │               └───NamedTyp
+    │               │                   └───basic_str
+    │               └───IfStatement
+    │                   ├───BinOpExpr
+    │                   │   ├───Eq
+    │                   │   ├───LvalExpr
+    │                   │   │   ├───Var
+    │                   │   │   │   ├───I
+    │                   │   │   │   ├───NamedTyp
+    │                   │   │   │   │   └───basic_int
+    │                   │   │   │   ├───0
+    │                   │   │   │   └───-4
+    │                   │   │   ├───NamedTyp
+    │                   │   │   │   └───basic_int
+    │                   │   │   └───-24
+    │                   │   ├───IntConst
+    │                   │   │   ├───2
+    │                   │   │   └───NamedTyp
+    │                   │   │       └───basic_int
+    │                   │   ├───NamedTyp
+    │                   │   │   └───basic_bool
+    │                   │   └───-28
+    │                   ├───StatementList
+    │                   │   └───WriteStatement
+    │                   │       └───ExprList
+    │                   │           └───StringConst
+    │                   │               ├───I = 2
+    │                   │               └───NamedTyp
+    │                   │                   └───basic_str
+    │                   └───StatementList
+    │                       └───WriteStatement
+    │                           └───ExprList
+    │                               ├───StringConst
+    │                               │   ├───I = 
+    │                               │   └───NamedTyp
+    │                               │       └───basic_str
+    │                               └───LvalExpr
+    │                                   ├───Var
+    │                                   │   ├───I
+    │                                   │   ├───NamedTyp
+    │                                   │   │   └───basic_int
+    │                                   │   ├───0
+    │                                   │   └───-4
+    │                                   ├───NamedTyp
+    │                                   │   └───basic_int
+    │                                   └───-32
+    └───-36

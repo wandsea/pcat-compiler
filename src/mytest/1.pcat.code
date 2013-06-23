@@ -1,0 +1,10 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $4, %esp
+	 andl $-16, %esp
+	 leave
+	 ret

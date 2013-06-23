@@ -1,0 +1,40 @@
+Frame for routine "ADD"
+	formal parameters:
+		[static link]        @ (%esp+8)
+		A                    @ (%esp+12)
+		B                    @ (%esp+16)
+	local variables:
+		(No local variables)
+	frame size:
+		stack allocated = 16 bytes
+
+Frame for routine "MULT"
+	formal parameters:
+		[static link]        @ (%esp+8)
+		A                    @ (%esp+12)
+		B                    @ (%esp+16)
+	local variables:
+		I                    @ (%esp-4)
+		P                    @ (%esp-8)
+	frame size:
+		stack allocated = 24 bytes
+
+Frame for routine "FACTORIAL"
+	formal parameters:
+		[static link]        @ (%esp+8)
+		A                    @ (%esp+12)
+		B                    @ (%esp+16)
+	local variables:
+		T                    @ (%esp-4)
+	frame size:
+		stack allocated = 72 bytes
+
+Frame for routine "Main Routine"
+	formal parameters:
+		(not applicable for Main Routine)
+	local variables:
+		X                    @ (%esp-4)
+		Y                    @ (%esp-8)
+	frame size:
+		stack allocated = 24 bytes
+

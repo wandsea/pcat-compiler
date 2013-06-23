@@ -1,0 +1,163 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $44, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $0, %eax
+	 movl %eax, -8(%ebp)
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -4(%ebp)
+label_2:
+	 movl -4(%ebp), %eax
+	 movl $5, %ecx
+	 cmpl %ecx, %eax
+	 jg label_3
+	 movl $label_4, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 movl -4(%ebp), %eax
+	 movl $1, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -4(%ebp)
+	 jmp label_2
+label_3:
+	 movl $label_5, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $5, %eax
+	 movl %eax, -4(%ebp)
+label_6:
+	 movl -4(%ebp), %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 jg label_7
+	 movl $label_8, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 negl %eax
+	 movl %eax, -16(%ebp)
+	 movl -4(%ebp), %eax
+	 movl -16(%ebp), %ecx
+	 addl %ecx, %eax
+	 movl %eax, -4(%ebp)
+	 jmp label_6
+label_7:
+	 movl $label_9, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -4(%ebp)
+label_10:
+	 movl -4(%ebp), %eax
+	 movl $5, %ecx
+	 cmpl %ecx, %eax
+	 jg label_11
+	 movl -4(%ebp), %eax
+	 movl %eax, -24(%ebp)
+	 movl -24(%ebp), %eax
+	 movl %eax, -8(%ebp)
+label_12:
+	 movl -4(%ebp), %eax
+	 movl %eax, -28(%ebp)
+	 movl -28(%ebp), %eax
+	 movl $10, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -32(%ebp)
+	 movl -8(%ebp), %eax
+	 movl -32(%ebp), %ecx
+	 cmpl %ecx, %eax
+	 jg label_13
+	 movl $label_14, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -36(%ebp)
+	 movl -36(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_15, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -8(%ebp), %eax
+	 movl %eax, -40(%ebp)
+	 movl -40(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 movl -8(%ebp), %eax
+	 movl $2, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -8(%ebp)
+	 jmp label_12
+label_13:
+	 movl -4(%ebp), %eax
+	 movl $1, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -4(%ebp)
+	 jmp label_10
+label_11:
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "Ascending loop:\0"
+
+	 .section .rodata
+label_4:
+	 .string "I = \0"
+
+	 .section .rodata
+label_5:
+	 .string "Descending loop:\0"
+
+	 .section .rodata
+label_8:
+	 .string "I = \0"
+
+	 .section .rodata
+label_9:
+	 .string "Double loop:\0"
+
+	 .section .rodata
+label_14:
+	 .string "I,J = \0"
+
+	 .section .rodata
+label_15:
+	 .string ", \0"
