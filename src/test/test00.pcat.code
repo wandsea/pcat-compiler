@@ -1,0 +1,14 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $12, %esp
+	 andl $-16, %esp
+	 movl $1, %eax
+	 movl %eax, -4(%ebp)
+	 movl $1, %eax
+	 movl %eax, -8(%ebp)
+	 leave
+	 ret

@@ -1,0 +1,30 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   │   └───VaribleDeclareList
+    │   │       ├───VaribleDeclare
+    │   │       │   ├───i
+    │   │       │   ├───NamedTyp
+    │   │       │   │   └───INTEGER
+    │   │       │   ├───IntConst
+    │   │       │   │   ├───1
+    │   │       │   │   ├───NamedTyp
+    │   │       │   │   │   └───basic_int
+    │   │       │   │   └───NamedTyp
+    │   │       │   │       └───basic_int
+    │   │       │   ├───1
+    │   │       │   └───-4
+    │   │       └───VaribleDeclare
+    │   │           ├───j
+    │   │           ├───NamedTyp
+    │   │           │   └───INTEGER
+    │   │           ├───IntConst
+    │   │           │   ├───1
+    │   │           │   ├───NamedTyp
+    │   │           │   │   └───basic_int
+    │   │           │   └───NamedTyp
+    │   │           │       └───basic_int
+    │   │           ├───1
+    │   │           └───-8
+    │   └───StatementList
+    └───-12

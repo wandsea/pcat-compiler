@@ -1,0 +1,83 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   │   ├───VaribleDeclareList
+    │   │   │   └───VaribleDeclare
+    │   │   │       ├───i
+    │   │   │       ├───NamedTyp
+    │   │   │       │   └───INTEGER
+    │   │   │       ├───IntConst
+    │   │   │       │   ├───10
+    │   │   │       │   └───NamedTyp
+    │   │   │       │       └───basic_int
+    │   │   │       ├───1
+    │   │   │       └───-4
+    │   │   └───VaribleDeclareList
+    │   │       └───VaribleDeclare
+    │   │           ├───j
+    │   │           ├───NamedTyp
+    │   │           │   └───REAL
+    │   │           ├───RealConst
+    │   │           │   ├───2.000000
+    │   │           │   └───NamedTyp
+    │   │           │       └───basic_real
+    │   │           ├───1
+    │   │           └───-8
+    │   └───StatementList
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───LvalExpr
+    │       │           ├───Var
+    │       │           │   ├───i
+    │       │           │   ├───NamedTyp
+    │       │           │   │   └───basic_int
+    │       │           │   ├───0
+    │       │           │   └───-4
+    │       │           ├───NamedTyp
+    │       │           │   └───basic_int
+    │       │           └───-12
+    │       ├───AssignStatement
+    │       │   ├───Var
+    │       │   │   ├───j
+    │       │   │   ├───NamedTyp
+    │       │   │   │   └───basic_real
+    │       │   │   ├───0
+    │       │   │   └───-8
+    │       │   └───BinOpExpr
+    │       │       ├───Time
+    │       │       ├───LvalExpr
+    │       │       │   ├───Var
+    │       │       │   │   ├───i
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_int
+    │       │       │   │   ├───0
+    │       │       │   │   └───-4
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-16
+    │       │       ├───LvalExpr
+    │       │       │   ├───Var
+    │       │       │   │   ├───j
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_real
+    │       │       │   │   ├───0
+    │       │       │   │   └───-8
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-20
+    │       │       ├───NamedTyp
+    │       │       │   └───basic_real
+    │       │       └───-24
+    │       └───WriteStatement
+    │           └───ExprList
+    │               └───LvalExpr
+    │                   ├───Var
+    │                   │   ├───i
+    │                   │   ├───NamedTyp
+    │                   │   │   └───basic_int
+    │                   │   ├───0
+    │                   │   └───-4
+    │                   ├───NamedTyp
+    │                   │   └───basic_int
+    │                   └───-28
+    └───-32

@@ -1,0 +1,50 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   └───StatementList
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───Complex Exprs
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       └───WriteStatement
+    │           └───ExprList
+    │               ├───BinOpExpr
+    │               │   ├───Slash
+    │               │   ├───BinOpExpr
+    │               │   │   ├───Plus
+    │               │   │   ├───IntConst
+    │               │   │   │   ├───1
+    │               │   │   │   └───NamedTyp
+    │               │   │   │       └───basic_int
+    │               │   │   ├───BinOpExpr
+    │               │   │   │   ├───Time
+    │               │   │   │   ├───IntConst
+    │               │   │   │   │   ├───2
+    │               │   │   │   │   └───NamedTyp
+    │               │   │   │   │       └───basic_int
+    │               │   │   │   ├───RealConst
+    │               │   │   │   │   ├───3.000000
+    │               │   │   │   │   └───NamedTyp
+    │               │   │   │   │       └───basic_real
+    │               │   │   │   ├───NamedTyp
+    │               │   │   │   │   └───basic_real
+    │               │   │   │   └───-4
+    │               │   │   ├───NamedTyp
+    │               │   │   │   └───basic_real
+    │               │   │   └───-8
+    │               │   ├───IntConst
+    │               │   │   ├───5
+    │               │   │   └───NamedTyp
+    │               │   │       └───basic_int
+    │               │   ├───NamedTyp
+    │               │   │   └───basic_real
+    │               │   └───-12
+    │               └───StringConst
+    │                   ├─── 1.4
+    │                   └───NamedTyp
+    │                       └───basic_str
+    └───-16

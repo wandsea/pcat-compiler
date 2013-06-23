@@ -1,0 +1,1333 @@
+├───Program
+    ├───BodyDefine
+    │   ├───DeclareList
+    │   └───StatementList
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───INTEGER arithmic operations
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───IntConst
+    │       │       │   ├───1
+    │       │       │   └───NamedTyp
+    │       │       │       └───basic_int
+    │       │       └───StringConst
+    │       │           ├─── 1
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UMinus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-4
+    │       │       └───StringConst
+    │       │           ├─── -1
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Plus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-8
+    │       │       └───StringConst
+    │       │           ├─── 3
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Minus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-12
+    │       │       └───StringConst
+    │       │           ├─── -1
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Time
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───3
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───5
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-16
+    │       │       └───StringConst
+    │       │           ├─── 15
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Div
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1243
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───123
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-20
+    │       │       └───StringConst
+    │       │           ├─── 10
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Mod
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1243
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───123
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-24
+    │       │       └───StringConst
+    │       │           ├─── 13
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UMinus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───123
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-28
+    │       │       └───StringConst
+    │       │           ├─── -123
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UPlus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───123
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_int
+    │       │       │   └───-32
+    │       │       └───StringConst
+    │       │           ├─── 123
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───REAL operations
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───RealConst
+    │       │       │   ├───1.000000
+    │       │       │   └───NamedTyp
+    │       │       │       └───basic_real
+    │       │       └───StringConst
+    │       │           ├─── 1.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UMinus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-36
+    │       │       └───StringConst
+    │       │           ├─── -1.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Plus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-40
+    │       │       └───StringConst
+    │       │           ├─── 3.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Minus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-44
+    │       │       └───StringConst
+    │       │           ├─── -1.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Time
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───3.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-48
+    │       │       └───StringConst
+    │       │           ├─── 6.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Slash
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───3.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-52
+    │       │       └───StringConst
+    │       │           ├─── 1.5
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UMinus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───3.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-56
+    │       │       └───StringConst
+    │       │           ├─── -3.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───UPlus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───3.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-60
+    │       │       └───StringConst
+    │       │           ├─── 3.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───INTEGER/REAL mixed operations
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Plus
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-64
+    │       │       └───StringConst
+    │       │           ├─── 3.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Minus
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-68
+    │       │       └───StringConst
+    │       │           ├─── -1.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Time
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───8
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-72
+    │       │       └───StringConst
+    │       │           ├─── 8.0
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Slash
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───8
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-76
+    │       │       └───StringConst
+    │       │           ├─── 0.125
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Slash
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───8
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_real
+    │       │       │   └───-80
+    │       │       └───StringConst
+    │       │           ├─── 0.125
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───BOOLEAN operations
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───LvalExpr
+    │       │       │   ├───Var
+    │       │       │   │   ├───TRUE
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_bool
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-84
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───LvalExpr
+    │       │       │   ├───Var
+    │       │       │   │   ├───FALSE
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_bool
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-88
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───And
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-92
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-96
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-100
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───And
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-104
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-108
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-112
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───And
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-116
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-120
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-124
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Or
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-128
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-132
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-136
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Or
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-140
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-144
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-148
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Or
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-152
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-156
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-160
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───Not
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───FALSE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-164
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-168
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───UnOpExpr
+    │       │       │   ├───Not
+    │       │       │   ├───LvalExpr
+    │       │       │   │   ├───Var
+    │       │       │   │   │   ├───TRUE
+    │       │       │   │   │   └───NamedTyp
+    │       │       │   │   │       └───basic_bool
+    │       │       │   │   ├───NamedTyp
+    │       │       │   │   │   └───basic_bool
+    │       │       │   │   └───-172
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-176
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───EmptyExpression
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       └───StringConst
+    │       │           ├───INTEGER comparative operations
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-180
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-184
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-188
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-192
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-196
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ne
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-200
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-204
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-208
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-212
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-216
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-220
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ne
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-224
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-228
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-232
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-236
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-240
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-244
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ne
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───2
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───IntConst
+    │       │       │   │   ├───1
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_int
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-248
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-252
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-256
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-260
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-264
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-268
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ne
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-272
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-276
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-280
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-284
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-288
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-292
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ne
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-296
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Gt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-300
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Lt
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-304
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Eq
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-308
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Ge
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-312
+    │       │       └───StringConst
+    │       │           ├─── TRUE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       ├───WriteStatement
+    │       │   └───ExprList
+    │       │       ├───BinOpExpr
+    │       │       │   ├───Le
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───2.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───RealConst
+    │       │       │   │   ├───1.000000
+    │       │       │   │   └───NamedTyp
+    │       │       │   │       └───basic_real
+    │       │       │   ├───NamedTyp
+    │       │       │   │   └───basic_bool
+    │       │       │   └───-316
+    │       │       └───StringConst
+    │       │           ├─── FALSE
+    │       │           └───NamedTyp
+    │       │               └───basic_str
+    │       └───WriteStatement
+    │           └───ExprList
+    │               ├───BinOpExpr
+    │               │   ├───Ne
+    │               │   ├───RealConst
+    │               │   │   ├───2.000000
+    │               │   │   └───NamedTyp
+    │               │   │       └───basic_real
+    │               │   ├───RealConst
+    │               │   │   ├───1.000000
+    │               │   │   └───NamedTyp
+    │               │   │       └───basic_real
+    │               │   ├───NamedTyp
+    │               │   │   └───basic_bool
+    │               │   └───-320
+    │               └───StringConst
+    │                   ├─── TRUE
+    │                   └───NamedTyp
+    │                       └───basic_str
+    └───-324

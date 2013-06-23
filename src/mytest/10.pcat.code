@@ -1,0 +1,164 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $20, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $0, %eax
+	 movl %eax, -8(%ebp)
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -4(%ebp)
+label_2:
+	 movl -4(%ebp), %eax
+	 movl $5, %ecx
+	 cmpl %ecx, %eax
+	 jg label_3
+	 pushl %ebp
+	 call FACTORIAL
+	 addl $4, %esp
+	 movl $label_4, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -4(%ebp), %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_5, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 movl -8(%ebp), %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 call print_line
+	 movl -4(%ebp), %eax
+	 movl $1, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -4(%ebp)
+	 jmp label_2
+label_3:
+	 leave
+	 ret
+
+FACTORIAL:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $8, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl $1, %eax
+	 movl 8(%ebp), %edx
+	 movl %eax, -8(%edx)
+	 movl $1, %eax
+	 movl %eax, -4(%ebp)
+	 pushl %ebp
+	 call FACT
+	 addl $4, %esp
+	 leave
+	 ret
+
+MULT:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $28, %esp
+	 andl $-16, %esp
+	 movl $0, %eax
+	 movl %eax, -4(%ebp)
+	 movl 8(%ebp), %edx
+	 movl 8(%edx), %edx
+	 movl -8(%edx), %eax
+	 movl %eax, -8(%ebp)
+	 movl -8(%ebp), %eax
+	 movl %eax, -4(%ebp)
+	 movl -4(%ebp), %eax
+	 movl %eax, -12(%ebp)
+	 movl 8(%ebp), %edx
+	 movl -4(%edx), %eax
+	 movl %eax, -16(%ebp)
+	 movl -12(%ebp), %eax
+	 movl -16(%ebp), %ecx
+	 imull %ecx, %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 movl %eax, -4(%ebp)
+	 movl -4(%ebp), %eax
+	 movl %eax, -24(%ebp)
+	 movl -24(%ebp), %eax
+	 movl 8(%ebp), %edx
+	 movl 8(%edx), %edx
+	 movl %eax, -8(%edx)
+	 leave
+	 ret
+
+FACT:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $24, %esp
+	 andl $-16, %esp
+	 movl 8(%ebp), %edx
+	 movl -4(%edx), %eax
+	 movl %eax, -4(%ebp)
+	 movl 8(%ebp), %edx
+	 movl 8(%edx), %edx
+	 movl -4(%edx), %eax
+	 movl %eax, -8(%ebp)
+	 movl -4(%ebp), %eax
+	 movl -8(%ebp), %ecx
+	 cmpl %ecx, %eax
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_6
+	 jmp label_7
+label_6:
+	 movl 8(%ebp), %edx
+	 pushl %edx
+	 call MULT
+	 addl $4, %esp
+	 movl 8(%ebp), %edx
+	 movl -4(%edx), %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 movl $1, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 movl 8(%ebp), %edx
+	 movl %eax, -4(%edx)
+	 movl 8(%ebp), %edx
+	 pushl %edx
+	 call FACT
+	 addl $4, %esp
+label_7:
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "The first 5 factorials are (in ascending order):\0"
+
+	 .section .rodata
+label_4:
+	 .string "FACTORIAL(\0"
+
+	 .section .rodata
+label_5:
+	 .string ") = \0"

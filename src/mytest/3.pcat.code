@@ -1,0 +1,1655 @@
+	 .text
+	 .globl MainEntry
+
+MainEntry:
+	 pushl %ebp
+	 movl %esp, %ebp
+	 subl $324, %esp
+	 andl $-16, %esp
+	 call print_line
+	 movl $label_1, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_2, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 negl %eax
+	 movl %eax, -4(%ebp)
+	 movl -4(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_3, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 addl %ecx, %eax
+	 movl %eax, -8(%ebp)
+	 movl -8(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_4, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 subl %ecx, %eax
+	 movl %eax, -12(%ebp)
+	 movl -12(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_5, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $3, %eax
+	 movl $5, %ecx
+	 imull %ecx, %eax
+	 movl %eax, -16(%ebp)
+	 movl -16(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_6, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1243, %eax
+	 movl $123, %ecx
+	 cltd
+	 idivl %ecx
+	 movl %eax, -20(%ebp)
+	 movl -20(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_7, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1243, %eax
+	 movl $123, %ecx
+	 cltd
+	 idivl %ecx
+	 movl %edx, %eax
+	 movl %eax, -24(%ebp)
+	 movl -24(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_8, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $123, %eax
+	 negl %eax
+	 movl %eax, -28(%ebp)
+	 movl -28(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_9, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $123, %eax
+	 movl %eax, -32(%ebp)
+	 movl -32(%ebp), %eax
+	 push %eax
+	 call print_int
+	 addl $4, %esp
+	 movl $label_10, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 call print_line
+	 movl $label_11, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1065353216, %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_12, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_13
+	 fchs
+	 fstps -36(%ebp)
+	 movl -36(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_14, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_15
+	 flds label_16
+	 faddp %st, %st(1)
+	 fstps -40(%ebp)
+	 movl -40(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_17, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_18
+	 flds label_19
+	 fsubrp %st, %st(1)
+	 fstps -44(%ebp)
+	 movl -44(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_20, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_21
+	 flds label_22
+	 fmulp %st, %st(1)
+	 fstps -48(%ebp)
+	 movl -48(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_23, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_24
+	 flds label_25
+	 fdivrp %st, %st(1)
+	 fstps -52(%ebp)
+	 movl -52(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_26, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_27
+	 fchs
+	 fstps -56(%ebp)
+	 movl -56(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_28, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_29
+	 fstps -60(%ebp)
+	 movl -60(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_30, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 call print_line
+	 movl $label_31, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 fildl label_32
+	 flds label_33
+	 faddp %st, %st(1)
+	 fstps -64(%ebp)
+	 movl -64(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_34, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_35
+	 fildl label_36
+	 fsubrp %st, %st(1)
+	 fstps -68(%ebp)
+	 movl -68(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_37, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_38
+	 fildl label_39
+	 fmulp %st, %st(1)
+	 fstps -72(%ebp)
+	 movl -72(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_40, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_41
+	 fildl label_42
+	 fdivrp %st, %st(1)
+	 fstps -76(%ebp)
+	 movl -76(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_43, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 fildl label_44
+	 fildl label_45
+	 fdivrp %st, %st(1)
+	 fstps -80(%ebp)
+	 movl -80(%ebp), %eax
+	 push %eax
+	 call print_real
+	 addl $4, %esp
+	 movl $label_46, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 call print_line
+	 movl $label_47, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -84(%ebp)
+	 movl -84(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_48, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $0, %eax
+	 movl %eax, -88(%ebp)
+	 movl -88(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_49, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -92(%ebp)
+	 movl -92(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_50
+	 movl $1, %eax
+	 movl %eax, -96(%ebp)
+	 movl -96(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_50
+	 movl $1, %eax
+	 jmp label_51
+label_50:
+	 movl $0, %eax
+label_51:
+	 movl %eax, -100(%ebp)
+	 movl -100(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_52, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -104(%ebp)
+	 movl -104(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_53
+	 movl $0, %eax
+	 movl %eax, -108(%ebp)
+	 movl -108(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_53
+	 movl $1, %eax
+	 jmp label_54
+label_53:
+	 movl $0, %eax
+label_54:
+	 movl %eax, -112(%ebp)
+	 movl -112(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_55, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $0, %eax
+	 movl %eax, -116(%ebp)
+	 movl -116(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_56
+	 movl $0, %eax
+	 movl %eax, -120(%ebp)
+	 movl -120(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_56
+	 movl $1, %eax
+	 jmp label_57
+label_56:
+	 movl $0, %eax
+label_57:
+	 movl %eax, -124(%ebp)
+	 movl -124(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_58, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -128(%ebp)
+	 movl -128(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_59
+	 movl $1, %eax
+	 movl %eax, -132(%ebp)
+	 movl -132(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_60
+label_59:
+	 movl $1, %eax
+	 jmp label_61
+label_60:
+	 movl $0, %eax
+label_61:
+	 movl %eax, -136(%ebp)
+	 movl -136(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_62, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -140(%ebp)
+	 movl -140(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_63
+	 movl $0, %eax
+	 movl %eax, -144(%ebp)
+	 movl -144(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_64
+label_63:
+	 movl $1, %eax
+	 jmp label_65
+label_64:
+	 movl $0, %eax
+label_65:
+	 movl %eax, -148(%ebp)
+	 movl -148(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_66, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $0, %eax
+	 movl %eax, -152(%ebp)
+	 movl -152(%ebp), %eax
+	 cmpl $0, %eax
+	 jne label_67
+	 movl $0, %eax
+	 movl %eax, -156(%ebp)
+	 movl -156(%ebp), %eax
+	 cmpl $0, %eax
+	 je label_68
+label_67:
+	 movl $1, %eax
+	 jmp label_69
+label_68:
+	 movl $0, %eax
+label_69:
+	 movl %eax, -160(%ebp)
+	 movl -160(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_70, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $0, %eax
+	 movl %eax, -164(%ebp)
+	 movl -164(%ebp), %eax
+	 cmpl $0, %eax
+	 sete %al
+	 movzbl %al, %eax
+	 movl %eax, -168(%ebp)
+	 movl -168(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_71, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl %eax, -172(%ebp)
+	 movl -172(%ebp), %eax
+	 cmpl $0, %eax
+	 sete %al
+	 movzbl %al, %eax
+	 movl %eax, -176(%ebp)
+	 movl -176(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_72, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 call print_line
+	 movl $label_73, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -180(%ebp)
+	 movl -180(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_74, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -184(%ebp)
+	 movl -184(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_75, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -188(%ebp)
+	 movl -188(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_76, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -192(%ebp)
+	 movl -192(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_77, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -196(%ebp)
+	 movl -196(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_78, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $2, %ecx
+	 cmpl %ecx, %eax
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -200(%ebp)
+	 movl -200(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_79, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -204(%ebp)
+	 movl -204(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_80, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -208(%ebp)
+	 movl -208(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_81, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -212(%ebp)
+	 movl -212(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_82, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -216(%ebp)
+	 movl -216(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_83, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -220(%ebp)
+	 movl -220(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_84, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $1, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -224(%ebp)
+	 movl -224(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_85, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -228(%ebp)
+	 movl -228(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_86, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -232(%ebp)
+	 movl -232(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_87, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -236(%ebp)
+	 movl -236(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_88, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -240(%ebp)
+	 movl -240(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_89, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -244(%ebp)
+	 movl -244(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_90, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 movl $2, %eax
+	 movl $1, %ecx
+	 cmpl %ecx, %eax
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -248(%ebp)
+	 movl -248(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_91, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_92
+	 flds label_93
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -252(%ebp)
+	 movl -252(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_94, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_95
+	 flds label_96
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -256(%ebp)
+	 movl -256(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_97, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_98
+	 flds label_99
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -260(%ebp)
+	 movl -260(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_100, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_101
+	 flds label_102
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -264(%ebp)
+	 movl -264(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_103, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_104
+	 flds label_105
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -268(%ebp)
+	 movl -268(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_106, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_107
+	 flds label_108
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -272(%ebp)
+	 movl -272(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_109, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_110
+	 flds label_111
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -276(%ebp)
+	 movl -276(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_112, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_113
+	 flds label_114
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -280(%ebp)
+	 movl -280(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_115, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_116
+	 flds label_117
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -284(%ebp)
+	 movl -284(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_118, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_119
+	 flds label_120
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -288(%ebp)
+	 movl -288(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_121, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_122
+	 flds label_123
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -292(%ebp)
+	 movl -292(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_124, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_125
+	 flds label_126
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -296(%ebp)
+	 movl -296(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_127, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_128
+	 flds label_129
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setg %al
+	 movzbl	%al, %eax
+	 movl %eax, -300(%ebp)
+	 movl -300(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_130, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_131
+	 flds label_132
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setl %al
+	 movzbl	%al, %eax
+	 movl %eax, -304(%ebp)
+	 movl -304(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_133, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_134
+	 flds label_135
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 sete %al
+	 movzbl	%al, %eax
+	 movl %eax, -308(%ebp)
+	 movl -308(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_136, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_137
+	 flds label_138
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setge %al
+	 movzbl	%al, %eax
+	 movl %eax, -312(%ebp)
+	 movl -312(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_139, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_140
+	 flds label_141
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setle %al
+	 movzbl	%al, %eax
+	 movl %eax, -316(%ebp)
+	 movl -316(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_142, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 flds label_143
+	 flds label_144
+	 fucomip %st(1), %st
+	 fstp %st(0)
+	 setne %al
+	 movzbl	%al, %eax
+	 movl %eax, -320(%ebp)
+	 movl -320(%ebp), %eax
+	 push %eax
+	 call print_bool
+	 addl $4, %esp
+	 movl $label_145, %eax
+	 push %eax
+	 call print_str
+	 addl $4, %esp
+	 call print_line
+	 leave
+	 ret
+
+	 .section .rodata
+label_1:
+	 .string "INTEGER arithmic operations\0"
+
+	 .section .rodata
+label_2:
+	 .string " 1\0"
+
+	 .section .rodata
+label_3:
+	 .string " -1\0"
+
+	 .section .rodata
+label_4:
+	 .string " 3\0"
+
+	 .section .rodata
+label_5:
+	 .string " -1\0"
+
+	 .section .rodata
+label_6:
+	 .string " 15\0"
+
+	 .section .rodata
+label_7:
+	 .string " 10\0"
+
+	 .section .rodata
+label_8:
+	 .string " 13\0"
+
+	 .section .rodata
+label_9:
+	 .string " -123\0"
+
+	 .section .rodata
+label_10:
+	 .string " 123\0"
+
+	 .section .rodata
+label_11:
+	 .string "REAL operations\0"
+
+	 .section .rodata
+label_12:
+	 .string " 1.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_13:
+	 .long 1065353216
+
+	 .section .rodata
+label_14:
+	 .string " -1.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_15:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_16:
+	 .long 1073741824
+
+	 .section .rodata
+label_17:
+	 .string " 3.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_18:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_19:
+	 .long 1073741824
+
+	 .section .rodata
+label_20:
+	 .string " -1.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_21:
+	 .long 1077936128
+
+	 .section .rodata
+	 .align 4 
+label_22:
+	 .long 1073741824
+
+	 .section .rodata
+label_23:
+	 .string " 6.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_24:
+	 .long 1077936128
+
+	 .section .rodata
+	 .align 4 
+label_25:
+	 .long 1073741824
+
+	 .section .rodata
+label_26:
+	 .string " 1.5\0"
+
+	 .section .rodata
+	 .align 4 
+label_27:
+	 .long 1077936128
+
+	 .section .rodata
+label_28:
+	 .string " -3.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_29:
+	 .long 1077936128
+
+	 .section .rodata
+label_30:
+	 .string " 3.0\0"
+
+	 .section .rodata
+label_31:
+	 .string "INTEGER/REAL mixed operations\0"
+
+	 .section .rodata
+	 .align 4 
+label_32:
+	 .long 1
+
+	 .section .rodata
+	 .align 4 
+label_33:
+	 .long 1073741824
+
+	 .section .rodata
+label_34:
+	 .string " 3.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_35:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_36:
+	 .long 2
+
+	 .section .rodata
+label_37:
+	 .string " -1.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_38:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_39:
+	 .long 8
+
+	 .section .rodata
+label_40:
+	 .string " 8.0\0"
+
+	 .section .rodata
+	 .align 4 
+label_41:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_42:
+	 .long 8
+
+	 .section .rodata
+label_43:
+	 .string " 0.125\0"
+
+	 .section .rodata
+	 .align 4 
+label_44:
+	 .long 1
+
+	 .section .rodata
+	 .align 4 
+label_45:
+	 .long 8
+
+	 .section .rodata
+label_46:
+	 .string " 0.125\0"
+
+	 .section .rodata
+label_47:
+	 .string "BOOLEAN operations\0"
+
+	 .section .rodata
+label_48:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_49:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_52:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_55:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_58:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_62:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_66:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_70:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_71:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_72:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_73:
+	 .string "INTEGER comparative operations\0"
+
+	 .section .rodata
+label_74:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_75:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_76:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_77:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_78:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_79:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_80:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_81:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_82:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_83:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_84:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_85:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_86:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_87:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_88:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_89:
+	 .string " TRUE\0"
+
+	 .section .rodata
+label_90:
+	 .string " FALSE\0"
+
+	 .section .rodata
+label_91:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_92:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_93:
+	 .long 1073741824
+
+	 .section .rodata
+label_94:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_95:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_96:
+	 .long 1073741824
+
+	 .section .rodata
+label_97:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_98:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_99:
+	 .long 1073741824
+
+	 .section .rodata
+label_100:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_101:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_102:
+	 .long 1073741824
+
+	 .section .rodata
+label_103:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_104:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_105:
+	 .long 1073741824
+
+	 .section .rodata
+label_106:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_107:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_108:
+	 .long 1073741824
+
+	 .section .rodata
+label_109:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_110:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_111:
+	 .long 1065353216
+
+	 .section .rodata
+label_112:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_113:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_114:
+	 .long 1065353216
+
+	 .section .rodata
+label_115:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_116:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_117:
+	 .long 1065353216
+
+	 .section .rodata
+label_118:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_119:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_120:
+	 .long 1065353216
+
+	 .section .rodata
+label_121:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_122:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_123:
+	 .long 1065353216
+
+	 .section .rodata
+label_124:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_125:
+	 .long 1065353216
+
+	 .section .rodata
+	 .align 4 
+label_126:
+	 .long 1065353216
+
+	 .section .rodata
+label_127:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_128:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_129:
+	 .long 1065353216
+
+	 .section .rodata
+label_130:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_131:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_132:
+	 .long 1065353216
+
+	 .section .rodata
+label_133:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_134:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_135:
+	 .long 1065353216
+
+	 .section .rodata
+label_136:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_137:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_138:
+	 .long 1065353216
+
+	 .section .rodata
+label_139:
+	 .string " TRUE\0"
+
+	 .section .rodata
+	 .align 4 
+label_140:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_141:
+	 .long 1065353216
+
+	 .section .rodata
+label_142:
+	 .string " FALSE\0"
+
+	 .section .rodata
+	 .align 4 
+label_143:
+	 .long 1073741824
+
+	 .section .rodata
+	 .align 4 
+label_144:
+	 .long 1065353216
+
+	 .section .rodata
+label_145:
+	 .string " TRUE\0"
