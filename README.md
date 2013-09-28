@@ -12,37 +12,13 @@ Architecture
 ------------
 
 
-Details
-------------
+* Lexical Analysis (Tokenizer)
 
-### Lexical Analysis (Tokenizer)
+* Syntax Analysis
 
-#### Tokens
-No more tweaks required. It is sufficient to follow the 
-specification.
+* Semantic Analysis
 
-### Syntax Analysis
-
-As part of the language specification, the syntax is also available at
-http://web.cecs.pdx.edu/~apt/cs302_1999/pcat99/pcat99.html
-
-Both concrete and abstract syntax is provided. In this part (syntax analysis),
-we use concrete syntax to handle the tokens, and then arrange them into
-AST in form of abstract syntax.
-
-The concrete syntax (concrete-syntax-ebnf.txt) is provided in form of EBNF, thus we
-convert it to BNF (concrete-syntax-bnf.txt) following directions from
-http://web.eecs.utk.edu/~bvz/cs461/notes/bison/
-
-
-### Semantic Analysis
-TODO
-
-
-### IR Generation
-
-TODO
-
+* IR Generation
 
 
 Resources
@@ -50,7 +26,6 @@ Resources
 
 We didn't receive enough information and supplimentary materials from TA,
 so we must search for it manually.
-
 
 A [similar course](http://web.cecs.pdx.edu/~harry/compilers/syllabus.html) 
 with project on PCAT was offered by 
